@@ -6,14 +6,17 @@ import {
   type CreateUserRole,
   useCreateUser,
 } from "@/stores/server/user/create-mutation";
+import DateTimePicker, {
+  type DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { Input, Select } from "heroui-native";
 import React, { useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Alert, Pressable, ScrollView, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Alert, Platform, Pressable, ScrollView, Text, View } from "react-native";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { z } from "zod";
 
 const ROLE_OPTIONS: {
@@ -53,6 +56,21 @@ function todayIsoLocal(): string {
   return `${y}-${m}-${day}`;
 }
 
+function parseDmyToDate(dmy: string): Date | null {
+  const iso = toIsoDate(dmy);
+  if (!iso) return null;
+  const [year, month, day] = iso.split("-").map(Number);
+  if (!year || !month || !day) return null;
+  return new Date(year, month - 1, day);
+}
+
+function toDmyDate(date: Date): string {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = String(date.getFullYear());
+  return `${day}/${month}/${year}`;
+}
+
 function buildSchema(locale: "en" | "mm") {
   return z.object({
     username: z
@@ -88,11 +106,13 @@ type FormValues = z.infer<ReturnType<typeof buildSchema>>;
 
 export default function TeamCreateUserScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const locale = useLocaleStore((state) => state.locale);
   const t = profileLocale[locale];
   const mmTextStyle = useMemo(() => myanmarUITextStyle(), []);
   const style = locale === "mm" ? mmTextStyle : undefined;
   const [showPassword, setShowPassword] = useState(false);
+  const [showDateOfBirthPicker, setShowDateOfBirthPicker] = useState(false);
   const { mutate, isPending } = useCreateUser();
 
   const schema = useMemo(() => buildSchema(locale), [locale]);
@@ -180,7 +200,10 @@ export default function TeamCreateUserScreen() {
         <View className="h-11 w-11" />
       </View>
 
-      <ScrollView className="px-4" contentContainerStyle={{ paddingBottom: 24 }}>
+      <ScrollView
+        className="px-4"
+        contentContainerStyle={{ paddingBottom: insets.bottom + 80, flexGrow: 1 }}
+      >
         <View className="rounded-2xl border border-[#c8dbf7] bg-[#ecf4ff] p-3">
           <View className="flex-row items-start gap-2">
             <Ionicons name="information-circle-outline" size={18} color="#325f99" />
@@ -239,18 +262,17 @@ export default function TeamCreateUserScreen() {
                   placeholder={labels.passwordPlaceholder}
                   secureTextEntry={!showPassword}
                   className="border border-slate-200 bg-white"
-                  endContent={
-                    <Pressable onPress={() => setShowPassword((prev) => !prev)}>
-                      <Ionicons
-                        name={showPassword ? "eye-outline" : "eye-off-outline"}
-                        size={18}
-                        color="#64748b"
-                      />
-                    </Pressable>
-                  }
                 />
               )}
             />
+            <Pressable
+              onPress={() => setShowPassword((prev) => !prev)}
+              className="self-end rounded-md bg-slate-100 px-2.5 py-1"
+            >
+              <Text className="text-xs text-slate-600" style={style}>
+                {showPassword ? (locale === "mm" ? "ဖျောက်ရန်" : "Hide") : locale === "mm" ? "ပြရန်" : "Show"}
+              </Text>
+            </Pressable>
             {!!errors.password?.message && (
               <Text className="text-xs text-red-500">{errors.password.message}</Text>
             )}
@@ -317,12 +339,49 @@ export default function TeamCreateUserScreen() {
               control={control}
               name="dateOfBirth"
               render={({ field: { onChange, value } }) => (
-                <Input
-                  value={value}
-                  onChangeText={onChange}
-                  placeholder={labels.datePlaceholder}
-                  className="border border-slate-200 bg-white"
-                />
+                <View>
+                  <Pressable
+                    onPress={() => setShowDateOfBirthPicker(true)}
+                    className="flex-row items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-3"
+                  >
+                    <Text
+                      className={value ? "text-slate-900" : "text-slate-400"}
+                      style={style}
+                    >
+                      {value || labels.datePlaceholder}
+                    </Text>
+                    <Ionicons name="calendar-outline" size={18} color="#64748b" />
+                  </Pressable>
+
+                  {showDateOfBirthPicker ? (
+                    <View className="mt-2 rounded-xl border border-slate-200 bg-white p-2">
+                      <DateTimePicker
+                        value={parseDmyToDate(value) ?? new Date()}
+                        mode="date"
+                        display={Platform.OS === "ios" ? "spinner" : "default"}
+                        maximumDate={new Date()}
+                        onChange={(event: DateTimePickerEvent, selectedDate?: Date) => {
+                          if (Platform.OS !== "ios") {
+                            setShowDateOfBirthPicker(false);
+                          }
+                          if (event.type === "set" && selectedDate) {
+                            onChange(toDmyDate(selectedDate));
+                          }
+                        }}
+                      />
+                      {Platform.OS === "ios" ? (
+                        <Pressable
+                          onPress={() => setShowDateOfBirthPicker(false)}
+                          className="mt-2 self-end rounded-lg bg-slate-100 px-3 py-1.5"
+                        >
+                          <Text className="text-xs font-semibold text-slate-700" style={style}>
+                            {locale === "mm" ? "ပြီးပါပြီ" : "Done"}
+                          </Text>
+                        </Pressable>
+                      ) : null}
+                    </View>
+                  ) : null}
+                </View>
               )}
             />
             {!!errors.dateOfBirth?.message && (
@@ -388,7 +447,7 @@ export default function TeamCreateUserScreen() {
         <Pressable
           onPress={handleSubmit(onSubmit)}
           disabled={isPending}
-          className="mt-5 items-center justify-center rounded-xl py-3.5"
+          className="mb-2 mt-5 items-center justify-center rounded-xl py-3.5"
           style={{
             backgroundColor: APP_COLORS.primary,
             opacity: isPending ? 0.7 : 1,

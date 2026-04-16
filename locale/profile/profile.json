@@ -64,6 +64,22 @@
       "errorTitle": "Error",
       "errorBody": "Unable to create user account.",
       "dateInvalid": "Invalid date format. Use dd/mm/yyyy."
+    },
+    "editUserScreen": {
+      "title": "Edit User",
+      "datePlaceholder": "dd/mm/yyyy",
+      "rolePlaceholder": "Select role",
+      "submit": "Update",
+      "submitting": "Updating...",
+      "statusTitle": "User Status",
+      "statusActive": "Active",
+      "statusLock": "Locked / Unlocked",
+      "successTitle": "Success",
+      "successBody": "User account updated successfully.",
+      "errorTitle": "Error",
+      "errorBody": "Unable to update user account.",
+      "dateInvalid": "Invalid date format. Use dd/mm/yyyy.",
+      "invalidUserId": "Invalid user id."
     }
   },
   "mm": {
@@ -115,7 +131,7 @@
       "empty": "အသုံးပြုသူ မတွေ့ရှိပါ။"
     },
     "createUserScreen": {
-      "title": "အသင်းပြုစုအသစ် မှတ်ပုံတင်ရန်",
+      "title": "အသင်းပြုစုအသစ်ထည့်ရန်",
       "infoTitle": "သတိပြုရန်",
       "infoBody": "အသုံးပြုသူအမည် ထပ်မံမရှိရပါ (အင်္ဂလိပ်အက္ခရာ + 09 + ဂဏန်း ၉ လုံး)။ စကားဝှက် အနည်းဆုံး ၈ လုံး။ နေ့စွဲပုံစံ dd/mm/yyyy ဖြစ်ရမည်။",
       "usernamePlaceholder": "09xxxxxxxxx",
@@ -131,6 +147,22 @@
       "errorTitle": "အမှား",
       "errorBody": "အသုံးပြုသူဖန်တီး၍ မရပါ။",
       "dateInvalid": "နေ့စွဲပုံစံ dd/mm/yyyy သုံးပါ။"
+    },
+    "editUserScreen": {
+      "title": "အသုံးပြုသူ ပြင်ဆင်ရန်",
+      "datePlaceholder": "dd/mm/yyyy",
+      "rolePlaceholder": "အခန်းကဏ္ဍ ရွေးပါ",
+      "submit": "ပြင်ဆင်မည်",
+      "submitting": "ပြင်ဆင်နေသည်...",
+      "statusTitle": "အသုံးပြုသူ အခြေအနေ",
+      "statusActive": "တက်ကြွမှု",
+      "statusLock": "သော့ဖွင့်ထားမှု",
+      "successTitle": "အောင်မြင်သည်",
+      "successBody": "အသုံးပြုသူ အချက်အလက် ပြင်ဆင်ပြီးပါပြီ။",
+      "errorTitle": "အမှား",
+      "errorBody": "အသုံးပြုသူ ပြင်ဆင်၍ မရပါ။",
+      "dateInvalid": "နေ့စွဲပုံစံ dd/mm/yyyy သုံးပါ။",
+      "invalidUserId": "အသုံးပြုသူ ID မမှန်ကန်ပါ။"
     }
   }
 }

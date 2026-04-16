@@ -6,7 +6,7 @@ export const MYANMAR_UI_FONT_STACK =
 
 export function myanmarUITextStyle(): TextStyle {
   if (Platform.OS === "web") {
-    return { fontFamily: MYANMAR_UI_FONT_STACK };
+    return { fontFamily: MYANMAR_UI_FONT_STACK, lineHeight: 0 };
   }
 
   return {
@@ -15,5 +15,6 @@ export function myanmarUITextStyle(): TextStyle {
       android: "Noto Sans Myanmar",
       default: "sans-serif",
     }),
+    lineHeight: 0,
   };
 }

@@ -160,7 +160,26 @@ export default function TeamManagementScreen() {
         data={items}
         className=" px-4"
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <TeamUserCard item={item} locale={locale} />}
+        renderItem={({ item }) => (
+          <TeamUserCard
+            item={item}
+            locale={locale}
+            onPress={() =>
+              router.push({
+                pathname: "/(tabs)/profile/user/[id]",
+                params: {
+                  id: item.id,
+                  fullName: item.fullName,
+                  email: item.email,
+                  phoneNumber: item.phoneNumber || item.username,
+                  role: item.role,
+                  active: String(item.active),
+                  notLocked: String(item.notLocked),
+                },
+              })
+            }
+          />
+        )}
         onEndReachedThreshold={0.2}
         onEndReached={() => {
           if (hasNextPage && !isFetchingNextPage) {
