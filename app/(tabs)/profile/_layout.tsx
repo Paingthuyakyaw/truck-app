@@ -13,6 +13,7 @@ export default function ProfileStackLayout() {
       <Stack.Screen name="truck/edit/[id]" />
       <Stack.Screen name="user/index" />
       <Stack.Screen name="user/create" />
+      <Stack.Screen name="security" />
       <Stack.Screen name="language" />
     </Stack>
   );

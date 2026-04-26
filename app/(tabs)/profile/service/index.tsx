@@ -212,7 +212,11 @@ export default function ServiceTypeManagementScreen() {
                       }}
                     >
                       <Select.Trigger className="rounded-xl border border-slate-200 bg-white px-2.5">
-                        <Select.Value placeholder="" style={style} />
+                        <Select.Value
+                          className="text-xs text-slate-900"
+                          placeholder=""
+                          style={style}
+                        />
                         <Select.TriggerIndicator />
                       </Select.Trigger>
                       <Select.Portal>
@@ -223,18 +227,27 @@ export default function ServiceTypeManagementScreen() {
                           width="trigger"
                         >
                           <Select.Item value="all" label={t.status.all}>
-                            <Select.ItemLabel style={style} />
+                            <Select.ItemLabel
+                              className="text-xs text-slate-900"
+                              style={style}
+                            />
                             <Select.ItemIndicator />
                           </Select.Item>
                           <Select.Item value="active" label={t.status.active}>
-                            <Select.ItemLabel style={style} />
+                            <Select.ItemLabel
+                              className="text-xs text-slate-900"
+                              style={style}
+                            />
                             <Select.ItemIndicator />
                           </Select.Item>
                           <Select.Item
                             value="inactive"
                             label={t.status.inactive}
                           >
-                            <Select.ItemLabel style={style} />
+                            <Select.ItemLabel
+                              className="text-xs text-slate-900"
+                              style={style}
+                            />
                             <Select.ItemIndicator />
                           </Select.Item>
                         </Select.Content>

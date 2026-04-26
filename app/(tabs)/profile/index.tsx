@@ -134,6 +134,10 @@ export default function ProfileScreen() {
                     router.push("/(tabs)/profile/service");
                     return;
                   }
+                  if (row.key === "security") {
+                    router.push("/(tabs)/profile/security");
+                    return;
+                  }
                   if (row.key === "language") {
                     router.push("/(tabs)/profile/language");
                   }
