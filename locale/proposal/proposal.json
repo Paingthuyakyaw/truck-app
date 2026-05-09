@@ -1,0 +1,112 @@
+{
+  "en": {
+    "list": {
+      "title": "Proposals",
+      "welcome": "Welcome",
+      "empty": "No proposals found",
+      "searchPlaceholder": "Search proposal...",
+      "tabs": {
+        "INFORM": "Pending",
+        "APPROVED": "Approved",
+        "TERMINATED": "Cancelled"
+      }
+    },
+    "advanced": {
+      "title": "Advanced Filters",
+      "proposalNo": "Proposal No",
+      "ownerId": "Owner ID",
+      "plateNo": "Plate No",
+      "proposalDateFrom": "Proposal Date From",
+      "proposalDateTo": "Proposal Date To",
+      "serviceTypeCsv": "Service Type",
+      "serviceDateFrom": "Service Date From",
+      "serviceDateTo": "Service Date To",
+      "createdByCsv": "Created By",
+      "datePlaceholder": "DD/MM/YYYY",
+      "reset": "Reset",
+      "apply": "Apply"
+    },
+    "create": {
+      "title": "Create Proposal",
+      "required": "Required field",
+      "invalidAmount": "Amount must be a valid number",
+      "invalidDate": "Use DD/MM/YYYY HH:mm",
+      "truck": "Truck",
+      "truckPlaceholder": "Select truck...",
+      "truckSearch": "Search...",
+      "amount": "Proposal Amount",
+      "amountPlaceholder": "5000",
+      "serviceType": "Service Type",
+      "serviceTypePlaceholder": "Select service...",
+      "serviceShop": "Service Shop",
+      "serviceShopPlaceholder": "Zaw Star Car Workshop",
+      "serviceDate": "Service Date",
+      "serviceDatePlaceholder": "dd/mm/yyyy, --:-- --",
+      "description": "Description",
+      "descriptionPlaceholder": "For tire maintenance",
+      "cancel": "Cancel",
+      "submit": "Submit",
+      "submitting": "Submitting...",
+      "done": "Done",
+      "successTitle": "Success",
+      "successBody": "Proposal created successfully.",
+      "errorTitle": "Error",
+      "errorBody": "Could not create proposal."
+    }
+  },
+  "mm": {
+    "list": {
+      "title": "အဆိုပြုချက်များ",
+      "welcome": "မင်္ဂလာပါ",
+      "empty": "အချက်အလက် မတွေ့ပါ",
+      "searchPlaceholder": "အဆိုပြုချက်ရှာရန်...",
+      "tabs": {
+        "INFORM": "စောင့်ဆိုင်းဆဲ",
+        "APPROVED": "အတည်ပြု",
+        "TERMINATED": "ပယ်ဖျက်"
+      }
+    },
+    "advanced": {
+      "title": "အသေးစိတ်ရှာဖွေမှု",
+      "proposalNo": "အဆိုပြုချက်အမှတ်",
+      "ownerId": "Owner ID",
+      "plateNo": "ကားနံပါတ်",
+      "proposalDateFrom": "အဆိုပြုရက် မှ",
+      "proposalDateTo": "အဆိုပြုရက် ထိ",
+      "serviceTypeCsv": "ဝန်ဆောင်မှုအမျိုးအစား",
+      "serviceDateFrom": "ဝန်ဆောင်မှုရက် မှ",
+      "serviceDateTo": "ဝန်ဆောင်မှုရက် ထိ",
+      "createdByCsv": "Created By",
+      "datePlaceholder": "DD/MM/YYYY",
+      "reset": "ရှင်းမည်",
+      "apply": "ရှာမည်"
+    },
+    "create": {
+      "title": "အဆိုပြုချက်အသစ်",
+      "required": "လိုအပ်သောအချက်အလက်ဖြစ်သည်",
+      "invalidAmount": "ပမာဏမှန်ကန်စွာထည့်ပါ",
+      "invalidDate": "DD/MM/YYYY HH:mm ပုံစံဖြင့်ထည့်ပါ",
+      "truck": "ထရပ်ကား",
+      "truckPlaceholder": "ထရပ်ကားရွေးချယ်ရန်...",
+      "truckSearch": "ရှာရန်...",
+      "amount": "အဆိုပြုငွေ",
+      "amountPlaceholder": "5000",
+      "serviceType": "ဝန်ဆောင်မှုအမျိုးအစား",
+      "serviceTypePlaceholder": "ရွေးချယ်ပါ...",
+      "serviceShop": "ဝန်ဆောင်မှုဆိုင်",
+      "serviceShopPlaceholder": "Zaw Star Car Workshop",
+      "serviceDate": "ဝန်ဆောင်မှုရက်",
+      "serviceDatePlaceholder": "dd/mm/yyyy, --:-- --",
+      "description": "ဖော်ပြချက်",
+      "descriptionPlaceholder": "For tire maintenance",
+      "cancel": "မလုပ်တော့ပါ",
+      "submit": "ထည့်သွင်းမည်",
+      "submitting": "ထည့်သွင်းနေသည်...",
+      "done": "ပြီးပါပြီ",
+      "successTitle": "အောင်မြင်ပါသည်",
+      "successBody": "အဆိုပြုချက်အသစ်ထည့်ပြီးပါပြီ။",
+      "errorTitle": "အမှားရှိပါသည်",
+      "errorBody": "အဆိုပြုချက်ထည့်၍မရပါ။"
+    }
+  }
+}
