@@ -6,6 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 import { KeyboardAvoidingView, Platform, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { z } from "zod";
+import {useTranslation} from '@/hooks/use-translation';
 
 const formSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -15,6 +16,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export default function LoginScreen() {
+  const t  = useTranslation('login');
   const { mutate, isPending } = useLogin();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const {
@@ -57,15 +59,15 @@ export default function LoginScreen() {
       >
         <Card className="gap-4">
           <Card.Header className="pb-0">
-            <Card.Title>Truck App Login</Card.Title>
+            <Card.Title>{t.title}</Card.Title>
             <Card.Description>
-              Sign in with your truck-app account.
+              {t.description}
             </Card.Description>
           </Card.Header>
 
           <Card.Body className="gap-3">
             <View className="gap-2">
-              <Text className="text-sm text-slate-600">Username</Text>
+              <Text className="text-sm text-slate-600">{t.username}</Text>
               <Controller
                 control={control}
                 name="username"
@@ -86,7 +88,7 @@ export default function LoginScreen() {
             </View>
 
             <View className="gap-2">
-              <Text className="text-sm text-slate-600">Password</Text>
+              <Text className="text-sm text-slate-600">{t.password}</Text>
               <Controller
                 control={control}
                 name="password"
@@ -117,7 +119,7 @@ export default function LoginScreen() {
               isDisabled={isPending}
               className="w-full"
             >
-              {isPending ? <Spinner size="sm" color="default" /> : "Login"}
+              {isPending ? <Spinner size="sm" color="default" /> : t.login}
             </Button>
           </Card.Footer>
         </Card>
