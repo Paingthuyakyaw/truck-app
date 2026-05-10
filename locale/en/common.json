@@ -1,0 +1,18 @@
+{
+  "common": {
+    "button": {
+      "yes": "Yes",
+      "close": "Close",
+      "cancel": "Cancel",
+      "search": "Search",
+      "clearSearch": "Clear",
+      "create": "Create",
+      "save": "Save",
+      "inform": "Inform",
+      "terminate": "Terminate",
+      "approve": "Approve",
+      "update": "Update",
+      "delete": "Delete"
+    }
+  }
+}

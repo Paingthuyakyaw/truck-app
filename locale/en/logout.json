@@ -1,0 +1,8 @@
+{
+  "logout": {
+    "title": "LOGOUT",
+    "text": "Are you sure to logout?",
+    "yes": "Yes",
+    "no": "No"
+  }
+}

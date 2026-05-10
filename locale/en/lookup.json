@@ -1,0 +1,10 @@
+{
+  "lookup": {
+    "roles": {
+      "ADMIN": "Admin",
+      "OWNER": "Truck Owner",
+      "VIEWER": "Viewer",
+      "WORKER": "Worker"
+    }
+  }
+}
