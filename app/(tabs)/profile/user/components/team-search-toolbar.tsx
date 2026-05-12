@@ -6,7 +6,7 @@ import React from "react";
 import { Pressable, View } from "react-native";
 
 const TEAM_SEARCH_INPUT_CLASSNAME =
-  "flex-1 border h-11 py-0  border-slate-200 bg-white ";
+  "flex-1 border h-11 py-0 text-sm border-slate-200 bg-white ";
 
 type TeamSearchToolbarProps = {
   locale: AppLocale;

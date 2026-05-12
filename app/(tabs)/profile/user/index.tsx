@@ -1,7 +1,8 @@
-import { CompactTextInput } from "@/components/compact-text-input";
 import { APP_COLORS } from "@/constants/colors";
-import { COMPACT_ADVANCED_INPUT_CLASSNAME } from "@/constants/compact-input";
-import { myanmarUITextStyle } from "@/constants/myanmar-font";
+import {
+  getMyanmarLeadingClass,
+  myanmarUITextStyle,
+} from "@/constants/myanmar-font";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import profileLocale from "@/locale/profile/profile.json";
 import { useLocaleStore } from "@/stores/client/locale-store";
@@ -9,8 +10,14 @@ import { useUsersInfinite } from "@/stores/server/user/query";
 import type { BoolFilter } from "@/stores/server/user/search-columns";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
-import { Card } from "heroui-native";
-import React, { useCallback, useMemo, useState } from "react";
+import { Card, Input } from "heroui-native";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -37,15 +44,24 @@ type TeamListUiState = {
   isNotLocked: SelectBoolValue;
 };
 
-const initialTeamListUi: TeamListUiState = {
-  quickQuery: "",
-  advancedOpen: false,
+type AdvancedDraftSlice = Pick<
+  TeamListUiState,
+  "fullName" | "phoneNumber" | "role" | "email" | "isActive" | "isNotLocked"
+>;
+
+const initialAdvancedDraft: AdvancedDraftSlice = {
   fullName: "",
   phoneNumber: "",
   role: "",
   email: "",
   isActive: "all",
   isNotLocked: "all",
+};
+
+const initialTeamListUi: TeamListUiState = {
+  quickQuery: "",
+  advancedOpen: false,
+  ...initialAdvancedDraft,
 };
 
 function mapSelectToBoolFilter(value: SelectBoolValue): BoolFilter {
@@ -63,10 +79,56 @@ export default function TeamManagementScreen() {
   const style = locale === "mm" ? mmTextStyle : undefined;
 
   const [ui, setUi] = useState<TeamListUiState>(initialTeamListUi);
+  /** Committed advanced filters — API uses this; form edits stay in `ui` until Apply. */
+  const [appliedAdvanced, setAppliedAdvanced] =
+    useState<AdvancedDraftSlice>(initialAdvancedDraft);
+  const appliedAdvancedRef = useRef(appliedAdvanced);
+  useEffect(() => {
+    appliedAdvancedRef.current = appliedAdvanced;
+  }, [appliedAdvanced]);
+
   const patchUi = useCallback((next: Partial<TeamListUiState>) => {
     setUi((prev) => ({ ...prev, ...next }));
   }, []);
   const debouncedQuickQuery = useDebouncedValue(ui.quickQuery, 500);
+
+  const onToggleAdvanced = useCallback(() => {
+    setUi((s) => {
+      const a = appliedAdvancedRef.current;
+      const fromApplied: AdvancedDraftSlice = {
+        fullName: a.fullName,
+        phoneNumber: a.phoneNumber,
+        role: a.role,
+        email: a.email,
+        isActive: a.isActive,
+        isNotLocked: a.isNotLocked,
+      };
+      if (s.advancedOpen) {
+        return { ...s, advancedOpen: false, ...fromApplied };
+      }
+      return { ...s, advancedOpen: true, ...fromApplied };
+    });
+  }, []);
+
+  const onApplyAdvanced = useCallback(() => {
+    setAppliedAdvanced({
+      fullName: ui.fullName,
+      phoneNumber: ui.phoneNumber,
+      role: ui.role,
+      email: ui.email,
+      isActive: ui.isActive,
+      isNotLocked: ui.isNotLocked,
+    });
+    patchUi({ advancedOpen: false });
+  }, [
+    ui.fullName,
+    ui.phoneNumber,
+    ui.role,
+    ui.email,
+    ui.isActive,
+    ui.isNotLocked,
+    patchUi,
+  ]);
 
   const activeOptions = useMemo(
     () => [
@@ -110,17 +172,35 @@ export default function TeamManagementScreen() {
     [t],
   );
 
+  /** Advanced role filter: empty string = any (no API constraint). */
+  const roleFilterOptions = useMemo(
+    () => [
+      {
+        value: "",
+        labelEn: t.tri?.any || "Any",
+        labelMm: t.tri?.any || "အားလုံး",
+      },
+      { value: "ADMIN", labelEn: "ADMIN", labelMm: "စီမံ" },
+      { value: "OWNER", labelEn: "OWNER", labelMm: "ပိုင်ရှင်" },
+      { value: "WORKER", labelEn: "WORKER", labelMm: "ဝန်ထမ်း" },
+      { value: "VIEWER", labelEn: "VIEWER", labelMm: "ကြည့်ရှုသူ" },
+    ],
+    [t],
+  );
+
+  const advancedInputClass = `border border-slate-200 text-sm ${getMyanmarLeadingClass(locale)} bg-white py-0 h-11`;
+
   const filters = useMemo(
     () => ({
       quickQuery: debouncedQuickQuery,
-      fullName: ui.fullName,
-      phoneNumber: ui.phoneNumber,
-      role: ui.role,
-      email: ui.email,
-      isActive: mapSelectToBoolFilter(ui.isActive),
-      isNotLocked: mapSelectToBoolFilter(ui.isNotLocked),
+      fullName: appliedAdvanced.fullName,
+      phoneNumber: appliedAdvanced.phoneNumber,
+      role: appliedAdvanced.role,
+      email: appliedAdvanced.email,
+      isActive: mapSelectToBoolFilter(appliedAdvanced.isActive),
+      isNotLocked: mapSelectToBoolFilter(appliedAdvanced.isNotLocked),
     }),
-    [ui, debouncedQuickQuery],
+    [debouncedQuickQuery, appliedAdvanced],
   );
 
   const {
@@ -197,9 +277,7 @@ export default function TeamManagementScreen() {
               advancedOpen={ui.advancedOpen}
               onChangeQuickQuery={(quickQuery) => patchUi({ quickQuery })}
               onClearQuickQuery={() => patchUi({ quickQuery: "" })}
-              onToggleAdvanced={() =>
-                setUi((s) => ({ ...s, advancedOpen: !s.advancedOpen }))
-              }
+              onToggleAdvanced={onToggleAdvanced}
               onPressAdd={() => router.push("/(tabs)/profile/user/create")}
             />
 
@@ -221,13 +299,11 @@ export default function TeamManagementScreen() {
                       >
                         {t.labels?.fullName || "Full Name"}
                       </Text>
-                      <CompactTextInput
-                        locale={locale}
-                        compactVariant="advanced"
+                      <Input
                         value={ui.fullName}
                         onChangeText={(fullName) => patchUi({ fullName })}
                         placeholder={t.placeholders?.fullName || "Full Name"}
-                        className={`border border-slate-200 bg-white ${COMPACT_ADVANCED_INPUT_CLASSNAME}`}
+                        className={advancedInputClass}
                       />
                     </View>
                     <View className="flex-1 gap-1">
@@ -237,36 +313,27 @@ export default function TeamManagementScreen() {
                       >
                         {t.labels?.phoneNumber || "Phone Number"}
                       </Text>
-                      <CompactTextInput
-                        locale={locale}
-                        compactVariant="advanced"
+                      <Input
                         value={ui.phoneNumber}
                         onChangeText={(phoneNumber) => patchUi({ phoneNumber })}
                         placeholder={
                           t.placeholders?.phoneNumber || "Phone Number"
                         }
                         keyboardType="phone-pad"
-                        className={`border border-slate-200 bg-white ${COMPACT_ADVANCED_INPUT_CLASSNAME}`}
+                        className={advancedInputClass}
                       />
                     </View>
                   </View>
 
                   <View className="flex-row gap-2">
                     <View className="flex-1 gap-1">
-                      <Text
-                        className="text-[10px] text-slate-500"
-                        style={style}
-                      >
-                        {t.labels?.role || "Role"}
-                      </Text>
-                      <CompactTextInput
-                        locale={locale}
-                        compactVariant="advanced"
+                      <CompactSelect
+                        label={t.labels?.role || "Role"}
                         value={ui.role}
-                        onChangeText={(role) => patchUi({ role })}
+                        onChange={(role) => patchUi({ role })}
+                        locale={locale}
                         placeholder={t.placeholders?.role || "Role"}
-                        autoCapitalize="characters"
-                        className={`border border-slate-200 bg-white ${COMPACT_ADVANCED_INPUT_CLASSNAME}`}
+                        options={roleFilterOptions}
                       />
                     </View>
                     <View className="flex-1 gap-1">
@@ -276,15 +343,13 @@ export default function TeamManagementScreen() {
                       >
                         {t.labels?.email || "Email"}
                       </Text>
-                      <CompactTextInput
-                        locale={locale}
-                        compactVariant="advanced"
+                      <Input
                         value={ui.email}
                         onChangeText={(email) => patchUi({ email })}
                         placeholder={t.placeholders?.email || "Email"}
                         autoCapitalize="none"
                         keyboardType="email-address"
-                        className={`border border-slate-200 bg-white ${COMPACT_ADVANCED_INPUT_CLASSNAME}`}
+                        className={advancedInputClass}
                       />
                     </View>
                   </View>
@@ -315,17 +380,13 @@ export default function TeamManagementScreen() {
 
                   <View className="flex-row gap-2 pt-0.5">
                     <Pressable
-                      onPress={() =>
+                      onPress={() => {
+                        setAppliedAdvanced(initialAdvancedDraft);
                         patchUi({
                           quickQuery: "",
-                          fullName: "",
-                          phoneNumber: "",
-                          role: "",
-                          email: "",
-                          isActive: "all",
-                          isNotLocked: "all",
-                        })
-                      }
+                          ...initialAdvancedDraft,
+                        });
+                      }}
                       className="flex-1 py-3 items-center justify-center rounded-xl bg-slate-100"
                     >
                       <Text
@@ -339,7 +400,7 @@ export default function TeamManagementScreen() {
                     <Pressable
                       className=" flex-1 py-3 items-center justify-center rounded-xl"
                       style={{ backgroundColor: APP_COLORS.primary }}
-                      onPress={() => patchUi({ advancedOpen: false })}
+                      onPress={onApplyAdvanced}
                     >
                       <Text
                         className="text-xs font-semibold text-white"

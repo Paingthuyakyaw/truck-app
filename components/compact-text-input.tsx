@@ -44,15 +44,6 @@ export const CompactTextInput = forwardRef<TextInput, CompactTextInputProps>(
       <Input
         ref={ref}
         className={className}
-        style={[
-          textStyle,
-          {
-            height: 46,
-            paddingVertical: 0,
-            paddingLeft: 5,
-          },
-          style,
-        ]}
         placeholderTextColor="#94a3b8"
         {...inputRest}
         {...(Platform.OS === "android" ? { includeFontPadding } : {})}

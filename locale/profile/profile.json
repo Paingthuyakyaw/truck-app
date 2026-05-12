@@ -72,7 +72,7 @@
     "createUserScreen": {
       "title": "Create User",
       "infoTitle": "Before you start",
-      "infoBody": "Username must be unique (English letters + 09 + 9 digits). Password: at least 8 characters. Date format: dd/mm/yyyy.",
+      "infoBody": "Username must be unique (English letters + 09 + 9 digits). Password: at least 8 characters. Date format: dd/mm/yyyy. VIEWER role requires a Parent Owner ID.",
       "usernamePlaceholder": "09xxxxxxxxx",
       "passwordPlaceholder": "Enter password",
       "fullNamePlaceholder": "Enter full name",
@@ -85,10 +85,13 @@
       "successBody": "User account created successfully.",
       "errorTitle": "Error",
       "errorBody": "Unable to create user account.",
-      "dateInvalid": "Invalid date format. Use dd/mm/yyyy."
+      "dateInvalid": "Invalid date format. Use dd/mm/yyyy.",
+      "parentOwnerPlaceholder": "Parent owner user ID"
     },
     "editUserScreen": {
       "title": "Edit User",
+      "infoTitle": "Before you save",
+      "infoBody": "Phone must be 09 followed by 9 digits (11 total). Dates use dd/mm/yyyy. VIEWER role requires Parent Owner ID.",
       "datePlaceholder": "dd/mm/yyyy",
       "rolePlaceholder": "Select role",
       "submit": "Update",
@@ -101,7 +104,15 @@
       "errorTitle": "Error",
       "errorBody": "Unable to update user account.",
       "dateInvalid": "Invalid date format. Use dd/mm/yyyy.",
-      "invalidUserId": "Invalid user id."
+      "invalidUserId": "Invalid user id.",
+      "parentOwnerPlaceholder": "Parent owner user ID",
+      "statusConfirmTitle": "Confirm change",
+      "statusActiveEnableMsg": "Mark this user as active?",
+      "statusActiveDisableMsg": "Mark this user as inactive?",
+      "statusLockEnableMsg": "Unlock this user account?",
+      "statusLockDisableMsg": "Lock this user account?",
+      "confirmCancel": "Cancel",
+      "confirmOk": "Confirm"
     },
     "truckScreen": {
       "title": "Truck Management",
@@ -313,7 +324,7 @@
     "createUserScreen": {
       "title": "အသင်းပြုစုအသစ်ထည့်ရန်",
       "infoTitle": "သတိပြုရန်",
-      "infoBody": "အသုံးပြုသူအမည် ထပ်မံမရှိရပါ (အင်္ဂလိပ်အက္ခရာ + 09 + ဂဏန်း ၉ လုံး)။ စကားဝှက် အနည်းဆုံး ၈ လုံး။ နေ့စွဲပုံစံ dd/mm/yyyy ဖြစ်ရမည်။",
+      "infoBody": "အသုံးပြုသူအမည် ထပ်မံမရှိရပါ (အင်္ဂလိပ်အက္ခရာ + 09 + ဂဏန်း ၉ လုံး)။ စကားဝှက် အနည်းဆုံး ၈ လုံး။ နေ့စွဲပုံစံ dd/mm/yyyy ဖြစ်ရမည်။ VIEWER အတွက် Parent Owner ID လိုအပ်ပါသည်။",
       "usernamePlaceholder": "09xxxxxxxxx",
       "passwordPlaceholder": "အနည်းဆုံး ၈ လုံး",
       "fullNamePlaceholder": "အမည်အပြည့်အစုံ",
@@ -326,10 +337,13 @@
       "successBody": "အသုံးပြုသူဖန်တီးပြီးပါပြီ။",
       "errorTitle": "အမှား",
       "errorBody": "အသုံးပြုသူဖန်တီး၍ မရပါ။",
-      "dateInvalid": "နေ့စွဲပုံစံ dd/mm/yyyy သုံးပါ။"
+      "dateInvalid": "နေ့စွဲပုံစံ dd/mm/yyyy သုံးပါ။",
+      "parentOwnerPlaceholder": "မိဘ ပိုင်ရှင် အသုံးပြုသူ ID"
     },
     "editUserScreen": {
       "title": "အသုံးပြုသူ ပြင်ဆင်ရန်",
+      "infoTitle": "သိမ်းမီသတိပြုရန်",
+      "infoBody": "ဖုန်းနံပါတ် ၀၉ နှင့် ဂဏန်း ၁၁ လုံး။ နေ့စွဲ dd/mm/yyyy။ VIEWER အတွက် Parent Owner ID လိုအပ်ပါသည်။",
       "datePlaceholder": "dd/mm/yyyy",
       "rolePlaceholder": "အခန်းကဏ္ဍ ရွေးပါ",
       "submit": "ပြင်ဆင်မည်",
@@ -342,7 +356,15 @@
       "errorTitle": "အမှား",
       "errorBody": "အသုံးပြုသူ ပြင်ဆင်၍ မရပါ။",
       "dateInvalid": "နေ့စွဲပုံစံ dd/mm/yyyy သုံးပါ။",
-      "invalidUserId": "အသုံးပြုသူ ID မမှန်ကန်ပါ။"
+      "invalidUserId": "အသုံးပြုသူ ID မမှန်ကန်ပါ။",
+      "parentOwnerPlaceholder": "မိဘ ပိုင်ရှင် အသုံးပြုသူ ID",
+      "statusConfirmTitle": "အပြောင်းအလဲ အတည်ပြုချင်ပါသလား",
+      "statusActiveEnableMsg": "ဤအသုံးပြုသူကို တက်ကြွစေမလား?",
+      "statusActiveDisableMsg": "ဤအသုံးပြုသူကို တက်ကြွမှု ရပ်မလား?",
+      "statusLockEnableMsg": "အကောင့်ကို သော့ဖွင့်မလား?",
+      "statusLockDisableMsg": "အကောင့်ကို သော့ပိတ်မလား?",
+      "confirmCancel": "ပယ်ဖျက်",
+      "confirmOk": "အတည်ပြုပါ"
     },
     "truckScreen": {
       "title": "ထရက်ကား စီမံခန့်ခွဲမှု",

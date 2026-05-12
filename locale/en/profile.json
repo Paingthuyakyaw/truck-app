@@ -1,0 +1,13 @@
+{
+  "profile": {
+    "brand": "Profile",
+    "managementSetting": "Management Settings",
+    "settingsRows": {
+      "team": "Users",
+      "truck": "Trucks",
+      "service": "Services",
+      "security": "Change Password",
+      "language": "Language"
+    }
+  }
+}

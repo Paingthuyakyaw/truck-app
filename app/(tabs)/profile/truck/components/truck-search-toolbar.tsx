@@ -7,7 +7,7 @@ import { Pressable, View } from "react-native";
 
 /** Same as team list search (`TeamSearchToolbar`). */
 const TRUCK_SEARCH_INPUT_CLASSNAME =
-  "flex-1 border h-11 py-0  border-slate-200 bg-white ";
+  "flex-1 border h-11 py-0 text-sm border-slate-200 bg-white ";
 
 type TruckSearchToolbarProps = {
   locale: AppLocale;

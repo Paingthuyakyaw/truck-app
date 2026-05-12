@@ -1,4 +1,7 @@
-import { myanmarUITextStyle } from "@/constants/myanmar-font";
+import {
+  getMyanmarLeadingClass,
+  myanmarUITextStyle,
+} from "@/constants/myanmar-font";
 import { Select } from "heroui-native";
 import React, { useMemo } from "react";
 import { Text, View } from "react-native";
@@ -60,12 +63,12 @@ export function CompactSelect({
       >
         <Select.Trigger
           className="
-         rounded-xl border border-slate-200 bg-white px-2.5"
+         rounded-xl border h-11  py-0 border-slate-200 bg-white px-2.5"
         >
           <Select.Value
-            className="text-xs text-slate-900"
+            className={`text-sm py-0  text-slate-900 ${getMyanmarLeadingClass(locale)} `}
             placeholder={placeholder}
-            style={style}
+            // style={style}
           />
           <Select.TriggerIndicator />
         </Select.Trigger>
@@ -78,14 +81,18 @@ export function CompactSelect({
             width="trigger"
           >
             {options.map((option) => {
-              const itemLabel = locale === "mm" ? option.labelMm : option.labelEn;
+              const itemLabel =
+                locale === "mm" ? option.labelMm : option.labelEn;
               return (
                 <Select.Item
                   key={option.value}
                   value={option.value}
                   label={itemLabel}
                 >
-                  <Select.ItemLabel className="text-xs text-slate-900" style={style} />
+                  <Select.ItemLabel
+                    className={`text-sm text-slate-900 ${getMyanmarLeadingClass(locale)}`}
+                    style={style}
+                  />
                   <Select.ItemIndicator />
                 </Select.Item>
               );

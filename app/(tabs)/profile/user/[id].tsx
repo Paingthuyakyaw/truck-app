@@ -1,5 +1,8 @@
 import { APP_COLORS } from "@/constants/colors";
-import { myanmarUITextStyle } from "@/constants/myanmar-font";
+import {
+  getMyanmarLeadingClass,
+  myanmarUITextStyle,
+} from "@/constants/myanmar-font";
 import profileLocale from "@/locale/profile/profile.json";
 import { useLocaleStore } from "@/stores/client/locale-store";
 import type { CreateUserRole } from "@/stores/server/user/create-mutation";
@@ -209,6 +212,11 @@ export default function TeamEditUserScreen() {
   });
 
   const selectedRole = watch("role");
+  const inputClassName = `border h-11 py-0 ${getMyanmarLeadingClass(locale)} border-slate-200 bg-white`;
+  const androidMmInputProps =
+    Platform.OS === "android" && locale === "mm"
+      ? { includeFontPadding: false as const }
+      : {};
 
   const onSubmit = (values: FormValues) => {
     const id = String(params.id ?? "").trim();
@@ -255,13 +263,24 @@ export default function TeamEditUserScreen() {
       Alert.alert(labels.errorTitle, labels.invalidUserId);
       return;
     }
-    mutateActiveStatus(
-      { id, status: nextStatus },
+    const message = nextStatus
+      ? labels.statusActiveEnableMsg
+      : labels.statusActiveDisableMsg;
+    Alert.alert(labels.statusConfirmTitle, message, [
+      { text: labels.confirmCancel, style: "cancel" },
       {
-        onSuccess: () => setIsActiveEnabled(nextStatus),
-        onError: () => Alert.alert(labels.errorTitle, labels.errorBody),
+        text: labels.confirmOk,
+        onPress: () => {
+          mutateActiveStatus(
+            { id, status: nextStatus },
+            {
+              onSuccess: () => setIsActiveEnabled(nextStatus),
+              onError: () => Alert.alert(labels.errorTitle, labels.errorBody),
+            },
+          );
+        },
       },
-    );
+    ]);
   };
 
   const onToggleLocked = (nextStatus: boolean) => {
@@ -270,13 +289,24 @@ export default function TeamEditUserScreen() {
       Alert.alert(labels.errorTitle, labels.invalidUserId);
       return;
     }
-    mutateLockStatus(
-      { id, status: nextStatus },
+    const message = nextStatus
+      ? labels.statusLockEnableMsg
+      : labels.statusLockDisableMsg;
+    Alert.alert(labels.statusConfirmTitle, message, [
+      { text: labels.confirmCancel, style: "cancel" },
       {
-        onSuccess: () => setIsUnlockedEnabled(nextStatus),
-        onError: () => Alert.alert(labels.errorTitle, labels.errorBody),
+        text: labels.confirmOk,
+        onPress: () => {
+          mutateLockStatus(
+            { id, status: nextStatus },
+            {
+              onSuccess: () => setIsUnlockedEnabled(nextStatus),
+              onError: () => Alert.alert(labels.errorTitle, labels.errorBody),
+            },
+          );
+        },
       },
-    );
+    ]);
   };
 
   const fieldLabels =
@@ -314,7 +344,7 @@ export default function TeamEditUserScreen() {
           <Ionicons name="arrow-back" size={22} color="#475569" />
         </Pressable>
         <Text
-          className="flex-1 px-3 text-center text-[24px] font-bold text-slate-900"
+          className={`flex-1 px-3 text-center text-lg ${getMyanmarLeadingClass(locale)} font-bold text-slate-900`}
           style={style}
         >
           {labels.title}
@@ -326,7 +356,31 @@ export default function TeamEditUserScreen() {
         className="px-4"
         contentContainerStyle={{ paddingBottom: insets.bottom + 80, flexGrow: 1 }}
       >
-        <View className="mt-1 rounded-2xl bg-white p-4">
+        <View className="rounded-2xl border border-[#c8dbf7] bg-[#ecf4ff] p-3">
+          <View className="flex-row items-start gap-2">
+            <Ionicons
+              name="information-circle-outline"
+              size={18}
+              color="#325f99"
+            />
+            <View className="flex-1">
+              <Text
+                className={`text-sm font-semibold ${getMyanmarLeadingClass(locale)} text-[#325f99]`}
+                style={style}
+              >
+                {labels.infoTitle}
+              </Text>
+              <Text
+                className={`mt-0.5 text-xs ${getMyanmarLeadingClass(locale)} text-[#325f99]`}
+                style={style}
+              >
+                {labels.infoBody}
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        <View className="mt-4 rounded-2xl bg-white p-4">
           <View className="gap-3">
             {(
               [
@@ -338,7 +392,10 @@ export default function TeamEditUserScreen() {
             ).map((field) => (
               <View className="gap-1.5" key={field.key}>
                 <View className="flex-row items-center gap-1">
-                  <Text className="text-sm font-medium text-slate-900" style={style}>
+                  <Text
+                    className={`text-sm font-medium ${getMyanmarLeadingClass(locale)} text-slate-900`}
+                    style={style}
+                  >
                     {fieldLabels[field.key]}
                   </Text>
                   {field.required ? <Text className="text-red-500">*</Text> : null}
@@ -352,12 +409,16 @@ export default function TeamEditUserScreen() {
                       onChangeText={onChange}
                       keyboardType={field.keyboardType}
                       autoCapitalize={field.key === "email" ? "none" : "sentences"}
-                      className="border border-slate-200 bg-white"
+                      className={inputClassName}
+                      {...androidMmInputProps}
                     />
                   )}
                 />
                 {!!errors[field.key]?.message && (
-                  <Text className="text-xs text-red-500">
+                  <Text
+                    className={`text-xs text-red-500 ${getMyanmarLeadingClass(locale)}`}
+                    style={style}
+                  >
                     {String(errors[field.key]?.message)}
                   </Text>
                 )}
@@ -366,7 +427,10 @@ export default function TeamEditUserScreen() {
 
             <View className="gap-1.5">
               <View className="flex-row items-center gap-1">
-                <Text className="text-sm font-medium text-slate-900" style={style}>
+                <Text
+                  className={`text-sm font-medium ${getMyanmarLeadingClass(locale)} text-slate-900`}
+                  style={style}
+                >
                   {fieldLabels.joinDate}
                 </Text>
                 <Text className="text-red-500">*</Text>
@@ -378,15 +442,15 @@ export default function TeamEditUserScreen() {
                   <View>
                     <Pressable
                       onPress={() => setActiveDateField("joinDate")}
-                      className="flex-row items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-3"
+                      className="flex-row items-center h-11 justify-between rounded-xl border border-slate-200 bg-white px-3 py-3"
                     >
                       <Text
-                        className={value ? "text-sm text-slate-900" : "text-sm text-slate-400"}
+                        className={value ? "text-slate-900" : "text-slate-400"}
                         style={style}
                       >
                         {value || labels.datePlaceholder}
                       </Text>
-                      <Ionicons name="calendar-outline" size={16} color="#64748b" />
+                      <Ionicons name="calendar-outline" size={18} color="#64748b" />
                     </Pressable>
 
                     {activeDateField === "joinDate" ? (
@@ -410,7 +474,10 @@ export default function TeamEditUserScreen() {
                             onPress={() => setActiveDateField(null)}
                             className="mt-2 self-end rounded-lg bg-slate-100 px-3 py-1.5"
                           >
-                            <Text className="text-xs font-semibold text-slate-700" style={style}>
+                            <Text
+                              className={`text-xs font-semibold text-slate-700 ${getMyanmarLeadingClass(locale)}`}
+                              style={style}
+                            >
                               {locale === "mm" ? "ပြီးပါပြီ" : "Done"}
                             </Text>
                           </Pressable>
@@ -421,13 +488,21 @@ export default function TeamEditUserScreen() {
                 )}
               />
               {!!errors.joinDate?.message && (
-                <Text className="text-xs text-red-500">{String(errors.joinDate.message)}</Text>
+                <Text
+                  className={`text-xs text-red-500 ${getMyanmarLeadingClass(locale)}`}
+                  style={style}
+                >
+                  {String(errors.joinDate.message)}
+                </Text>
               )}
             </View>
 
             <View className="gap-1.5">
               <View className="flex-row items-center gap-1">
-                <Text className="text-sm font-medium text-slate-900" style={style}>
+                <Text
+                  className={`text-sm font-medium ${getMyanmarLeadingClass(locale)} text-slate-900`}
+                  style={style}
+                >
                   {fieldLabels.dateOfBirth}
                 </Text>
                 <Text className="text-red-500">*</Text>
@@ -439,15 +514,15 @@ export default function TeamEditUserScreen() {
                   <View>
                     <Pressable
                       onPress={() => setActiveDateField("dateOfBirth")}
-                      className="flex-row items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-3"
+                      className="flex-row items-center h-11 justify-between rounded-xl border border-slate-200 bg-white px-3 py-3"
                     >
                       <Text
-                        className={value ? "text-sm text-slate-900" : "text-sm text-slate-400"}
+                        className={value ? "text-slate-900" : "text-slate-400"}
                         style={style}
                       >
                         {value || labels.datePlaceholder}
                       </Text>
-                      <Ionicons name="calendar-outline" size={16} color="#64748b" />
+                      <Ionicons name="calendar-outline" size={18} color="#64748b" />
                     </Pressable>
 
                     {activeDateField === "dateOfBirth" ? (
@@ -471,7 +546,10 @@ export default function TeamEditUserScreen() {
                             onPress={() => setActiveDateField(null)}
                             className="mt-2 self-end rounded-lg bg-slate-100 px-3 py-1.5"
                           >
-                            <Text className="text-xs font-semibold text-slate-700" style={style}>
+                            <Text
+                              className={`text-xs font-semibold text-slate-700 ${getMyanmarLeadingClass(locale)}`}
+                              style={style}
+                            >
                               {locale === "mm" ? "ပြီးပါပြီ" : "Done"}
                             </Text>
                           </Pressable>
@@ -482,7 +560,10 @@ export default function TeamEditUserScreen() {
                 )}
               />
               {!!errors.dateOfBirth?.message && (
-                <Text className="text-xs text-red-500">
+                <Text
+                  className={`text-xs text-red-500 ${getMyanmarLeadingClass(locale)}`}
+                  style={style}
+                >
                   {String(errors.dateOfBirth.message)}
                 </Text>
               )}
@@ -490,7 +571,10 @@ export default function TeamEditUserScreen() {
 
             <View className="gap-1.5">
               <View className="flex-row items-center gap-1">
-                <Text className="text-sm font-medium text-slate-900" style={style}>
+                <Text
+                  className={`text-sm font-medium ${getMyanmarLeadingClass(locale)} text-slate-900`}
+                  style={style}
+                >
                   {fieldLabels.role}
                 </Text>
                 <Text className="text-red-500">*</Text>
@@ -513,10 +597,12 @@ export default function TeamEditUserScreen() {
                       }
                     }}
                   >
-                    <Select.Trigger className="rounded-xl border border-slate-200 bg-white px-2.5">
+                    <Select.Trigger
+                      className={`rounded-xl h-11 py-0 ${getMyanmarLeadingClass(locale)} border border-slate-200 bg-white px-2.5`}
+                    >
                       <Select.Value
                         placeholder={labels.rolePlaceholder}
-                        style={[style, { fontSize: 14 }]}
+                        className={`py-0 text-sm ${getMyanmarLeadingClass(locale)}`}
                       />
                       <Select.TriggerIndicator />
                     </Select.Trigger>
@@ -533,7 +619,7 @@ export default function TeamEditUserScreen() {
                             value={role.value}
                             label={locale === "mm" ? role.labelMm : role.labelEn}
                           >
-                            <Select.ItemLabel style={[style, { fontSize: 14 }]} />
+                            <Select.ItemLabel style={style} />
                             <Select.ItemIndicator />
                           </Select.Item>
                         ))}
@@ -547,7 +633,10 @@ export default function TeamEditUserScreen() {
             {selectedRole === "VIEWER" ? (
               <View className="gap-1.5">
                 <View className="flex-row items-center gap-1">
-                  <Text className="text-sm font-medium text-slate-900" style={style}>
+                  <Text
+                    className={`text-sm font-medium ${getMyanmarLeadingClass(locale)} text-slate-900`}
+                    style={style}
+                  >
                     {fieldLabels.parentOwnerId}
                   </Text>
                   <Text className="text-red-500">*</Text>
@@ -566,12 +655,18 @@ export default function TeamEditUserScreen() {
                     <Input
                       value={String(value ?? "")}
                       onChangeText={onChange}
-                      className="border border-slate-200 bg-white"
+                      autoCapitalize="none"
+                      placeholder={labels.parentOwnerPlaceholder}
+                      className={inputClassName}
+                      {...androidMmInputProps}
                     />
                   )}
                 />
                 {!!errors.parentOwnerId?.message && (
-                  <Text className="text-xs text-red-500">
+                  <Text
+                    className={`text-xs text-red-500 ${getMyanmarLeadingClass(locale)}`}
+                    style={style}
+                  >
                     {String(errors.parentOwnerId.message)}
                   </Text>
                 )}
@@ -583,7 +678,7 @@ export default function TeamEditUserScreen() {
         <Pressable
           onPress={handleSubmit(onSubmit)}
           disabled={isPending}
-          className="mb-2 mt-5 items-center justify-center rounded-xl py-3.5"
+          className={`mb-2 mt-5 items-center justify-center rounded-xl py-3 ${getMyanmarLeadingClass(locale)}`}
           style={{
             backgroundColor: APP_COLORS.primary,
             opacity: isPending ? 0.7 : 1,
@@ -595,7 +690,10 @@ export default function TeamEditUserScreen() {
         </Pressable>
 
         <View className="mt-4 rounded-2xl bg-white p-4">
-          <Text className="mb-3 text-sm font-semibold text-slate-900" style={style}>
+          <Text
+            className={`mb-3 text-sm font-semibold text-slate-900 ${getMyanmarLeadingClass(locale)}`}
+            style={style}
+          >
             {labels.statusTitle}
           </Text>
 

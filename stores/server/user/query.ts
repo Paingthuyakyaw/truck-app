@@ -67,9 +67,10 @@ export function useUsersInfinite(
       }
       return page + 1;
     },
-    staleTime: 60 * 1000,
+    /** Treat server as source of truth: no “fresh for 60s” window; remount refetches. */
+    staleTime: 0,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: "always",
   });
 }
 

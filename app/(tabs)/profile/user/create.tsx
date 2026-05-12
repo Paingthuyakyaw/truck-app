@@ -1,5 +1,8 @@
 import { APP_COLORS } from "@/constants/colors";
-import { myanmarUITextStyle } from "@/constants/myanmar-font";
+import {
+  getMyanmarLeadingClass,
+  myanmarUITextStyle,
+} from "@/constants/myanmar-font";
 import profileLocale from "@/locale/profile/profile.json";
 import { useLocaleStore } from "@/stores/client/locale-store";
 import {
@@ -114,7 +117,20 @@ function buildSchema(locale: "en" | "mm") {
             : "Use dd/mm/yyyy",
       }),
     role: z.enum(["ADMIN", "OWNER", "WORKER", "VIEWER"]),
-  });
+    parentOwnerId: z.string().optional(),
+  })
+    .superRefine((data, ctx) => {
+      if (data.role === "VIEWER" && !String(data.parentOwnerId ?? "").trim()) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            locale === "mm"
+              ? "VIEWER အတွက် Parent Owner ID လိုအပ်သည်"
+              : "Parent Owner ID is required for VIEWER",
+          path: ["parentOwnerId"],
+        });
+      }
+    });
 }
 
 type FormValues = z.infer<ReturnType<typeof buildSchema>>;
@@ -134,6 +150,7 @@ export default function TeamCreateUserScreen() {
   const {
     control,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -144,8 +161,11 @@ export default function TeamCreateUserScreen() {
       email: "",
       dateOfBirth: "",
       role: "OWNER",
+      parentOwnerId: "",
     },
   });
+
+  const selectedRole = watch("role");
 
   const labels = t.createUserScreen;
   const fieldLabels =
@@ -157,6 +177,7 @@ export default function TeamCreateUserScreen() {
           email: "အီးမေးလ်လိပ်စာ",
           dateOfBirth: "မွေးနေ့သက္ကရာဇ်",
           role: "အခန်းကဏ္ဍ",
+          parentOwnerId: "မိဘ Owner ID",
         }
       : {
           username: "Username",
@@ -165,6 +186,7 @@ export default function TeamCreateUserScreen() {
           email: "Email",
           dateOfBirth: "Date of Birth",
           role: "Role",
+          parentOwnerId: "Parent Owner ID",
         };
 
   const onSubmit = (values: FormValues) => {
@@ -184,6 +206,10 @@ export default function TeamCreateUserScreen() {
         dateOfBirth: dateOfBirthIso,
         joinDate: todayIsoLocal(),
         role: values.role,
+        parentOwnerId:
+          values.role === "VIEWER"
+            ? values.parentOwnerId?.trim()
+            : undefined,
       },
       {
         onSuccess: () => {
@@ -207,7 +233,7 @@ export default function TeamCreateUserScreen() {
           <Ionicons name="arrow-back" size={22} color="#475569" />
         </Pressable>
         <Text
-          className="flex-1 px-3 text-center text-lg leading-0 font-bold text-slate-900"
+          className={`flex-1 px-3 text-center text-lg ${getMyanmarLeadingClass(locale)}  font-bold text-slate-900  `}
           style={style}
         >
           {labels.title}
@@ -231,13 +257,13 @@ export default function TeamCreateUserScreen() {
             />
             <View className="flex-1">
               <Text
-                className="text-sm  font-semibold leading-0 text-[#325f99]"
+                className={`text-sm  font-semibold ${getMyanmarLeadingClass(locale)}  text-[#325f99]`}
                 style={style}
               >
                 {labels.infoTitle}
               </Text>
               <Text
-                className="mt-0.5 text-xs leading-0 text-[#325f99]"
+                className={`mt-0.5 text-xs ${getMyanmarLeadingClass(locale)}  text-[#325f99]`}
                 style={style}
               >
                 {labels.infoBody}
@@ -251,7 +277,7 @@ export default function TeamCreateUserScreen() {
             <View className="gap-1.5">
               <View className="flex-row items-center gap-1">
                 <Text
-                  className="text-sm leading-0 font-medium text-slate-900"
+                  className={`text-sm ${getMyanmarLeadingClass(locale)}  font-medium text-slate-900`}
                   style={style}
                 >
                   {fieldLabels.username}
@@ -266,8 +292,7 @@ export default function TeamCreateUserScreen() {
                     value={value}
                     onChangeText={onChange}
                     placeholder={labels.usernamePlaceholder}
-                    keyboardType="phone-pad"
-                    className="border py-0 h-11 leading-0 border-slate-200 bg-white"
+                    className={`border py-0 h-11 ${getMyanmarLeadingClass(locale)}  border-slate-200 bg-white`}
                     {...(Platform.OS === "android" && locale === "mm"
                       ? { includeFontPadding: false }
                       : {})}
@@ -284,7 +309,7 @@ export default function TeamCreateUserScreen() {
             <View className="gap-1.5">
               <View className="flex-row items-center gap-1">
                 <Text
-                  className="text-sm leading-0 font-medium text-slate-900"
+                  className={`text-sm ${getMyanmarLeadingClass(locale)}  font-medium text-slate-900`}
                   style={style}
                 >
                   {fieldLabels.password}
@@ -300,7 +325,7 @@ export default function TeamCreateUserScreen() {
                     onChangeText={onChange}
                     placeholder={labels.passwordPlaceholder}
                     secureTextEntry={!showPassword}
-                    className="border h-11 leading-0 py-0 border-slate-200 bg-white"
+                    className={`border h-11 ${getMyanmarLeadingClass(locale)}  py-0 border-slate-200 bg-white`}
                     {...(Platform.OS === "android" && locale === "mm"
                       ? { includeFontPadding: false }
                       : {})}
@@ -312,7 +337,7 @@ export default function TeamCreateUserScreen() {
                 className="self-end rounded-md bg-slate-100 px-2.5 py-1"
               >
                 <Text
-                  className="text-xs leading-0 text-slate-600"
+                  className={`text-xs ${getMyanmarLeadingClass(locale)}  text-slate-600`}
                   // style={style}
                 >
                   {showPassword
@@ -334,7 +359,7 @@ export default function TeamCreateUserScreen() {
             <View className="gap-1.5">
               <View className="flex-row items-center gap-1">
                 <Text
-                  className="text-sm font-medium leading-0 text-slate-900"
+                  className={`text-sm font-medium ${getMyanmarLeadingClass(locale)}  text-slate-900`}
                   style={style}
                 >
                   {fieldLabels.fullName}
@@ -349,7 +374,7 @@ export default function TeamCreateUserScreen() {
                     value={value}
                     onChangeText={onChange}
                     placeholder={labels.fullNamePlaceholder}
-                    className="border h-11 py-0 leading-0 border-slate-200 bg-white"
+                    className={`border h-11 py-0 ${getMyanmarLeadingClass(locale)}  border-slate-200 bg-white`}
                     {...(Platform.OS === "android" && locale === "mm"
                       ? { includeFontPadding: false }
                       : {})}
@@ -357,7 +382,10 @@ export default function TeamCreateUserScreen() {
                 )}
               />
               {!!errors.fullName?.message && (
-                <Text className="text-xs leading-0 text-red-500" style={style}>
+                <Text
+                  className={`text-xs ${getMyanmarLeadingClass(locale)}  text-red-500`}
+                  style={style}
+                >
                   {errors.fullName.message}
                 </Text>
               )}
@@ -366,7 +394,7 @@ export default function TeamCreateUserScreen() {
             <View className="gap-1.5">
               <View className="flex-row items-center gap-1">
                 <Text
-                  className="text-sm leading-0 font-medium text-slate-900"
+                  className={`text-sm ${getMyanmarLeadingClass(locale)}  font-medium text-slate-900`}
                   style={style}
                 >
                   {fieldLabels.email}
@@ -383,7 +411,7 @@ export default function TeamCreateUserScreen() {
                     placeholder={labels.emailPlaceholder}
                     keyboardType="email-address"
                     autoCapitalize="none"
-                    className="border h-11 py-0 leading-0 border-slate-200 bg-white"
+                    className={`border h-11 py-0 ${getMyanmarLeadingClass(locale)}  border-slate-200 bg-white`}
                     {...(Platform.OS === "android" && locale === "mm"
                       ? { includeFontPadding: false }
                       : {})}
@@ -391,7 +419,10 @@ export default function TeamCreateUserScreen() {
                 )}
               />
               {!!errors.email?.message && (
-                <Text className="text-xs leading-0 text-red-500" style={style}>
+                <Text
+                  className={`text-xs ${getMyanmarLeadingClass(locale)}  text-red-500`}
+                  style={style}
+                >
                   {errors.email.message}
                 </Text>
               )}
@@ -399,7 +430,10 @@ export default function TeamCreateUserScreen() {
 
             <View className="gap-1.5">
               <View className="flex-row items-center gap-1">
-                <Text className="text-xs leading-0 font-medium text-slate-900">
+                <Text
+                  className={`text-sm ${getMyanmarLeadingClass(locale)} font-semibold  text-slate-900`}
+                  style={style}
+                >
                   {fieldLabels.dateOfBirth}
                 </Text>
                 <Text className="text-red-500">*</Text>
@@ -453,7 +487,7 @@ export default function TeamCreateUserScreen() {
                             className="mt-2 self-end rounded-lg bg-slate-100 px-3 py-1.5"
                           >
                             <Text
-                              className="text-xs leading-0 font-semibold text-slate-700"
+                              className={`text-xs ${getMyanmarLeadingClass(locale)}  font-semibold text-slate-700`}
                               style={style}
                             >
                               {locale === "mm" ? "ပြီးပါပြီ" : "Done"}
@@ -466,7 +500,10 @@ export default function TeamCreateUserScreen() {
                 )}
               />
               {!!errors.dateOfBirth?.message && (
-                <Text className="text-xs leading-0 text-red-500" style={style}>
+                <Text
+                  className={`text-xs ${getMyanmarLeadingClass(locale)}  text-red-500`}
+                  style={style}
+                >
                   {errors.dateOfBirth.message}
                 </Text>
               )}
@@ -475,7 +512,7 @@ export default function TeamCreateUserScreen() {
             <View className="gap-1.5">
               <View className="flex-row items-center gap-1">
                 <Text
-                  className="text-sm leading-0 font-medium text-slate-900"
+                  className={`text-sm ${getMyanmarLeadingClass(locale)}  font-medium text-slate-900`}
                   style={style}
                 >
                   {fieldLabels.role}
@@ -500,10 +537,12 @@ export default function TeamCreateUserScreen() {
                       }
                     }}
                   >
-                    <Select.Trigger className="rounded-xl h-11 py-0 leading-0 border border-slate-200 bg-white px-2.5">
+                    <Select.Trigger
+                      className={`rounded-xl h-11 py-0 ${getMyanmarLeadingClass(locale)}  border border-slate-200 bg-white px-2.5`}
+                    >
                       <Select.Value
                         placeholder={labels.rolePlaceholder}
-                        className=" py-0 leading-0"
+                        className={` py-0 text-sm ${getMyanmarLeadingClass(locale)}`}
                       />
                       <Select.TriggerIndicator />
                     </Select.Trigger>
@@ -532,13 +571,51 @@ export default function TeamCreateUserScreen() {
                 )}
               />
             </View>
+
+            {selectedRole === "VIEWER" ? (
+              <View className="gap-1.5">
+                <View className="flex-row items-center gap-1">
+                  <Text
+                    className={`text-sm ${getMyanmarLeadingClass(locale)}  font-medium text-slate-900`}
+                    style={style}
+                  >
+                    {fieldLabels.parentOwnerId}
+                  </Text>
+                  <Text className="text-red-500">*</Text>
+                </View>
+                <Controller
+                  control={control}
+                  name="parentOwnerId"
+                  render={({ field: { onChange, value } }) => (
+                    <Input
+                      value={value ?? ""}
+                      onChangeText={onChange}
+                      placeholder={labels.parentOwnerPlaceholder}
+                      autoCapitalize="none"
+                      className={`border h-11 py-0 ${getMyanmarLeadingClass(locale)}  border-slate-200 bg-white`}
+                      {...(Platform.OS === "android" && locale === "mm"
+                        ? { includeFontPadding: false }
+                        : {})}
+                    />
+                  )}
+                />
+                {!!errors.parentOwnerId?.message && (
+                  <Text
+                    className={`text-xs ${getMyanmarLeadingClass(locale)}  text-red-500`}
+                    style={style}
+                  >
+                    {errors.parentOwnerId.message}
+                  </Text>
+                )}
+              </View>
+            ) : null}
           </View>
         </View>
 
         <Pressable
           onPress={handleSubmit(onSubmit)}
           disabled={isPending}
-          className="mb-2 mt-5 items-center justify-center rounded-xl py-3 leading-0"
+          className={`mb-2 mt-5 items-center justify-center rounded-xl py-3 ${getMyanmarLeadingClass(locale)}`}
           style={{
             backgroundColor: APP_COLORS.primary,
             opacity: isPending ? 0.7 : 1,

@@ -1,7 +1,10 @@
 import { APP_COLORS } from "@/constants/colors";
-import { myanmarUITextStyle } from "@/constants/myanmar-font";
+import {
+  getMyanmarLeadingClass,
+  myanmarUITextStyle,
+} from "@/constants/myanmar-font";
 import { useAuth } from "@/hooks/use-auth";
-import profileLocale from "@/locale/profile/profile.json";
+import { useTranslation } from "@/hooks/use-translation";
 import { useLocaleStore } from "@/stores/client/locale-store";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
@@ -35,18 +38,23 @@ export default function ProfileScreen() {
   const { fullName, role, signOut } = useAuth();
   const locale = useLocaleStore((state) => state.locale);
 
-  const name = useMemo(
-    () => fullName ?? "Unknown User",
-    [fullName],
-  );
-  const userRole = useMemo(
-    () => role ?? "No role",
-    [role],
-  );
+  const name = useMemo(() => fullName ?? "Unknown User", [fullName]);
+  const userRole = useMemo(() => role ?? "No role", [role]);
   const initial = name.charAt(0).toUpperCase();
-  const t = profileLocale[locale];
+  const tProfile = useTranslation("profile");
+  const tCommon = useTranslation("common");
+  const tLookup = useTranslation("lookup");
+  const tLogout = useTranslation("logout");
   const mmTextStyle = useMemo(() => myanmarUITextStyle(), []);
   const textStyle = locale === "mm" ? mmTextStyle : undefined;
+  const mmLeadingClass = useMemo(
+    () => getMyanmarLeadingClass(locale),
+    [locale],
+  );
+  const mmBodyStyle = useMemo(
+    () => [mmTextStyle, { fontWeight: "400" as const }],
+    [mmTextStyle],
+  );
 
   return (
     <SafeAreaView style={{ flex: 1 }} className="flex-1 bg-[#f5f8fc]">
@@ -59,11 +67,8 @@ export default function ProfileScreen() {
       >
         <View className="mb-4 flex-row justify-between items-center ">
           <View>
-            <Text
-              className="text-xs text-slate-500"
-              style={textStyle}
-            >
-              {t.greeting}
+            <Text className="text-xs text-slate-500" style={textStyle}>
+              {tCommon.greeting}
             </Text>
             <Text
               className="mt-1 text-base font-bold text-slate-900"
@@ -72,11 +77,8 @@ export default function ProfileScreen() {
               {name}
             </Text>
           </View>
-          <Text
-            className="text-lg font-bold text-slate-900"
-            style={textStyle}
-          >
-            {t.brand}
+          <Text className="text-lg font-bold text-slate-900" style={textStyle}>
+            {tProfile.brand}
           </Text>
         </View>
 
@@ -86,7 +88,10 @@ export default function ProfileScreen() {
               <Avatar.Fallback>{initial}</Avatar.Fallback>
             </Avatar>
             <View className="flex-1">
-              <Text className="text-base font-semibold text-slate-900" style={textStyle}>
+              <Text
+                className={`text-base font-semibold text-slate-900 ${mmLeadingClass}`}
+                style={textStyle}
+              >
                 {name}
               </Text>
               <View className="mt-1 flex-row items-center gap-2">
@@ -94,8 +99,11 @@ export default function ProfileScreen() {
                   className="h-2 w-2 rounded-full"
                   style={{ backgroundColor: APP_COLORS.primary }}
                 />
-                <Text className="text-base font-semibold text-slate-600" style={textStyle}>
-                  {userRole}
+                <Text
+                  className={`text-base text-slate-600 font-semibold ${mmLeadingClass}`}
+                  style={textStyle}
+                >
+                  {(tLookup.roles as any)[userRole] || "Unknown Role"}
                 </Text>
               </View>
             </View>
@@ -103,10 +111,10 @@ export default function ProfileScreen() {
         </Card>
 
         <Text
-          className="mb-3 px-1 text-sm font-semibold text-slate-500"
+          className={`mb-3 px-1 text-sm font-semibold text-slate-500 ${mmLeadingClass}`}
           style={textStyle}
         >
-          {t.settingsHeading}
+          {tProfile.managementSetting}
         </Text>
 
         <Card className="overflow-hidden">
@@ -147,15 +155,19 @@ export default function ProfileScreen() {
                   </View>
                   <View className="flex-1">
                     <Text
-                      className="text-sm font-medium text-slate-900"
-                      style={textStyle}
+                      className={`text-sm font-medium text-slate-900 ${mmLeadingClass}`}
+                      style={locale === "mm" ? mmBodyStyle : undefined}
                     >
-                      {t.settingsRows[row.key as keyof typeof t.settingsRows]}
+                      {
+                        tProfile.settingsRows[
+                          row.key as keyof typeof tProfile.settingsRows
+                        ]
+                      }
                     </Text>
                     {row.key === "language" ? (
                       <Text
-                        className="text-xs text-slate-500"
-                        style={textStyle}
+                        className={`text-xs text-slate-500 ${mmLeadingClass}`}
+                        style={locale === "mm" ? mmBodyStyle : undefined}
                       >
                         {locale === "mm" ? "မြန်မာ (Myanmar)" : "English"}
                       </Text>
@@ -178,8 +190,11 @@ export default function ProfileScreen() {
                 router.replace("/(auth)/login");
               }}
             >
-              <Text style={textStyle}>
-                {t.logout}
+              <Text
+                className={mmLeadingClass}
+                style={locale === "mm" ? mmBodyStyle : undefined}
+              >
+                {tLogout.title}
               </Text>
             </Button>
           </Card.Body>

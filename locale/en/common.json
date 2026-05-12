@@ -13,6 +13,7 @@
       "approve": "Approve",
       "update": "Update",
       "delete": "Delete"
-    }
+    },
+    "greeting": "Good Evening"
   }
 }
