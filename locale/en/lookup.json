@@ -2,7 +2,7 @@
   "lookup": {
     "roles": {
       "ADMIN": "Admin",
-      "OWNER": "Truck Owner",
+      "OWNER": "Owner",
       "VIEWER": "Viewer",
       "WORKER": "Worker"
     },
