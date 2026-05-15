@@ -33,7 +33,7 @@ export function TeamUserCard({ item, locale, onPress }: TeamUserCardProps) {
             </View>
 
             <View className="rounded-xl bg-[#EAF1F8] px-3 py-2">
-              <Text className="text-xs font-semibold text-[#4A7CFF]">
+              <Text className="text-xs font-semibold text-[#3F5F87]">
                 {(tLookup.roles as any) [item.role] || 'Unknown Role'}
               </Text>
             </View>

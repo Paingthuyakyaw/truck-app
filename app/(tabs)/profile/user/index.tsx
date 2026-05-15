@@ -4,7 +4,6 @@ import {
   myanmarUITextStyle,
 } from "@/constants/myanmar-font";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
-import profileLocale from "@/locale/profile/profile.json";
 import { useLocaleStore } from "@/stores/client/locale-store";
 import { useUsersInfinite } from "@/stores/server/user/query";
 import type { BoolFilter } from "@/stores/server/user/search-columns";
@@ -79,7 +78,6 @@ export default function TeamManagementScreen() {
 
   const router = useRouter();
   const locale = useLocaleStore((state) => state.locale);
-  const t = profileLocale[locale].teamScreen;
 
   const mmTextStyle = useMemo(() => myanmarUITextStyle(), []);
   const style = locale === "mm" ? mmTextStyle : undefined;
@@ -345,7 +343,7 @@ export default function TeamManagementScreen() {
                         patchUi({ isActive: value as SelectBoolValue })
                       }
                       locale={locale}
-                      placeholder={t.tri?.any || "Any"}
+                      placeholder={tCommon.anyLabel}
                       options={activeOptions}
                     />
 
@@ -356,7 +354,7 @@ export default function TeamManagementScreen() {
                         patchUi({ isNotLocked: value as SelectBoolValue })
                       }
                       locale={locale}
-                      placeholder={t.tri?.any || "Any"}
+                      placeholder={tCommon.anyLabel}
                       options={lockOptions}
                     />
                   </View>
