@@ -30,6 +30,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { CompactSelect } from "./components/compact-select";
 import { TeamSearchToolbar } from "./components/team-search-toolbar";
 import { TeamUserCard } from "./components/team-user-card";
+import {useTranslation} from "@/hooks/use-translation";
 
 type SelectBoolValue = "all" | "true" | "false";
 
@@ -71,6 +72,7 @@ function mapSelectToBoolFilter(value: SelectBoolValue): BoolFilter {
 }
 
 export default function TeamManagementScreen() {
+  const tUser = useTranslation('user')
   const router = useRouter();
   const locale = useLocaleStore((state) => state.locale);
   const t = profileLocale[locale].teamScreen;
@@ -232,7 +234,7 @@ export default function TeamManagementScreen() {
           className="flex-1 px-3 text-center text-[18px] font-bold text-slate-900"
           style={style}
         >
-          {t.title}
+          {tUser.master.title}
         </Text>
 
         <View className="h-11 w-11" />
@@ -273,7 +275,7 @@ export default function TeamManagementScreen() {
             <TeamSearchToolbar
               locale={locale}
               quickQuery={ui.quickQuery}
-              placeholder={t.searchPlaceholder}
+              placeholder={tUser.master.searchPlaceholder}
               advancedOpen={ui.advancedOpen}
               onChangeQuickQuery={(quickQuery) => patchUi({ quickQuery })}
               onClearQuickQuery={() => patchUi({ quickQuery: "" })}
@@ -288,7 +290,7 @@ export default function TeamManagementScreen() {
                     className="text-sm font-semibold text-slate-900"
                     style={style}
                   >
-                    {t.advancedTitle}
+                    {tUser.search.advancedTitle}
                   </Text>
 
                   <View className="flex-row gap-2">
@@ -297,12 +299,12 @@ export default function TeamManagementScreen() {
                         className="text-[10px] text-slate-500"
                         style={style}
                       >
-                        {t.labels?.fullName || "Full Name"}
+                        {tUser.search.fullName}
                       </Text>
                       <Input
                         value={ui.fullName}
                         onChangeText={(fullName) => patchUi({ fullName })}
-                        placeholder={t.placeholders?.fullName || "Full Name"}
+                        placeholder={tUser.search.placeholders.fullName}
                         className={advancedInputClass}
                       />
                     </View>
@@ -311,14 +313,12 @@ export default function TeamManagementScreen() {
                         className="text-[10px] text-slate-500"
                         style={style}
                       >
-                        {t.labels?.phoneNumber || "Phone Number"}
+                        {tUser.search.phoneNumber}
                       </Text>
                       <Input
                         value={ui.phoneNumber}
                         onChangeText={(phoneNumber) => patchUi({ phoneNumber })}
-                        placeholder={
-                          t.placeholders?.phoneNumber || "Phone Number"
-                        }
+                        placeholder={tUser.search.placeholders.phoneNumber}
                         keyboardType="phone-pad"
                         className={advancedInputClass}
                       />
@@ -328,11 +328,11 @@ export default function TeamManagementScreen() {
                   <View className="flex-row gap-2">
                     <View className="flex-1 gap-1">
                       <CompactSelect
-                        label={t.labels?.role || "Role"}
+                        label={tUser.search.role}
                         value={ui.role}
                         onChange={(role) => patchUi({ role })}
                         locale={locale}
-                        placeholder={t.placeholders?.role || "Role"}
+                        placeholder={tUser.search.placeholders.role}
                         options={roleFilterOptions}
                       />
                     </View>
@@ -341,12 +341,12 @@ export default function TeamManagementScreen() {
                         className="text-[10px] text-slate-500"
                         style={style}
                       >
-                        {t.labels?.email || "Email"}
+                        {tUser.search.email}
                       </Text>
                       <Input
                         value={ui.email}
                         onChangeText={(email) => patchUi({ email })}
-                        placeholder={t.placeholders?.email || "Email"}
+                        placeholder={tUser.search.placeholders.email}
                         autoCapitalize="none"
                         keyboardType="email-address"
                         className={advancedInputClass}
@@ -356,7 +356,7 @@ export default function TeamManagementScreen() {
 
                   <View className="flex-row gap-2">
                     <CompactSelect
-                      label={t.labels?.isActive || "Active"}
+                      label={tUser.search.isActive}
                       value={ui.isActive}
                       onChange={(value) =>
                         patchUi({ isActive: value as SelectBoolValue })
@@ -367,7 +367,7 @@ export default function TeamManagementScreen() {
                     />
 
                     <CompactSelect
-                      label={t.labels?.isNotLocked || "Lock"}
+                      label={tUser.search.isNotLocked}
                       value={ui.isNotLocked}
                       onChange={(value) =>
                         patchUi({ isNotLocked: value as SelectBoolValue })
@@ -393,7 +393,7 @@ export default function TeamManagementScreen() {
                         className="text-xs font-semibold text-slate-700"
                         style={style}
                       >
-                        {t.reset}
+                        {tUser.search.reset}
                       </Text>
                     </Pressable>
 
@@ -406,7 +406,7 @@ export default function TeamManagementScreen() {
                         className="text-xs font-semibold text-white"
                         style={style}
                       >
-                        {t.apply}
+                        {tUser.search.search}
                       </Text>
                     </Pressable>
                   </View>
@@ -425,7 +425,7 @@ export default function TeamManagementScreen() {
               className="px-6 py-8 text-center text-slate-500"
               style={style}
             >
-              {t.empty}
+              {tUser.master.empty}
             </Text>
           )
         }

@@ -2,10 +2,11 @@
   "user": {
     "master": {
       "title": "အဖွဲ့ဝင်များ",
-      "advancedTitle": "အဆင့်မြင့်ရှာဖွေမှု",
-      "searchPlaceholder": "အမည်ဖြင့်ရှာဖွေရန်..."
+      "searchPlaceholder": "အမည်ဖြင့်ရှာဖွေရန်...",
+      "empty": "အသုံးပြုသူ မတွေ့ရှိပါ။"
     },
     "search": {
+      "advancedTitle": "အဆင့်မြင့်ရှာဖွေမှု",
       "fullName": "အမည်",
       "phoneNumber": "ဖုန်းနံပါတ်",
       "role": "အခန်းကဏ္ဍ",
@@ -17,7 +18,9 @@
         "phoneNumber": "ဖုန်းနံပါတ် ထည့်ပါ",
         "role": "ADMIN / OWNER / STAFF",
         "email": "အီးမေးလ် ထည့်ပါ"
-      }
+      },
+      "reset": "ရှင်းလင်းမည်",
+      "search": "ရှာပါ"
     },
     "createUser": {
     }

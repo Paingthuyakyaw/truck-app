@@ -2,10 +2,11 @@
   "user": {
     "master": {
       "title": "Users",
-      "advancedTitle": "Advanced Search",
-      "searchPlaceholder": "Search by name..."
+      "searchPlaceholder": "Search by name...",
+      "empty": "No users found."
     },
     "search": {
+      "advancedTitle": "Advanced Search",
       "fullName": "Full Name",
       "phoneNumber": "Phone Number",
       "role": "Role",
@@ -17,7 +18,9 @@
         "phoneNumber": "Enter phone number",
         "role": "ADMIN / OWNER / STAFF",
         "email": "Enter email"
-      }
+      },
+      "reset": "Reset",
+      "search": "Search"
     },
     "createUser": {
     }
