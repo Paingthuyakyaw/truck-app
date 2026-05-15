@@ -72,7 +72,11 @@ function mapSelectToBoolFilter(value: SelectBoolValue): BoolFilter {
 }
 
 export default function TeamManagementScreen() {
+
   const tUser = useTranslation('user')
+  const tLookup = useTranslation('lookup');
+  const tCommon = useTranslation('common');
+
   const router = useRouter();
   const locale = useLocaleStore((state) => state.locale);
   const t = profileLocale[locale].teamScreen;
@@ -175,20 +179,18 @@ export default function TeamManagementScreen() {
   );
 
   /** Advanced role filter: empty string = any (no API constraint). */
-  const roleFilterOptions = useMemo(
-    () => [
-      {
-        value: "",
-        labelEn: t.tri?.any || "Any",
-        labelMm: t.tri?.any || "အားလုံး",
-      },
-      { value: "ADMIN", labelEn: "ADMIN", labelMm: "စီမံ" },
-      { value: "OWNER", labelEn: "OWNER", labelMm: "ပိုင်ရှင်" },
-      { value: "WORKER", labelEn: "WORKER", labelMm: "ဝန်ထမ်း" },
-      { value: "VIEWER", labelEn: "VIEWER", labelMm: "ကြည့်ရှုသူ" },
-    ],
-    [t],
-  );
+
+  const  roleFilterOptions = useMemo(() => {
+    return [
+      { value: "", labelEn: tCommon.anyLabel, labelMm: tCommon.anyLabel },
+      ...Object.entries(tLookup.roles || {}).map(([key, val]) => ({
+        value: key,
+        labelEn: val,
+        labelMm: val
+      }))
+    ];
+  },[tLookup.roles])
+
 
   const advancedInputClass = `border border-slate-200 text-sm ${getMyanmarLeadingClass(locale)} bg-white py-0 h-11`;
 
