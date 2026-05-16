@@ -30,8 +30,10 @@
         "username": "အသုံးပြုသူအကောင့်",
         "password": "စကားဝှက်",
         "fullName": "အမည်အပြည့်အစုံ",
+        "phoneNumber": "ဖုန်းနံပါတ်",
         "email": "အီးမေးလ်လိပ်စာ",
         "dateOfBirth": "မွေးနေ့သက္ကရာဇ်",
+        "fullIdNo": "မှတ်ပုံတင်နံပါတ်",
         "role": "ရာထူး",
         "parentOwner": "ယာဉ်ပိုင်ရှင်"
       },
@@ -39,8 +41,10 @@
         "username": "ABC09xxxxxxxxx",
         "password": "အနည်းဆုံး ၈ လုံး",
         "fullName": "အမည်အပြည့်အစုံ",
+        "phoneNumber": "ဖုန်းနံပါတ်",
         "email": "example@gmail.com",
         "dateOfBirth": "dd/mm/yyyy",
+        "fullIdNo": "မှတ်ပုံတင်နံပါတ်",
         "role": "ရာထူး ရွေးပါ",
         "parentOwner": "ယာဉ်ပိုင်ရှင် ရွေးပါ"
       },

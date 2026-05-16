@@ -30,8 +30,10 @@
         "username": "Username",
         "password": "Password",
         "fullName": "Full Name",
+        "phoneNumber": "Phone",
         "email": "Email",
         "dateOfBirth": "Date of Birth",
+        "fullIdNo": "Identity No",
         "role": "Role",
         "parentOwner": "Owner"
       },
@@ -39,8 +41,10 @@
         "username": "ABC09xxxxxxxxx",
         "password": "Enter password",
         "fullName": "Enter full name",
+        "phoneNumber": "Enter phone",
         "email": "example@gmail.com",
         "dateOfBirth": "dd/mm/yyyy",
+        "fullIdNo": "Identity No",
         "role": "Select role",
         "parentOwner": "Select owner"
 

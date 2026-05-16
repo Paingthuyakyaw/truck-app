@@ -101,6 +101,15 @@ function buildSchema(locale: "en" | "mm") {
             .string()
             .max(100, locale === "mm" ? "အီးမေးလ်သည် စာလုံး ၁၀၀ ထက်မကျော်ရပါ" : "Email cannot exceed 100 characters")
             .email(locale === "mm" ? "အီးမေးလ်မှန်ကန်ရမည်" : "Invalid email"),
+        phoneNumber: z
+            .string()
+            .min(1, locale === "mm" ? "ဖုန်းနံပါတ်လိုအပ်သည်" : "Phone number is required")
+            .regex(
+                /^09\d{9}$/,
+                locale === "mm"
+                    ? "၀၉ ဖြင့်စပြီး ဂဏန်း ၉ လုံး ဖြစ်ရမည် (ဥပမာ- 09111222333)"
+                    : "Phone number must start with 09 followed by exactly 9 digits (e.g., 09111222333)"
+            ),
         dateOfBirth: z
             .string()
             .min(1, locale === "mm" ? "မွေးသက္ကရာဇ်လိုအပ်သည်" : "Date is required")
@@ -110,6 +119,10 @@ function buildSchema(locale: "en" | "mm") {
                         ? "နေ့/လ/နှစ် ပုံစံ dd/mm/yyyy ထည့်ပါ"
                         : "Use dd/mm/yyyy",
             }),
+        fullIdNo: z
+            .string()
+            .max(50, locale === "mm" ? "မှတ်ပုံတင်နံပါတ်သည် စာလုံး ၅၀ ထက်မကျော်ရပါ" : "Full ID number cannot exceed 50 characters")
+            .optional(),
         role: z.enum(["ADMIN", "OWNER", "WORKER", "VIEWER"]),
         parentOwnerId: z.string().optional(),
     })
@@ -153,9 +166,11 @@ export default function TeamCreateUserScreen() {
             username: "",
             password: "",
             fullName: "",
+            phoneNumber: "",
             email: "",
             dateOfBirth: "",
-            role: "OWNER",
+            fullIdNo: "",
+            role: "" as CreateUserRole,
             parentOwnerId: "",
         },
     });
@@ -184,8 +199,9 @@ export default function TeamCreateUserScreen() {
                 password: values.password,
                 fullName: values.fullName.trim(),
                 email: values.email.trim(),
-                phoneNumber: values.username.trim(),
+                phoneNumber: values.phoneNumber.trim(),
                 dateOfBirth: dateOfBirthIso,
+                fullIdNo: values.fullIdNo?.trim() || undefined,
                 joinDate: todayIsoLocal(),
                 role: values.role,
                 parentOwnerId:
@@ -272,6 +288,7 @@ export default function TeamCreateUserScreen() {
                                     <Input
                                         value={value}
                                         onChangeText={onChange}
+                                        maxLength={100}
                                         placeholder={t.placeholders.username}
                                         className={`border py-0 h-11 ${getMyanmarLeadingClass(locale)}  border-slate-200 bg-white`}
                                         {...(Platform.OS === "android" && locale === "mm"
@@ -352,6 +369,7 @@ export default function TeamCreateUserScreen() {
                                     <Input
                                         value={value}
                                         onChangeText={onChange}
+                                        maxLength={100}
                                         placeholder={t.placeholders.fullName}
                                         className={`border h-11 py-0 ${getMyanmarLeadingClass(locale)}  border-slate-200 bg-white`}
                                         {...(Platform.OS === "android" && locale === "mm"
@@ -372,6 +390,39 @@ export default function TeamCreateUserScreen() {
 
                         <View className="gap-1.5">
                             <View className="flex-row items-center gap-1">
+                                <Text className={`text-sm ${getMyanmarLeadingClass(locale)} font-medium text-slate-900`} style={style}>
+                                    {t.labels.phoneNumber}
+                                </Text>
+                            </View>
+                            <Controller
+                                control={control}
+                                name="phoneNumber"
+                                render={({ field: { value, onChange } }) => (
+                                    <Input
+                                        value={value}
+                                        onChangeText={onChange}
+                                        maxLength={50}
+                                        keyboardType="numeric"
+                                        placeholder={t.placeholders.phoneNumber}
+                                        className={`border h-11 py-0 ${getMyanmarLeadingClass(locale)}  border-slate-200 bg-white`}
+                                        {...(Platform.OS === "android" && locale === "mm"
+                                            ? {includeFontPadding: false}
+                                            : {})}
+                                    />
+                                )}
+                            />
+                            {!!errors.phoneNumber?.message && (
+                                <Text
+                                    className={`text-xs ${getMyanmarLeadingClass(locale)}  text-red-500`}
+                                    style={style}
+                                >
+                                    {errors.phoneNumber.message}
+                                </Text>
+                            )}
+                        </View>
+
+                        <View className="gap-1.5">
+                            <View className="flex-row items-center gap-1">
                                 <Text
                                     className={`text-sm ${getMyanmarLeadingClass(locale)}  font-medium text-slate-900`}
                                     style={style}
@@ -386,6 +437,7 @@ export default function TeamCreateUserScreen() {
                                     <Input
                                         value={value}
                                         onChangeText={onChange}
+                                        maxLength={100}
                                         placeholder={t.placeholders.email}
                                         keyboardType="email-address"
                                         autoCapitalize="none"
@@ -482,6 +534,42 @@ export default function TeamCreateUserScreen() {
                                     style={style}
                                 >
                                     {errors.dateOfBirth.message}
+                                </Text>
+                            )}
+                        </View>
+
+                        <View className="gap-1.5">
+                            <View className="flex-row items-center gap-1">
+                                <Text
+                                    className={`text-sm font-medium ${getMyanmarLeadingClass(locale)}  text-slate-900`}
+                                    style={style}
+                                >
+                                    {t.labels.fullIdNo}
+                                </Text>
+                                <Text className="text-yellow-500">{locale === 'mm' ? '(မထည့်လည်းရ)' : '(Optional)'}</Text>
+                            </View>
+                            <Controller
+                                control={control}
+                                name="fullIdNo"
+                                render={({field: {onChange, value}}) => (
+                                    <Input
+                                        value={value}
+                                        onChangeText={onChange}
+                                        maxLength={50}
+                                        placeholder={t.placeholders.fullIdNo}
+                                        className={`border h-11 py-0 ${getMyanmarLeadingClass(locale)}  border-slate-200 bg-white`}
+                                        {...(Platform.OS === "android" && locale === "mm"
+                                            ? {includeFontPadding: false}
+                                            : {})}
+                                    />
+                                )}
+                            />
+                            {!!errors.fullIdNo?.message && (
+                                <Text
+                                    className={`text-xs ${getMyanmarLeadingClass(locale)}  text-red-500`}
+                                    style={style}
+                                >
+                                    {errors.fullIdNo.message}
                                 </Text>
                             )}
                         </View>
