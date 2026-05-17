@@ -5,6 +5,7 @@ import logout from '@/locale/en/logout.json';
 import profile from '@/locale/en/profile.json';
 import error from '@/locale/en/error.json';
 import common from '@/locale/en/common.json';
+import user from '@/locale/en/user.json';
 
 export const en = {
     ...login,
@@ -13,4 +14,5 @@ export const en = {
     ...profile,
     ...error,
     ...common,
+    ...user
 }

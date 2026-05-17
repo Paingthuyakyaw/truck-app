@@ -4,6 +4,7 @@ import logout from '@/locale/mm/logout.json'
 import profile from '@/locale/mm/profile.json'
 import error from '@/locale/mm/error.json'
 import common from '@/locale/mm/common.json'
+import user from '@/locale/mm/user.json'
 
 export const mm = {
     ...login,
@@ -11,5 +12,6 @@ export const mm = {
     ...logout,
     ...profile,
     ...error,
-    ...common
+    ...common,
+    ...user
 }

@@ -38,8 +38,6 @@
       "errorGeneric": "Something went wrong. Please try again."
     },
     "teamScreen": {
-      "title": "Team Management",
-      "searchPlaceholder": "Search by name...",
       "advancedTitle": "Advanced Search",
       "labels": {
         "fullName": "Full Name",
@@ -290,8 +288,6 @@
       "errorGeneric": "တစ်ခုခု မှားယွင်းနေပါသည်။ ထပ်ကြိုးစားပါ။"
     },
     "teamScreen": {
-      "title": "အသင်းပြုစု စီမံခန့်ခွဲမှု",
-      "searchPlaceholder": "အမည်ဖြင့်ရှာဖွေရန်...",
       "advancedTitle": "အဆင့်မြင့်ရှာဖွေမှု",
       "labels": {
         "fullName": "အမည်",

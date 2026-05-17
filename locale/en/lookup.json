@@ -2,9 +2,17 @@
   "lookup": {
     "roles": {
       "ADMIN": "Admin",
-      "OWNER": "Truck Owner",
+      "OWNER": "Owner",
       "VIEWER": "Viewer",
       "WORKER": "Worker"
+    },
+    "accountStatus": {
+      "true": "Active",
+      "false": "Inactive"
+    },
+    "accountControl": {
+      "true": "Unlocked",
+      "false": "Locked"
     }
   }
 }

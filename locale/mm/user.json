@@ -1,0 +1,60 @@
+{
+  "user": {
+    "master": {
+      "title": "အဖွဲ့ဝင်များ",
+      "searchPlaceholder": "အမည်ဖြင့်ရှာဖွေရန်...",
+      "empty": "အသုံးပြုသူ မတွေ့ရှိပါ။"
+    },
+    "search": {
+      "advancedTitle": "အဆင့်မြင့်ရှာဖွေမှု",
+      "fullName": "အမည်",
+      "phoneNumber": "ဖုန်းနံပါတ်",
+      "role": "ရာထူး",
+      "email": "အီးမေးလ်",
+      "isActive": "အကောင့် အခြေအနေ",
+      "isNotLocked": "အကောင့် စီမံမှု",
+      "placeholders": {
+        "fullName": "အမည် ထည့်ပါ",
+        "phoneNumber": "ဖုန်းနံပါတ် ထည့်ပါ",
+        "role": "ADMIN / OWNER / STAFF",
+        "email": "အီးမေးလ် ထည့်ပါ"
+      },
+      "reset": "ရှင်းလင်းမည်",
+      "search": "ရှာပါ"
+    },
+    "createUser": {
+      "title": "အဖွဲ့ဝင်အသစ်ထည့်ရန်",
+      "infoTitle": "သတိပြုရန်",
+      "infoBody": "အသုံးပြုသူအမည် ထပ်မံမရှိရပါ (အင်္ဂလိပ်အက္ခရာ + 09 + ဂဏန်း ၉ လုံး)။ စကားဝှက် အနည်းဆုံး ၈ လုံး။ နေ့စွဲပုံစံ dd/mm/yyyy ဖြစ်ရမည်။ ကြည့်ရှုသူ ရာထူးအတွက် ပိုင်ရှင်ကို ရွေးချယ်ပေးပါ။",
+      "labels":  {
+        "username": "အသုံးပြုသူအကောင့်",
+        "password": "စကားဝှက်",
+        "fullName": "အမည်အပြည့်အစုံ",
+        "phoneNumber": "ဖုန်းနံပါတ်",
+        "email": "အီးမေးလ်လိပ်စာ",
+        "dateOfBirth": "မွေးနေ့သက္ကရာဇ်",
+        "fullIdNo": "မှတ်ပုံတင်နံပါတ်",
+        "role": "ရာထူး",
+        "parentOwner": "ယာဉ်ပိုင်ရှင်"
+      },
+      "placeholders": {
+        "username": "ABC09xxxxxxxxx",
+        "password": "အနည်းဆုံး ၈ လုံး",
+        "fullName": "အမည်အပြည့်အစုံ",
+        "phoneNumber": "ဖုန်းနံပါတ်",
+        "email": "example@gmail.com",
+        "dateOfBirth": "dd/mm/yyyy",
+        "fullIdNo": "မှတ်ပုံတင်နံပါတ်",
+        "role": "ရာထူး ရွေးပါ",
+        "parentOwner": "ယာဉ်ပိုင်ရှင် ရွေးပါ"
+      },
+      "submit": "အဖွဲ့ဝင်အသစ်ထည့်မည်",
+      "submitting": "ဖန်တီးနေသည်...",
+      "successTitle": "အောင်မြင်သည်",
+      "successBody": "အသုံးပြုသူဖန်တီးပြီးပါပြီ။",
+      "errorTitle": "အမှား",
+      "errorBody": "အသုံးပြုသူဖန်တီး၍ မရပါ။",
+      "dateInvalid": "နေ့စွဲပုံစံ dd/mm/yyyy သုံးပါ။"
+    }
+  }
+}

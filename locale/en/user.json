@@ -1,0 +1,61 @@
+{
+  "user": {
+    "master": {
+      "title": "Users",
+      "searchPlaceholder": "Search by name...",
+      "empty": "No users found."
+    },
+    "search": {
+      "advancedTitle": "Advanced Search",
+      "fullName": "Full Name",
+      "phoneNumber": "Phone Number",
+      "role": "Role",
+      "email": "Email",
+      "isActive": "Account Status",
+      "isNotLocked": "Account Control",
+      "placeholders": {
+        "fullName": "Enter full name",
+        "phoneNumber": "Enter phone number",
+        "role": "ADMIN / OWNER / STAFF",
+        "email": "Enter email"
+      },
+      "reset": "Reset",
+      "search": "Search"
+    },
+    "createUser": {
+      "title": "Create User",
+      "infoTitle": "Before you start",
+      "infoBody": "Username must be unique (English letters + 09 + 9 digits). Password: at least 8 characters. Date format: dd/mm/yyyy. VIEWER role requires an OWNER",
+      "labels": {
+        "username": "Username",
+        "password": "Password",
+        "fullName": "Full Name",
+        "phoneNumber": "Phone",
+        "email": "Email",
+        "dateOfBirth": "Date of Birth",
+        "fullIdNo": "Identity No",
+        "role": "Role",
+        "parentOwner": "Owner"
+      },
+      "placeholders": {
+        "username": "ABC09xxxxxxxxx",
+        "password": "Enter password",
+        "fullName": "Enter full name",
+        "phoneNumber": "Enter phone",
+        "email": "example@gmail.com",
+        "dateOfBirth": "dd/mm/yyyy",
+        "fullIdNo": "Identity No",
+        "role": "Select role",
+        "parentOwner": "Select owner"
+
+      },
+      "submit": "Create",
+      "submitting": "Creating...",
+      "successTitle": "Success",
+      "successBody": "User account created successfully.",
+      "errorTitle": "Error",
+      "errorBody": "Unable to create user account.",
+      "dateInvalid": "Invalid date format. Use dd/mm/yyyy."
+    }
+  }
+}

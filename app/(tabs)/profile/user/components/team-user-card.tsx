@@ -4,6 +4,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Card } from "heroui-native";
 import React, { useMemo } from "react";
 import { Pressable, Text, View } from "react-native";
+import {useTranslation} from "@/hooks/use-translation";
 
 type TeamUserCardProps = {
   item: UserTeamItem;
@@ -14,6 +15,7 @@ type TeamUserCardProps = {
 export function TeamUserCard({ item, locale, onPress }: TeamUserCardProps) {
   const mmTextStyle = useMemo(() => myanmarUITextStyle(), []);
   const style = locale === "mm" ? mmTextStyle : undefined;
+  const tLookup = useTranslation('lookup')
 
   return (
     <Pressable onPress={onPress}>
@@ -31,8 +33,8 @@ export function TeamUserCard({ item, locale, onPress }: TeamUserCardProps) {
             </View>
 
             <View className="rounded-xl bg-[#EAF1F8] px-3 py-2">
-              <Text className="text-xs font-semibold text-[#4A7CFF]">
-                {item.role}
+              <Text className="text-xs font-semibold text-[#3F5F87]">
+                {(tLookup.roles as any) [item.role] || 'Unknown Role'}
               </Text>
             </View>
           </View>

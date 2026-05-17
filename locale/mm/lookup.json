@@ -5,6 +5,15 @@
       "OWNER": "ယာဉ်ပိုင်ရှင်",
       "VIEWER": "ကြည့်ရှုသူ",
       "WORKER": "ဝန်ထမ်း"
+    },
+    "accountStatus": {
+      "true": "အသုံးပြုဆဲ",
+      "false": "ရပ်ဆိုင်းထား"
+    },
+    "accountControl": {
+      "true": "ဖွင့်ထား",
+      "false": "ပိတ်ထား"
     }
+
   }
 }
