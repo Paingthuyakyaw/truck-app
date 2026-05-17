@@ -133,6 +133,7 @@ export default function ProposalScreen() {
           <View className="pb-3 pt-1">
             <ProposalHeader
               title={t.title}
+              locale={locale}
               welcomeLabel={t.welcome}
               fullName={fullName || "-"}
               style={style}
@@ -192,7 +193,10 @@ export default function ProposalScreen() {
               <ActivityIndicator color={APP_COLORS.primary} />
             </View>
           ) : (
-            <Text className="px-6 py-8 text-center text-slate-500" style={style}>
+            <Text
+              className="px-6 py-8 text-center text-slate-500"
+              style={style}
+            >
               {t.empty}
             </Text>
           )

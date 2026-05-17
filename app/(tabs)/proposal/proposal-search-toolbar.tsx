@@ -1,11 +1,12 @@
 import { APP_COLORS } from "@/constants/colors";
-import { compactLineInputTextStyle } from "@/constants/compact-input";
+import { getMyanmarLeadingClass } from "@/constants/myanmar-font";
 import type { AppLocale } from "@/stores/client/locale-store";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Input, TextField } from "heroui-native";
-import React, { useMemo } from "react";
-import { Pressable, View, type StyleProp, type TextStyle } from "react-native";
+import { Input } from "heroui-native";
+import React from "react";
+import { Pressable, View } from "react-native";
 
+/** Match team / truck / service list search (`TeamSearchToolbar`). */
 type ProposalSearchToolbarProps = {
   locale: AppLocale;
   quickQuery: string;
@@ -18,7 +19,7 @@ type ProposalSearchToolbarProps = {
 };
 
 export function ProposalSearchToolbar({
-  locale,
+  locale: _locale,
   quickQuery,
   placeholder,
   advancedOpen,
@@ -27,45 +28,44 @@ export function ProposalSearchToolbar({
   onToggleAdvanced,
   onPressAdd,
 }: ProposalSearchToolbarProps) {
-  const inputTextStyle = useMemo(
-    () => compactLineInputTextStyle(locale) as StyleProp<TextStyle>,
-    [locale],
-  );
-
   return (
     <View className="mb-4 flex-row items-center gap-2">
-      <TextField className=" flex-1">
+      <View className="relative flex-1">
         <Input
           value={quickQuery}
           onChangeText={onChangeQuickQuery}
           placeholder={placeholder}
-          className={`flex-1 border border-slate-200 bg-white `}
+          className={`flex-1 border h-11 py-0 text-sm border-slate-200 bg-white ${getMyanmarLeadingClass(_locale)}`}
+          style={{ paddingRight: 44 }}
         />
-      </TextField>
+
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Advanced filters"
+          onPress={onToggleAdvanced}
+          className="absolute bottom-0 right-2 top-0 justify-center"
+          hitSlop={8}
+        >
+          <Ionicons
+            name={advancedOpen ? "funnel" : "funnel-outline"}
+            size={20}
+            color={APP_COLORS.primary}
+          />
+        </Pressable>
+      </View>
 
       {!!quickQuery && (
         <Pressable
           onPress={onClearQuickQuery}
-          className="items-center h-11 justify-center rounded-lg border border-slate-200 bg-white p-2.5"
+          className="items-center justify-center rounded-full border border-slate-200 bg-white p-2.5"
         >
-          <Ionicons name="close" size={18} color={APP_COLORS.primary} />
+          <Ionicons name="close" size={18} color="#4A7CFF" />
         </Pressable>
       )}
 
       <Pressable
-        onPress={onToggleAdvanced}
-        className="items-center justify-center rounded-lg  h-11 border border-slate-200 bg-white p-2.5"
-      >
-        <Ionicons
-          name={advancedOpen ? "funnel" : "funnel-outline"}
-          size={18}
-          color={APP_COLORS.primary}
-        />
-      </Pressable>
-
-      <Pressable
         onPress={onPressAdd}
-        className="items-center justify-center rounded-lg h-11 p-2.5"
+        className="items-center justify-center rounded-full p-2.5"
         style={{ backgroundColor: APP_COLORS.primary }}
       >
         <Ionicons name="add" size={20} color="#fff" />

@@ -1,4 +1,5 @@
 import { APP_COLORS } from "@/constants/colors";
+import { getMyanmarLeadingClass } from "@/constants/myanmar-font";
 import proposalLocale from "@/locale/proposal/proposal.json";
 import type { AppLocale } from "@/stores/client/locale-store";
 import type { ProposalTabStatus } from "@/stores/server/proposal/search-columns";
@@ -31,13 +32,13 @@ export function ProposalTabs({
           <Pressable
             key={tab}
             onPress={() => onChange(tab)}
-            className="flex-1 items-center justify-center rounded-xl px-1 py-2.5"
+            className={`flex-1 items-center justify-center rounded-xl px-1 h-10 ${getMyanmarLeadingClass(locale)}`}
             style={active ? { backgroundColor: APP_COLORS.primary } : undefined}
           >
             <Text
-              className={`text-sm font-semibold ${active ? "text-white" : "text-slate-500"}`}
+              className={`text-sm  ${getMyanmarLeadingClass(locale)}  ${active ? "text-white" : "text-slate-500"}`}
               numberOfLines={1}
-              style={style}
+              // style={style}
             >
               {labels[tab]}
             </Text>
