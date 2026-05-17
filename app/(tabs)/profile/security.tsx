@@ -1,5 +1,8 @@
 import { APP_COLORS } from "@/constants/colors";
-import { myanmarUITextStyle } from "@/constants/myanmar-font";
+import {
+  getMyanmarLeadingClass,
+  myanmarUITextStyle,
+} from "@/constants/myanmar-font";
 import profileLocale from "@/locale/profile/profile.json";
 import { useLocaleStore } from "@/stores/client/locale-store";
 import { useChangePassword } from "@/stores/server/user/password-mutation";
@@ -7,6 +10,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isAxiosError } from "axios";
 import { useRouter } from "expo-router";
+import { Input } from "heroui-native";
 import React, { useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -18,10 +22,12 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { z } from "zod";
 
 const FALLBACK_CHANGE_PASSWORD_LABELS = {
@@ -174,30 +180,20 @@ export default function ChangePasswordScreen() {
     onToggle: () => void,
   ) => (
     <View style={styles.field}>
-      <Text style={[styles.label, textStyle]}>
-        {label}
-      </Text>
+      <Text style={[styles.label, textStyle]}>{label}</Text>
       <View>
         <Controller
           control={control}
           name={name}
           render={({ field: { onBlur, onChange, value } }) => (
-            <TextInput
+            <Input
               value={value}
               onBlur={onBlur}
               onChangeText={onChange}
               placeholder={placeholder}
               placeholderTextColor="#94a3b8"
               secureTextEntry={!visible}
-              autoCapitalize="none"
-              autoCorrect={false}
-              style={[
-                styles.input,
-                textStyle,
-                {
-                  borderColor: errors[name] ? "#ef4444" : "#e2e8f0",
-                },
-              ]}
+              className={`border h-11 ${getMyanmarLeadingClass(locale)}  py-0 border-slate-200 bg-white`}
             />
           )}
         />
@@ -215,9 +211,7 @@ export default function ChangePasswordScreen() {
         </Pressable>
       </View>
       {errors[name]?.message ? (
-        <Text style={[styles.error, textStyle]}>
-          {errors[name]?.message}
-        </Text>
+        <Text style={[styles.error, textStyle]}>{errors[name]?.message}</Text>
       ) : null}
     </View>
   );
@@ -229,15 +223,11 @@ export default function ChangePasswordScreen() {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <View style={styles.header}>
-          <Pressable
-            onPress={() => router.back()}
-            style={styles.backButton}
-          >
+          <Pressable onPress={() => router.back()} style={styles.backButton}>
             <Ionicons name="arrow-back" size={22} color="#475569" />
           </Pressable>
           <Text
-            style={[styles.title, textStyle]}
-            numberOfLines={1}
+            className={`flex-1 px-3 text-center text-lg ${getMyanmarLeadingClass(locale)}  font-bold text-slate-900  `}
           >
             {labels.title}
           </Text>
@@ -261,9 +251,7 @@ export default function ChangePasswordScreen() {
                 color="#325f99"
               />
               <View style={styles.flex}>
-                <Text
-                  style={[styles.infoTitle, textStyle]}
-                >
+                <Text style={[styles.infoTitle, textStyle]}>
                   {labels.infoTitle}
                 </Text>
                 <Text style={[styles.infoBody, textStyle]}>
@@ -301,10 +289,13 @@ export default function ChangePasswordScreen() {
             accessibilityRole="button"
             disabled={isPending}
             onPress={handleSubmit(onSubmit)}
-            style={[styles.submitButton, {
-              backgroundColor: APP_COLORS.primary,
-              opacity: isPending ? 0.75 : 1,
-            }]}
+            style={[
+              styles.submitButton,
+              {
+                backgroundColor: APP_COLORS.primary,
+                opacity: isPending ? 0.75 : 1,
+              },
+            ]}
           >
             {isPending ? (
               <ActivityIndicator color="#fff" />

@@ -1,5 +1,8 @@
 import { APP_COLORS } from "@/constants/colors";
-import { myanmarUITextStyle } from "@/constants/myanmar-font";
+import {
+  getMyanmarLeadingClass,
+  myanmarUITextStyle,
+} from "@/constants/myanmar-font";
 import profileLocale from "@/locale/profile/profile.json";
 import { useLocaleStore } from "@/stores/client/locale-store";
 import { useTruckDetail } from "@/stores/server/truck/query";
@@ -10,8 +13,18 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { Input, Select } from "heroui-native";
 import React, { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { ActivityIndicator, Alert, Pressable, ScrollView, Text, View } from "react-native";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  ActivityIndicator,
+  Alert,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { z } from "zod";
 
 const YEAR_RE = /^\d{4}$/;
@@ -43,7 +56,8 @@ export default function EditTruckScreen() {
   const mmTextStyle = useMemo(() => myanmarUITextStyle(), []);
   const style = locale === "mm" ? mmTextStyle : undefined;
   const schema = useMemo(
-    () => buildSchema(createLabels.requiredField, createLabels.modelYearInvalid),
+    () =>
+      buildSchema(createLabels.requiredField, createLabels.modelYearInvalid),
     [createLabels.modelYearInvalid, createLabels.requiredField],
   );
 
@@ -74,7 +88,9 @@ export default function EditTruckScreen() {
     const detail = data?.data;
     if (!detail) return;
     const fuelTypeRaw = String(detail.fuelType ?? "diesel").toLowerCase();
-    const fuelType = FUEL_TYPES.includes(fuelTypeRaw as (typeof FUEL_TYPES)[number])
+    const fuelType = FUEL_TYPES.includes(
+      fuelTypeRaw as (typeof FUEL_TYPES)[number],
+    )
       ? (fuelTypeRaw as FormValues["fuelType"])
       : "diesel";
 
@@ -128,7 +144,10 @@ export default function EditTruckScreen() {
   ) => (
     <View className="gap-1.5">
       <View className="flex-row items-center gap-1">
-        <Text className="text-sm font-medium text-slate-900" style={style}>
+        <Text
+          className={`text-sm font-medium text-slate-900 ${getMyanmarLeadingClass(locale)} `}
+          style={style}
+        >
           {createLabels.fieldLabels[key]}
         </Text>
         {options?.required ? <Text className="text-red-500">*</Text> : null}
@@ -143,15 +162,17 @@ export default function EditTruckScreen() {
             keyboardType={options?.keyboardType}
             autoCapitalize="none"
             editable={options?.editable ?? true}
-            multiline={options?.multiline}
-            numberOfLines={options?.multiline ? 4 : 1}
+            // multiline={options?.multiline}
+            // numberOfLines={options?.multiline ? 4 : 1}
             textAlignVertical={options?.multiline ? "top" : "center"}
-            className={`rounded-2xl border border-slate-200 bg-[#f8fafc] px-3 ${options?.multiline ? "min-h-[120px] py-2" : ""}`}
+            className={`border py-0 h-11 ${getMyanmarLeadingClass(locale)}  border-slate-200 bg-white`}
           />
         )}
       />
       {(options?.editable ?? true) && !!errors[key]?.message && (
-        <Text className="text-xs text-red-500">{String(errors[key]?.message)}</Text>
+        <Text className="text-xs text-red-500">
+          {String(errors[key]?.message)}
+        </Text>
       )}
     </View>
   );
@@ -165,7 +186,10 @@ export default function EditTruckScreen() {
         >
           <Ionicons name="arrow-back" size={22} color="#475569" />
         </Pressable>
-        <Text className="flex-1 px-3 text-center text-[24px] font-bold text-slate-900" style={style}>
+        <Text
+          className={`flex-1 px-3 text-center text-lg ${getMyanmarLeadingClass(locale)}  font-bold text-slate-900  `}
+          style={style}
+        >
           {labels.title}
         </Text>
         <View className="h-11 w-11" />
@@ -178,14 +202,18 @@ export default function EditTruckScreen() {
       ) : (
         <ScrollView
           className="px-4"
-          contentContainerStyle={{ paddingBottom: insets.bottom + 80, flexGrow: 1 }}
+          contentContainerStyle={{
+            paddingBottom: insets.bottom + 80,
+            flexGrow: 1,
+          }}
         >
           <View className="mt-1 rounded-3xl bg-white p-5">
             <View className="gap-4">
               {renderField("model", {
                 required: true,
                 editable: false,
-                valueOverride: `${data?.data?.modelYear ?? ""} ${data?.data?.model ?? ""}`.trim(),
+                valueOverride:
+                  `${data?.data?.modelYear ?? ""} ${data?.data?.model ?? ""}`.trim(),
               })}
 
               <View className="flex-row gap-3">
@@ -199,7 +227,10 @@ export default function EditTruckScreen() {
 
               <View className="gap-1.5">
                 <View className="flex-row items-center gap-1">
-                  <Text className="text-sm font-medium text-slate-900" style={style}>
+                  <Text
+                    className="text-sm font-medium text-slate-900"
+                    style={style}
+                  >
                     {createLabels.fieldLabels.fuelType}
                   </Text>
                   <Text className="text-red-500">*</Text>
@@ -216,8 +247,13 @@ export default function EditTruckScreen() {
                         }
                       }}
                     >
-                      <Select.Trigger className="rounded-2xl border border-slate-200 bg-[#f8fafc] px-3">
-                        <Select.Value placeholder={createLabels.fuelTypePlaceholder} style={style} />
+                      <Select.Trigger
+                        className={`rounded-2xl ${getMyanmarLeadingClass(locale)} h-11 py-0 border border-slate-200 bg-[#f8fafc] px-3`}
+                      >
+                        <Select.Value
+                          className={`py-0 ${getMyanmarLeadingClass(locale)}`}
+                          placeholder={createLabels.fuelTypePlaceholder}
+                        />
                         <Select.TriggerIndicator />
                       </Select.Trigger>
                       <Select.Portal>
@@ -228,7 +264,11 @@ export default function EditTruckScreen() {
                           width="trigger"
                         >
                           {FUEL_TYPES.map((fuelType) => (
-                            <Select.Item key={fuelType} value={fuelType} label={fuelType}>
+                            <Select.Item
+                              key={fuelType}
+                              value={fuelType}
+                              label={fuelType}
+                            >
                               <Select.ItemLabel style={style} />
                               <Select.ItemIndicator />
                             </Select.Item>
@@ -239,11 +279,16 @@ export default function EditTruckScreen() {
                   )}
                 />
                 {!!errors.fuelType?.message && (
-                  <Text className="text-xs text-red-500">{String(errors.fuelType.message)}</Text>
+                  <Text className="text-xs text-red-500">
+                    {String(errors.fuelType.message)}
+                  </Text>
                 )}
               </View>
 
-              {renderField("modelYear", { required: true, keyboardType: "number-pad" })}
+              {renderField("modelYear", {
+                required: true,
+                keyboardType: "number-pad",
+              })}
               {renderField("chassisNo")}
               {renderField("engineNo", { multiline: true })}
             </View>
@@ -254,7 +299,10 @@ export default function EditTruckScreen() {
               onPress={() => router.back()}
               className="flex-1 items-center justify-center rounded-xl bg-slate-200 py-3.5"
             >
-              <Text className="text-base font-semibold text-slate-700" style={style}>
+              <Text
+                className="text-base font-semibold text-slate-700"
+                style={style}
+              >
                 {labels.cancel}
               </Text>
             </Pressable>
@@ -263,9 +311,15 @@ export default function EditTruckScreen() {
               onPress={handleSubmit(onSubmit)}
               disabled={isPending}
               className="flex-1 items-center justify-center rounded-xl py-3.5"
-              style={{ backgroundColor: APP_COLORS.primary, opacity: isPending ? 0.7 : 1 }}
+              style={{
+                backgroundColor: APP_COLORS.primary,
+                opacity: isPending ? 0.7 : 1,
+              }}
             >
-              <Text className="text-base font-semibold text-white" style={style}>
+              <Text
+                className="text-base font-semibold text-white"
+                style={style}
+              >
                 {isPending ? labels.submitting : labels.submit}
               </Text>
             </Pressable>

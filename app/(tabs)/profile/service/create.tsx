@@ -1,5 +1,8 @@
 import { APP_COLORS } from "@/constants/colors";
-import { myanmarUITextStyle } from "@/constants/myanmar-font";
+import {
+  getMyanmarLeadingClass,
+  myanmarUITextStyle,
+} from "@/constants/myanmar-font";
 import profileLocale from "@/locale/profile/profile.json";
 import { useLocaleStore } from "@/stores/client/locale-store";
 import { useCreateServiceType } from "@/stores/server/service-type/create-mutation";
@@ -91,7 +94,7 @@ export default function CreateServiceTypeScreen() {
           <Ionicons name="arrow-back" size={22} color="#475569" />
         </Pressable>
         <Text
-          className="flex-1 px-3 text-center text-[24px] font-bold text-slate-900"
+          className={`flex-1 px-3 text-center text-lg ${getMyanmarLeadingClass(locale)}  font-bold text-slate-900  `}
           style={style}
         >
           {labels.title}
@@ -117,7 +120,10 @@ export default function CreateServiceTypeScreen() {
 
             <View className="gap-1.5">
               <View className="flex-row items-center gap-1">
-                <Text className="text-sm font-medium text-slate-900" style={style}>
+                <Text
+                  className={`text-sm font-medium ${getMyanmarLeadingClass(locale)}  text-slate-900`}
+                  style={style}
+                >
                   {labels.fieldLabels.serviceType}
                 </Text>
                 <Text className="text-red-500">*</Text>
@@ -132,7 +138,7 @@ export default function CreateServiceTypeScreen() {
                       onChange(text.replace(/\s+/g, "_").toUpperCase())
                     }
                     autoCapitalize="characters"
-                    className="border border-slate-200 bg-white"
+                    className={`border h-11 py-0 ${getMyanmarLeadingClass(locale)}  border-slate-200 bg-white`}
                     placeholder={labels.placeholders.serviceType}
                   />
                 )}
@@ -146,7 +152,10 @@ export default function CreateServiceTypeScreen() {
 
             <View className="gap-1.5">
               <View className="flex-row items-center gap-1">
-                <Text className="text-sm font-medium text-slate-900" style={style}>
+                <Text
+                  className={`text-sm font-medium ${getMyanmarLeadingClass(locale)}  text-slate-900`}
+                  style={style}
+                >
                   {labels.fieldLabels.langEng}
                 </Text>
                 <Text className="text-red-500">*</Text>
@@ -158,7 +167,7 @@ export default function CreateServiceTypeScreen() {
                   <Input
                     value={value}
                     onChangeText={onChange}
-                    className="border border-slate-200 bg-white"
+                    className={`border h-11 py-0 ${getMyanmarLeadingClass(locale)}  border-slate-200 bg-white`}
                     placeholder={labels.placeholders.langEng}
                   />
                 )}
@@ -172,7 +181,10 @@ export default function CreateServiceTypeScreen() {
 
             <View className="gap-1.5">
               <View className="flex-row items-center gap-1">
-                <Text className="text-sm font-medium text-slate-900" style={style}>
+                <Text
+                  className={`text-sm font-medium ${getMyanmarLeadingClass(locale)}  text-slate-900`}
+                  style={style}
+                >
                   {labels.fieldLabels.langMy}
                 </Text>
                 <Text className="text-red-500">*</Text>
@@ -184,7 +196,7 @@ export default function CreateServiceTypeScreen() {
                   <Input
                     value={value}
                     onChangeText={onChange}
-                    className="border border-slate-200 bg-white"
+                    className={`border h-11 py-0 ${getMyanmarLeadingClass(locale)}  border-slate-200 bg-white`}
                     placeholder={labels.placeholders.langMy}
                   />
                 )}

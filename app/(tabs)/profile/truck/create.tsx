@@ -1,5 +1,8 @@
 import { APP_COLORS } from "@/constants/colors";
-import { myanmarUITextStyle } from "@/constants/myanmar-font";
+import {
+  getMyanmarLeadingClass,
+  myanmarUITextStyle,
+} from "@/constants/myanmar-font";
 import profileLocale from "@/locale/profile/profile.json";
 import { useLocaleStore } from "@/stores/client/locale-store";
 import { useCreateTruck } from "@/stores/server/truck/create-mutation";
@@ -109,7 +112,10 @@ export default function CreateTruckScreen() {
   ) => (
     <View className="gap-1.5">
       <View className="flex-row items-center gap-1">
-        <Text className="text-sm font-medium text-slate-900" style={style}>
+        <Text
+          className={`text-sm font-medium text-slate-900 ${getMyanmarLeadingClass(locale)} `}
+          style={style}
+        >
           {labels.fieldLabels[key]}
         </Text>
         {options?.required ? <Text className="text-red-500">*</Text> : null}
@@ -123,7 +129,7 @@ export default function CreateTruckScreen() {
             onChangeText={onChange}
             keyboardType={options?.keyboardType}
             autoCapitalize="none"
-            className="border border-slate-200 bg-white"
+            className={`border py-0 h-11 ${getMyanmarLeadingClass(locale)}  border-slate-200 bg-white`}
           />
         )}
       />
@@ -145,7 +151,7 @@ export default function CreateTruckScreen() {
           <Ionicons name="arrow-back" size={22} color="#475569" />
         </Pressable>
         <Text
-          className="flex-1 px-3 text-center text-[24px] font-bold text-slate-900"
+          className={`flex-1 px-3 text-center text-lg ${getMyanmarLeadingClass(locale)}  font-bold text-slate-900  `}
           style={style}
         >
           {labels.title}
@@ -206,10 +212,12 @@ export default function CreateTruckScreen() {
                         }
                       }}
                     >
-                      <Select.Trigger className="rounded-xl border border-slate-200 bg-white px-2.5">
+                      <Select.Trigger
+                        className={`rounded-xl h-11 py-0 ${getMyanmarLeadingClass(locale)}  border border-slate-200 bg-white px-2.5`}
+                      >
                         <Select.Value
+                          className={` py-0 text-sm ${getMyanmarLeadingClass(locale)}`}
                           placeholder={labels.fuelTypePlaceholder}
-                          style={style}
                         />
                         <Select.TriggerIndicator />
                       </Select.Trigger>

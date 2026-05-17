@@ -1,5 +1,8 @@
 import { APP_COLORS } from "@/constants/colors";
-import { myanmarUITextStyle } from "@/constants/myanmar-font";
+import {
+  getMyanmarLeadingClass,
+  myanmarUITextStyle,
+} from "@/constants/myanmar-font";
 import profileLocale from "@/locale/profile/profile.json";
 import { useLocaleStore } from "@/stores/client/locale-store";
 import { useUpdateServiceType } from "@/stores/server/service-type/update-mutation";
@@ -111,7 +114,7 @@ export default function EditServiceTypeScreen() {
           <Ionicons name="arrow-back" size={22} color="#475569" />
         </Pressable>
         <Text
-          className="flex-1 px-3 text-center text-[24px] font-bold text-slate-900"
+          className={`flex-1 px-3 text-center text-lg ${getMyanmarLeadingClass(locale)}  font-bold text-slate-900  `}
           style={style}
         >
           {labels.title}
@@ -130,7 +133,10 @@ export default function EditServiceTypeScreen() {
           <View className="gap-3">
             <View className="gap-1.5">
               <View className="flex-row items-center gap-1">
-                <Text className="text-sm font-medium text-slate-900" style={style}>
+                <Text
+                  className={`text-sm font-medium ${getMyanmarLeadingClass(locale)}  text-slate-900`}
+                  style={style}
+                >
                   {createLabels.fieldLabels.serviceType}
                 </Text>
                 <Text className="text-red-500">*</Text>
@@ -138,13 +144,16 @@ export default function EditServiceTypeScreen() {
               <Input
                 value={serviceType}
                 editable={false}
-                className="border border-slate-200 bg-slate-100"
+                className={`border h-11 py-0 ${getMyanmarLeadingClass(locale)}  border-slate-200 bg-white`}
               />
             </View>
 
             <View className="gap-1.5">
               <View className="flex-row items-center gap-1">
-                <Text className="text-sm font-medium text-slate-900" style={style}>
+                <Text
+                  className={`text-sm font-medium ${getMyanmarLeadingClass(locale)}  text-slate-900`}
+                  style={style}
+                >
                   {createLabels.fieldLabels.langEng}
                 </Text>
                 <Text className="text-red-500">*</Text>
@@ -156,7 +165,7 @@ export default function EditServiceTypeScreen() {
                   <Input
                     value={value}
                     onChangeText={onChange}
-                    className="border border-slate-200 bg-white"
+                    className={`border h-11 py-0 ${getMyanmarLeadingClass(locale)}  border-slate-200 bg-white`}
                   />
                 )}
               />
@@ -169,7 +178,10 @@ export default function EditServiceTypeScreen() {
 
             <View className="gap-1.5">
               <View className="flex-row items-center gap-1">
-                <Text className="text-sm font-medium text-slate-900" style={style}>
+                <Text
+                  className={`text-sm font-medium ${getMyanmarLeadingClass(locale)}  text-slate-900`}
+                  style={style}
+                >
                   {createLabels.fieldLabels.langMy}
                 </Text>
                 <Text className="text-red-500">*</Text>
@@ -181,7 +193,7 @@ export default function EditServiceTypeScreen() {
                   <Input
                     value={value}
                     onChangeText={onChange}
-                    className="border border-slate-200 bg-white"
+                    className={`border h-11 py-0 ${getMyanmarLeadingClass(locale)}  border-slate-200 bg-white`}
                   />
                 )}
               />
@@ -194,7 +206,10 @@ export default function EditServiceTypeScreen() {
 
             <View className="gap-1.5">
               <View className="flex-row items-center gap-1">
-                <Text className="text-sm font-medium text-slate-900" style={style}>
+                <Text
+                  className={`text-sm font-medium ${getMyanmarLeadingClass(locale)}  text-slate-900`}
+                  style={style}
+                >
                   {labels.activeLabel}
                 </Text>
                 <Text className="text-red-500">*</Text>
@@ -217,8 +232,14 @@ export default function EditServiceTypeScreen() {
                       }
                     }}
                   >
-                    <Select.Trigger className="rounded-xl border border-slate-200 bg-white px-2.5">
-                      <Select.Value style={style} />
+                    <Select.Trigger
+                      className={`rounded-xl h-11 py-0 ${getMyanmarLeadingClass(locale)}  border border-slate-200 bg-white px-2.5`}
+                    >
+                      <Select.Value
+                        placeholder="Select"
+                        className={` py-0 text-sm ${getMyanmarLeadingClass(locale)}`}
+                        style={style}
+                      />
                       <Select.TriggerIndicator />
                     </Select.Trigger>
                     <Select.Portal>
@@ -232,7 +253,10 @@ export default function EditServiceTypeScreen() {
                           <Select.ItemLabel style={style} />
                           <Select.ItemIndicator />
                         </Select.Item>
-                        <Select.Item value="false" label={labels.status.inactive}>
+                        <Select.Item
+                          value="false"
+                          label={labels.status.inactive}
+                        >
                           <Select.ItemLabel style={style} />
                           <Select.ItemIndicator />
                         </Select.Item>
@@ -250,7 +274,10 @@ export default function EditServiceTypeScreen() {
             onPress={() => router.back()}
             className="flex-1 items-center justify-center rounded-xl bg-slate-200 py-3.5"
           >
-            <Text className="text-base font-semibold text-slate-700" style={style}>
+            <Text
+              className={`text-sm font-medium ${getMyanmarLeadingClass(locale)}  text-slate-900`}
+              style={style}
+            >
               {labels.cancel}
             </Text>
           </Pressable>

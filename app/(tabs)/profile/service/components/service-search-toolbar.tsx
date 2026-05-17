@@ -1,13 +1,14 @@
-import { CompactTextInput } from "@/components/compact-text-input";
 import { APP_COLORS } from "@/constants/colors";
-import {
-  COMPACT_SEARCH_BAR_INPUT_CLASSNAME,
-  COMPACT_SEARCH_BAR_ROW_CLASSNAME,
-} from "@/constants/compact-input";
+import { getMyanmarLeadingClass } from "@/constants/myanmar-font";
 import type { AppLocale } from "@/stores/client/locale-store";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { Input } from "heroui-native";
 import React from "react";
 import { Pressable, View } from "react-native";
+
+/** Match truck list search (`TruckSearchToolbar`). */
+const SERVICE_SEARCH_INPUT_CLASSNAME =
+  "flex-1 border h-11 py-0 text-sm border-slate-200 bg-white ";
 
 type ServiceSearchToolbarProps = {
   locale: AppLocale;
@@ -21,7 +22,7 @@ type ServiceSearchToolbarProps = {
 };
 
 export function ServiceSearchToolbar({
-  locale,
+  locale: _locale,
   quickQuery,
   placeholder,
   advancedOpen,
@@ -32,32 +33,20 @@ export function ServiceSearchToolbar({
 }: ServiceSearchToolbarProps) {
   return (
     <View className="mb-4 flex-row items-center gap-2">
-      <View className={COMPACT_SEARCH_BAR_ROW_CLASSNAME}>
-        <CompactTextInput
-          locale={locale}
+      <View className="relative flex-1">
+        <Input
           value={quickQuery}
           onChangeText={onChangeQuickQuery}
           placeholder={placeholder}
-          className={COMPACT_SEARCH_BAR_INPUT_CLASSNAME}
+          className={`flex-1 border h-11 py-0 text-sm border-slate-200 bg-white ${getMyanmarLeadingClass(_locale)}`}
+          style={{ paddingRight: 44 }}
         />
-
-        {!!quickQuery && (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Clear search"
-            onPress={onClearQuickQuery}
-            className="justify-center pl-0.5 pr-1"
-            hitSlop={10}
-          >
-            <Ionicons name="close-circle" size={22} color="#94a3b8" />
-          </Pressable>
-        )}
 
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Advanced filters"
           onPress={onToggleAdvanced}
-          className="justify-center px-2.5"
+          className="absolute bottom-0 right-2 top-0 justify-center"
           hitSlop={8}
         >
           <Ionicons
@@ -67,6 +56,15 @@ export function ServiceSearchToolbar({
           />
         </Pressable>
       </View>
+
+      {!!quickQuery && (
+        <Pressable
+          onPress={onClearQuickQuery}
+          className="items-center justify-center rounded-full border border-slate-200 bg-white p-2.5"
+        >
+          <Ionicons name="close" size={18} color="#4A7CFF" />
+        </Pressable>
+      )}
 
       <Pressable
         onPress={onPressAdd}
