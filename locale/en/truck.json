@@ -3,7 +3,14 @@
     "master": {
       "title": "Trucks",
       "searchPlaceholder": "Search by plate number...",
-      "empty": "No trucks found"
+      "empty": "No trucks found",
+      "card": {
+        "engineNo": "Engine",
+        "chassisNo": "Chassis",
+        "fuelType": "Fuel Type",
+        "frontTire": "F Tire",
+        "backTire": "B Tire"
+      }
     },
     "search": {
       "advancedTitle": "Advanced Search",

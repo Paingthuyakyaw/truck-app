@@ -59,7 +59,6 @@ export default function TruckManagementScreen() {
     const tTruck = useTranslation('truck')
     const router = useRouter();
     const locale = useLocaleStore((state) => state.locale);
-    const t = profileLocale[locale].truckScreen;
 
     const mmTextStyle = useMemo(() => myanmarUITextStyle(), []);
     const style = locale === "mm" ? mmTextStyle : undefined;
@@ -140,8 +139,11 @@ export default function TruckManagementScreen() {
                         item={item}
                         locale={locale}
                         labels={{
-                            fuelType: t.labels.fuelType,
-                            frontTire: t.labels.frontTire,
+                            fuelType: tTruck.master.card.fuelType,
+                            frontTire: tTruck.master.card.frontTire,
+                            backTire:tTruck.master.card.backTire,
+                            chassisNo:tTruck.master.card.chassisNo,
+                            engineNo:tTruck.master.card.engineNo
                         }}
                         onPress={() => router.push(`/(tabs)/profile/truck/edit/${item.id}`)}
                     />
@@ -157,7 +159,7 @@ export default function TruckManagementScreen() {
                         <TruckSearchToolbar
                             locale={locale}
                             quickQuery={ui.quickQuery}
-                            placeholder={t.searchPlaceholder}
+                            placeholder={tTruck.master.searchPlaceholder}
                             advancedOpen={ui.advancedOpen}
                             onChangeQuickQuery={(quickQuery) => patchUi({quickQuery})}
                             onClearQuickQuery={() => patchUi({quickQuery: ""})}
@@ -306,7 +308,7 @@ export default function TruckManagementScreen() {
                             className="px-6 py-8 text-center text-slate-500"
                             style={style}
                         >
-                            {t.empty}
+                            {tTruck.master.empty}
                         </Text>
                     )
                 }

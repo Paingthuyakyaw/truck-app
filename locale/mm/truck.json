@@ -3,14 +3,21 @@
     "master": {
       "title": "ကုန်တင်ယာဉ်များ",
       "searchPlaceholder": "ကားနံပါတ်ဖြင့်ရှာဖွေရန်...",
-      "empty": "ကုန်တင်ယာဉ်များ မတွေ့ရှိပါ။"
+      "empty": "ကုန်တင်ယာဉ်များ မတွေ့ရှိပါ။",
+      "card": {
+        "engineNo": "အင်ဂျင်",
+        "chassisNo": "ချက်စီ",
+        "fuelType": "စက်သုံးဆီ",
+        "frontTire": "ရှေ့ဘီး",
+        "backTire": "နောက်ဘီး"
+      }
     },
     "search": {
       "advancedTitle": "အဆင့်မြင့်ရှာဖွေမှု",
       "plateNo": "ယာဉ်နံပါတ်",
       "model": "တံဆိပ်",
       "modelYear": "မော်ဒယ်ခုနှစ်",
-      "chassisNo": "ရှာစီနံပါတ်",
+      "chassisNo": "ချက်စီနံပါတ်",
       "placeholders": {
         "plateNo": "1T-9999",
         "model": "Canter",
