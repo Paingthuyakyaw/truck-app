@@ -747,7 +747,7 @@ export default function TeamEditUserScreen() {
                         <Switch
                             animation={{
                                 backgroundColor: {
-                                    value: isActiveEnabled ? ['#E2E8F0', APP_COLORS.primary] : ['#E2E8F0', '#E2E8F0']
+                                    value: isUnlockedEnabled ? ['#EAF1F8', APP_COLORS.primary] : ['#EAF1F8', '#EAF1F8']
                                 },
                             }}
                             isSelected={isUnlockedEnabled}
