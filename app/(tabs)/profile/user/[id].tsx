@@ -5,7 +5,6 @@ import {
 } from "@/constants/myanmar-font";
 import {useTranslation} from "@/hooks/use-translation";
 import {getApiErrorAlertCopy} from "@/lib/api-error-alert";
-import profileLocale from "@/locale/profile/profile.json";
 import {useLocaleStore} from "@/stores/client/locale-store";
 import type {CreateUserRole} from "@/stores/server/user/create-mutation";
 import {
@@ -158,7 +157,7 @@ function buildSchema(locale: "en" | "mm") {
             .optional(),
         parentOwnerId: z.string().optional(),
     })
-        .superRefine((data,ctx) => {
+        .superRefine((data, ctx) => {
             if (data.role === "VIEWER" && !String(data.parentOwnerId ?? "").trim()) {
                 ctx.addIssue({
                     code: z.ZodIssueCode.custom,
@@ -191,8 +190,6 @@ export default function TeamEditUserScreen() {
         notLocked?: string;
     }>();
     const locale = useLocaleStore((state) => state.locale);
-    const t2 = profileLocale[locale];
-    const labels = t2.editUserScreen;
     const errorCatalog = useTranslation("error");
     const mmTextStyle = useMemo(() => myanmarUITextStyle(), []);
     const style = locale === "mm" ? mmTextStyle : undefined;
@@ -254,14 +251,14 @@ export default function TeamEditUserScreen() {
     const onSubmit = (values: FormValues) => {
         const id = String(params.id ?? "").trim();
         if (!id) {
-            Alert.alert(labels.errorTitle, labels.invalidUserId);
+            Alert.alert(t.errorTitle, t.userInvalid);
             return;
         }
 
         const dateOfBirthIso = toIsoDate(values.dateOfBirth);
         const joinDateIso = toIsoDate(values.joinDate);
         if (!dateOfBirthIso || !joinDateIso) {
-            Alert.alert(labels.errorTitle, labels.dateInvalid);
+            Alert.alert(t.errorTitle, t.dateInvalid);
             return;
         }
 
@@ -280,13 +277,13 @@ export default function TeamEditUserScreen() {
             },
             {
                 onSuccess: () => {
-                    Alert.alert(labels.successTitle, labels.successBody);
+                    Alert.alert(t.successTitle, t.successBody);
                     router.back();
                 },
                 onError: (err: unknown) => {
                     const {title, message} = getApiErrorAlertCopy(err, errorCatalog, {
-                        title: labels.errorTitle,
-                        message: labels.errorBody,
+                        title: t.errorTitle,
+                        message: t.errorBody,
                     });
                     Alert.alert(title, message);
                 },
@@ -297,22 +294,22 @@ export default function TeamEditUserScreen() {
     const onToggleActive = (nextStatus: boolean) => {
         const id = String(params.id ?? "").trim();
         if (!id) {
-            Alert.alert(labels.errorTitle, labels.invalidUserId);
+            Alert.alert(t.errorTitle, t.userInvalid);
             return;
         }
-        const message = nextStatus
-            ? labels.statusActiveEnableMsg
-            : labels.statusActiveDisableMsg;
-        Alert.alert(labels.statusConfirmTitle, message, [
-            {text: labels.confirmCancel, style: "cancel"},
+        const title = nextStatus ? t.accountActiveTitle : t.accountInactiveTitle;
+        const message = nextStatus ? t.accountActiveMsg : t.accountInactiveMsg;
+
+        Alert.alert(title, message, [
+            {text: t.confirmCancel, style: "cancel"},
             {
-                text: labels.confirmOk,
+                text: t.confirmOk,
                 onPress: () => {
                     mutateActiveStatus(
                         {id, status: nextStatus},
                         {
                             onSuccess: () => setIsActiveEnabled(nextStatus),
-                            onError: () => Alert.alert(labels.errorTitle, labels.errorBody),
+                            onError: () => Alert.alert(t.errorTitle, t.errorBody),
                         },
                     );
                 },
@@ -323,22 +320,21 @@ export default function TeamEditUserScreen() {
     const onToggleLocked = (nextStatus: boolean) => {
         const id = String(params.id ?? "").trim();
         if (!id) {
-            Alert.alert(labels.errorTitle, labels.invalidUserId);
+            Alert.alert(t.errorTitle, t.userInvalid);
             return;
         }
-        const message = nextStatus
-            ? labels.statusLockEnableMsg
-            : labels.statusLockDisableMsg;
-        Alert.alert(labels.statusConfirmTitle, message, [
-            {text: labels.confirmCancel, style: "cancel"},
+        const title = nextStatus ? t.accountUnlockTitle : t.accountLockTitle ;
+        const message = nextStatus ? t.accountUnlockMsg : t.accountLockMsg ;
+        Alert.alert(title ,message, [
+            {text: t.confirmCancel, style: "cancel"},
             {
-                text: labels.confirmOk,
+                text: t.confirmOk,
                 onPress: () => {
                     mutateLockStatus(
                         {id, status: nextStatus},
                         {
                             onSuccess: () => setIsUnlockedEnabled(nextStatus),
-                            onError: () => Alert.alert(labels.errorTitle, labels.errorBody),
+                            onError: () => Alert.alert(t.errorTitle, t.errorBody),
                         },
                     );
                 },
@@ -600,7 +596,7 @@ export default function TeamEditUserScreen() {
 
                                     return (
                                         <Select
-                                            value={{value : value ,label: selectedLabel ? selectedLabel : ""}}
+                                            value={{value: value, label: selectedLabel ? selectedLabel : ""}}
                                             onValueChange={(next) => {
                                                 if (next && !Array.isArray(next)) {
                                                     onChange(next.value as CreateUserRole);
@@ -611,7 +607,7 @@ export default function TeamEditUserScreen() {
                                                 className={`rounded-xl h-11 py-0 ${getMyanmarLeadingClass(locale)} border border-slate-200 bg-white px-2.5`}
                                             >
                                                 <Select.Value
-                                                    placeholder={labels.rolePlaceholder}
+                                                    placeholder={t.placeholders.role}
                                                     className={`py-0 text-sm ${getMyanmarLeadingClass(locale)}`}
                                                 />
                                                 <Select.TriggerIndicator/>
@@ -627,7 +623,7 @@ export default function TeamEditUserScreen() {
                                                         <Select.Item
                                                             key={role.value}
                                                             value={role.value}
-                                                            label={ role.label ? role.label : ""}
+                                                            label={role.label ? role.label : ""}
                                                         >
                                                             <Select.ItemLabel style={style}/>
                                                             <Select.ItemIndicator/>
@@ -668,7 +664,7 @@ export default function TeamEditUserScreen() {
                                             value={String(value ?? "")}
                                             onChangeText={onChange}
                                             autoCapitalize="none"
-                                            placeholder={labels.parentOwnerPlaceholder}
+                                            placeholder={t.placeholders.parentOwner}
                                             className={inputClassName}
                                             {...androidMmInputProps}
                                         />

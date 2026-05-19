@@ -92,7 +92,27 @@
       "active": "Active",
       "inactive": "Inactive",
       "lock": "Locked",
-      "unlock": "Unlocked"
+      "unlock": "Unlocked",
+      "errorTitle": "Error",
+      "dateInvalid": "Invalid date format. Use dd/mm/yyyy.",
+      "userInvalid": "Invalid user ",
+      "successTitle": "Success",
+      "successBody": "User update success",
+      "errorBody": "Failed to update user",
+
+      "accountActiveTitle": "Activate account?",
+      "accountActiveMsg": "This user will regain full login access immediately.",
+      "accountInactiveTitle": "Deactivate account?",
+      "accountInactiveMsg": "The user will be logged out and lose access to the app.",
+
+      "accountLockTitle": "Lock account?",
+      "accountLockMsg": "This account will be locked immediately.",
+      "accountUnlockTitle": "Unlock account?",
+      "accountUnlockMsg": "This account will be unlocked immediately.",
+
+
+      "confirmCancel": "Cancel",
+      "confirmOk": "Confirm"
     }
   }
 }

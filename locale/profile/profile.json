@@ -37,62 +37,6 @@
       "errorTitle": "Could not update password",
       "errorGeneric": "Something went wrong. Please try again."
     },
-    "teamScreen": {
-      "advancedTitle": "Advanced Search",
-      "labels": {
-        "fullName": "Full Name",
-        "phoneNumber": "Phone Number",
-        "role": "Role",
-        "email": "Email",
-        "isActive": "Is Active",
-        "isNotLocked": "Is Not Locked"
-      },
-      "placeholders": {
-        "fullName": "Enter full name",
-        "phoneNumber": "Enter phone number",
-        "role": "ADMIN / OWNER / STAFF",
-        "email": "Enter email"
-      },
-      "tri": {
-        "any": "Any",
-        "yes": "Yes",
-        "no": "No"
-      },
-      "reset": "Reset",
-      "apply": "Apply",
-      "active": "Active",
-      "inactive": "Inactive",
-      "locked": "Locked",
-      "unlocked": "Unlocked",
-      "error": "Something went wrong.",
-      "empty": "No users found."
-    },
-    "editUserScreen": {
-      "title": "Edit User",
-      "infoTitle": "Before you save",
-      "infoBody": "Phone must be 09 followed by 9 digits (11 total). Dates use dd/mm/yyyy. VIEWER role requires Parent Owner ID.",
-      "datePlaceholder": "dd/mm/yyyy",
-      "rolePlaceholder": "Select role",
-      "submit": "Update",
-      "submitting": "Updating...",
-      "statusTitle": "User Status",
-      "statusActive": "Active",
-      "statusLock": "Locked / Unlocked",
-      "successTitle": "Success",
-      "successBody": "User account updated successfully.",
-      "errorTitle": "Error",
-      "errorBody": "Unable to update user account.",
-      "dateInvalid": "Invalid date format. Use dd/mm/yyyy.",
-      "invalidUserId": "Invalid user id.",
-      "parentOwnerPlaceholder": "Parent owner user ID",
-      "statusConfirmTitle": "Confirm change",
-      "statusActiveEnableMsg": "Mark this user as active?",
-      "statusActiveDisableMsg": "Mark this user as inactive?",
-      "statusLockEnableMsg": "Unlock this user account?",
-      "statusLockDisableMsg": "Lock this user account?",
-      "confirmCancel": "Cancel",
-      "confirmOk": "Confirm"
-    },
     "truckScreen": {
       "title": "Truck Management",
       "searchPlaceholder": "Search by plate number...",
@@ -267,62 +211,6 @@
       "ok": "အိုကေ",
       "errorTitle": "စကားဝှက် မပြောင်းနိုင်ပါ",
       "errorGeneric": "တစ်ခုခု မှားယွင်းနေပါသည်။ ထပ်ကြိုးစားပါ။"
-    },
-    "teamScreen": {
-      "advancedTitle": "အဆင့်မြင့်ရှာဖွေမှု",
-      "labels": {
-        "fullName": "အမည်",
-        "phoneNumber": "ဖုန်းနံပါတ်",
-        "role": "အခန်းကဏ္ဍ",
-        "email": "အီးမေးလ်",
-        "isActive": "တက်ကြွမှု",
-        "isNotLocked": "သော့ဖွင့်ထားမှု"
-      },
-      "placeholders": {
-        "fullName": "အမည် ထည့်ပါ",
-        "phoneNumber": "ဖုန်းနံပါတ် ထည့်ပါ",
-        "role": "ADMIN / OWNER / STAFF",
-        "email": "အီးမေးလ် ထည့်ပါ"
-      },
-      "tri": {
-        "any": "အားလုံး",
-        "yes": "ဟုတ်",
-        "no": "မဟုတ်"
-      },
-      "reset": "ရှင်းလင်းမည်",
-      "apply": "ကျင့်သုံး",
-      "active": "Active",
-      "inactive": "Inactive",
-      "locked": "Locked",
-      "unlocked": "Unlocked",
-      "error": "အမှားတစ်ခု ဖြစ်ပွားခဲ့သည်။",
-      "empty": "အသုံးပြုသူ မတွေ့ရှိပါ။"
-    },
-    "editUserScreen": {
-      "title": "အသုံးပြုသူ ပြင်ဆင်ရန်",
-      "infoTitle": "သိမ်းမီသတိပြုရန်",
-      "infoBody": "ဖုန်းနံပါတ် ၀၉ နှင့် ဂဏန်း ၁၁ လုံး။ နေ့စွဲ dd/mm/yyyy။ VIEWER အတွက် Parent Owner ID လိုအပ်ပါသည်။",
-      "datePlaceholder": "dd/mm/yyyy",
-      "rolePlaceholder": "အခန်းကဏ္ဍ ရွေးပါ",
-      "submit": "ပြင်ဆင်မည်",
-      "submitting": "ပြင်ဆင်နေသည်...",
-      "statusTitle": "အသုံးပြုသူ အခြေအနေ",
-      "statusActive": "တက်ကြွမှု",
-      "statusLock": "သော့ဖွင့်ထားမှု",
-      "successTitle": "အောင်မြင်သည်",
-      "successBody": "အသုံးပြုသူ အချက်အလက် ပြင်ဆင်ပြီးပါပြီ။",
-      "errorTitle": "အမှား",
-      "errorBody": "အသုံးပြုသူ ပြင်ဆင်၍ မရပါ။",
-      "dateInvalid": "နေ့စွဲပုံစံ dd/mm/yyyy သုံးပါ။",
-      "invalidUserId": "အသုံးပြုသူ ID မမှန်ကန်ပါ။",
-      "parentOwnerPlaceholder": "မိဘ ပိုင်ရှင် အသုံးပြုသူ ID",
-      "statusConfirmTitle": "အပြောင်းအလဲ အတည်ပြုချင်ပါသလား",
-      "statusActiveEnableMsg": "ဤအသုံးပြုသူကို တက်ကြွစေမလား?",
-      "statusActiveDisableMsg": "ဤအသုံးပြုသူကို တက်ကြွမှု ရပ်မလား?",
-      "statusLockEnableMsg": "အကောင့်ကို သော့ဖွင့်မလား?",
-      "statusLockDisableMsg": "အကောင့်ကို သော့ပိတ်မလား?",
-      "confirmCancel": "ပယ်ဖျက်",
-      "confirmOk": "အတည်ပြုပါ"
     },
     "truckScreen": {
       "title": "ထရက်ကား စီမံခန့်ခွဲမှု",
