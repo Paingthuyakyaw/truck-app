@@ -30,6 +30,8 @@ import { CompactSelect } from "./components/compact-select";
 import { TeamSearchToolbar } from "./components/team-search-toolbar";
 import { TeamUserCard } from "./components/team-user-card";
 import {useTranslation} from "@/hooks/use-translation";
+import { useThrottledCallback } from '@/hooks/use-throttled-callback';
+import {UserTeamItem} from "@/stores/server/user/typed";
 
 type SelectBoolValue = "all" | "true" | "false";
 
@@ -201,6 +203,28 @@ export default function TeamManagementScreen() {
     [data],
   );
 
+  // Wrap the navigation handler action loop inside the throttle engine
+  const handleCardPress = useThrottledCallback((item: UserTeamItem) => {
+    router.push({
+      pathname: "/(tabs)/profile/user/[id]",
+      params: {
+        id: item.id,
+        fullName: item.fullName,
+        email: item.email,
+        phoneNumber: item.phoneNumber || item.username,
+        role: item.role,
+        active: String(item.active),
+        notLocked: String(item.notLocked),
+      },
+    })
+  }, 600);
+
+  const handleAddPress = useThrottledCallback(()=>{
+    router.push("/(tabs)/profile/user/create")
+  },600)
+
+
+
   return (
     <SafeAreaView className="flex-1 bg-[#f3f7fb]">
       <View className="flex-row items-center px-4 pb-2 pt-1">
@@ -229,20 +253,7 @@ export default function TeamManagementScreen() {
           <TeamUserCard
             item={item}
             locale={locale}
-            onPress={() =>
-              router.push({
-                pathname: "/(tabs)/profile/user/[id]",
-                params: {
-                  id: item.id,
-                  fullName: item.fullName,
-                  email: item.email,
-                  phoneNumber: item.phoneNumber || item.username,
-                  role: item.role,
-                  active: String(item.active),
-                  notLocked: String(item.notLocked),
-                },
-              })
-            }
+            onPress={() =>handleCardPress(item)}
           />
         )}
         onEndReachedThreshold={0.2}
@@ -261,7 +272,7 @@ export default function TeamManagementScreen() {
               onChangeQuickQuery={(quickQuery) => patchUi({ quickQuery })}
               onClearQuickQuery={() => patchUi({ quickQuery: "" })}
               onToggleAdvanced={onToggleAdvanced}
-              onPressAdd={() => router.push("/(tabs)/profile/user/create")}
+              onPressAdd={() => handleAddPress()}
             />
 
             {ui.advancedOpen ? (
