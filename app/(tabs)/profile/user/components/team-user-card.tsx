@@ -48,8 +48,8 @@ export function TeamUserCard({ item, locale, onPress }: TeamUserCardProps) {
                         </View>
 
                         {/* Right Tag Column (Keeps its clean structure) */}
-                        <View className="shrink-0 bg-slate-100 rounded-lg px-2.5 py-1">
-                            <Text className="text-[11px] font-semibold text-slate-600 tracking-wide" style={style}>
+                        <View className="shrink-0 bg-[#EAF1F8] rounded-md px-2.5 py-1.5">
+                            <Text className="text-[12px] font-bold text-[#3F5F87] font-mono tracking-wide" style={style}>
                                 {(tLookup.roles as any)[item.role] || "-"}
                             </Text>
                         </View>
