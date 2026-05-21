@@ -10,6 +10,8 @@ export const APP_COLORS = {
    */
   primary: "#5a80ab",
 
+  primaryPressed : "#456385",
+
   /**
    * Branded structural containers.
    * WHEN: Subtle brand highlighting is needed without overwhelming high-emphasis dark colors, or as immediate micro-feedback during click states.

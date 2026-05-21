@@ -68,28 +68,29 @@ export default function LoginScreen() {
             >
                 <Card className="gap-4"
                       style={{
-                          backgroundColor:APP_COLORS.card,
-                          borderColor:APP_COLORS.border,
-                          borderWidth:1,
-                          borderRadius:12
+                          backgroundColor: APP_COLORS.card,
+                          borderColor: APP_COLORS.border,
+                          borderWidth: 1,
+                          borderRadius: 12
                       }}
                 >
                     <Card.Header className="pb-0">
                         <Card.Title
-                                    className={`${getMyanmarLeadingClass(locale)} `}
-                                    style={[{color:APP_COLORS.textPrimary},textStyle]}>
+                            className={`${getMyanmarLeadingClass(locale)} `}
+                            style={[{color: APP_COLORS.textPrimary}, textStyle]}>
                             {t.title}
                         </Card.Title>
                         <Card.Description
-                            className = {`text-sm ${getMyanmarLeadingClass(locale)}`}
-                            style={[{color:APP_COLORS.textSecondary},textStyle]}>
+                            className={`text-sm ${getMyanmarLeadingClass(locale)}`}
+                            style={[{color: APP_COLORS.textSecondary}, textStyle]}>
                             {t.description}
                         </Card.Description>
                     </Card.Header>
 
                     <Card.Body className="gap-3">
                         <View className="gap-2">
-                            <Text className={`text-sm ${getMyanmarLeadingClass(locale)}`} style={[{color:APP_COLORS.textSecondary},textStyle]}>
+                            <Text className={`text-sm ${getMyanmarLeadingClass(locale)}`}
+                                  style={[{color: APP_COLORS.textSecondary}, textStyle]}>
                                 {t.username}
                             </Text>
                             <Controller
@@ -104,7 +105,7 @@ export default function LoginScreen() {
                                         placeholderTextColor={APP_COLORS.textMuted}
                                         autoCapitalize="none"
                                         style={{
-                                            backgroundColor:APP_COLORS.inputBackground,
+                                            backgroundColor: APP_COLORS.inputBackground,
                                             borderColor: errors.username ? APP_COLORS.error : APP_COLORS.border,
                                             borderWidth: 1,
                                             color: APP_COLORS.textPrimary
@@ -114,8 +115,8 @@ export default function LoginScreen() {
                             />
                             {!!errors.username?.message ? (
                                 <Text
-                                    className={`text-sm ${getMyanmarLeadingClass(locale)} `}
-                                    style={[{color:APP_COLORS.error},textStyle]}
+                                    className={`text-xs ${getMyanmarLeadingClass(locale)} `}
+                                    style={[{color: APP_COLORS.error}, textStyle]}
                                 >
                                     {errors.username.message}
                                 </Text>
@@ -124,7 +125,8 @@ export default function LoginScreen() {
 
                         <View className="gap-2">
 
-                            <Text className={`text-sm ${getMyanmarLeadingClass(locale)}`} style={[{color:APP_COLORS.textPrimary},textStyle]}>
+                            <Text className={`text-sm ${getMyanmarLeadingClass(locale)}`}
+                                  style={[{color: APP_COLORS.textSecondary}, textStyle]}>
                                 {t.password}
                             </Text>
 
@@ -132,7 +134,7 @@ export default function LoginScreen() {
                                 control={control}
                                 name="password"
                                 render={({field: {onChange, value}}) => (
-                                    <View style={{ position: "relative", justifyContent: "center" }}>
+                                    <View style={{position: "relative", justifyContent: "center"}}>
 
                                         <Input
                                             value={value}
@@ -140,9 +142,9 @@ export default function LoginScreen() {
                                             onChangeText={onChange}
                                             placeholder="Enter password"
                                             placeholderTextColor={APP_COLORS.textMuted}
-                                            secureTextEntry = {!showPassword}
+                                            secureTextEntry={!showPassword}
                                             style={{
-                                                backgroundColor:APP_COLORS.inputBackground,
+                                                backgroundColor: APP_COLORS.inputBackground,
                                                 borderColor: errors.password ? APP_COLORS.error : APP_COLORS.border,
                                                 borderWidth: 1,
                                                 color: APP_COLORS.textPrimary,
@@ -152,14 +154,16 @@ export default function LoginScreen() {
                                         />
                                         <Pressable
                                             onPress={() => setShowPassword(!showPassword)}
-                                            style={({pressed})=>({
-                                                position:'absolute',
-                                                right: 12 ,
-                                                padding: 4 ,
-                                                opacity: pressed ? 0.7 : 1
+                                            style={({pressed}) => ({
+                                                position: 'absolute',
+                                                right: 12,
+                                                width: 32,
+                                                padding: 4,
+                                                opacity: pressed ? 0.75 : 1
                                             })}
                                         >
-                                            <Feather name={showPassword ? 'eye-off' : 'eye'} size={18} color={APP_COLORS.textMuted}/>
+                                            <Feather name={showPassword ? 'eye-off' : 'eye'} size={18}
+                                                     color={APP_COLORS.textMuted}/>
                                         </Pressable>
 
 
@@ -168,14 +172,16 @@ export default function LoginScreen() {
                                 )}
                             />
                             {!!errors.password?.message ? (
-                                <Text className={`text-sm ${getMyanmarLeadingClass(locale)}`} style={[{color:APP_COLORS.error},textStyle]}>
+                                <Text className={`text-xs ${getMyanmarLeadingClass(locale)}`}
+                                      style={[{color: APP_COLORS.error}, textStyle]}>
                                     {errors.password.message}
                                 </Text>
                             ) : null}
                         </View>
 
                         {errorMessage ? (
-                            <Text className={`text-sm ${getMyanmarLeadingClass(locale)}`} style={[{color:APP_COLORS.error},textStyle]}>
+                            <Text className={`text-xs ${getMyanmarLeadingClass(locale)}`}
+                                  style={[{color: APP_COLORS.error}, textStyle]}>
                                 {errorMessage}
                             </Text>
                         ) : null}
@@ -187,14 +193,15 @@ export default function LoginScreen() {
                             isDisabled={isPending}
                             className={`w-full ${getMyanmarLeadingClass(locale)}`}
                             style={{
-                                backgroundColor:APP_COLORS.primary,
+                                backgroundColor: APP_COLORS.primary,
                                 opacity: isPending ? 0.7 : 1
                             }}
                         >
                             {isPending ? (
                                 <Spinner size="sm" color="white"/>
                             ) : (
-                                <Text className={`text-sm ${getMyanmarLeadingClass(locale)}`} style={[{ color: "#FFFFFF" }]}>{t.login}</Text>
+                                <Text className={`text-sm ${getMyanmarLeadingClass(locale)} font-bold`}
+                                      style={[{color: "#FFFFFF"}]}>{t.login}</Text>
                             )}
                         </Button>
                     </Card.Footer>
