@@ -4,12 +4,13 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {Button, Card, Input, Spinner} from "heroui-native";
 import React, {useMemo, useState} from "react";
 import {Controller, useForm} from "react-hook-form";
-import {KeyboardAvoidingView, Platform, Text, View} from "react-native";
+import {KeyboardAvoidingView, Platform, Pressable, Text, View} from "react-native";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {z} from "zod";
 import {getMyanmarLeadingClass, myanmarUITextStyle} from "@/constants/myanmar-font";
 import {useLocaleStore} from "@/stores/client/locale-store";
 import {APP_COLORS} from "@/constants/colors";
+import {Feather} from "@expo/vector-icons";
 
 const formSchema = z.object({
     username: z.string().min(1, "Username is required"),
@@ -57,6 +58,7 @@ export default function LoginScreen() {
     const locale = useLocaleStore((state) => state.locale);
     const mmTextStyle = useMemo(() => myanmarUITextStyle(), []);
     const textStyle = locale === "mm" ? mmTextStyle : undefined;
+    const [showPassword, setShowPassword] = useState(false);
 
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: APP_COLORS.background}}>
@@ -97,7 +99,7 @@ export default function LoginScreen() {
                                     <Input
                                         value={value}
                                         onChangeText={onChange}
-                                        className=" leading-0"
+                                        className={`${getMyanmarLeadingClass(locale)}`}
                                         placeholder="Enter username"
                                         placeholderTextColor={APP_COLORS.textMuted}
                                         autoCapitalize="none"
@@ -121,27 +123,48 @@ export default function LoginScreen() {
                         </View>
 
                         <View className="gap-2">
+
                             <Text className={`text-sm ${getMyanmarLeadingClass(locale)}`} style={[{color:APP_COLORS.textPrimary},textStyle]}>
                                 {t.password}
                             </Text>
+
                             <Controller
                                 control={control}
                                 name="password"
                                 render={({field: {onChange, value}}) => (
-                                    <Input
-                                        value={value}
-                                        className=" leading-0"
-                                        onChangeText={onChange}
-                                        placeholder="Enter password"
-                                        placeholderTextColor={APP_COLORS.textMuted}
-                                        style={{
-                                            backgroundColor:APP_COLORS.inputBackground,
-                                            borderColor: errors.username ? APP_COLORS.error : APP_COLORS.border,
-                                            borderWidth: 1,
-                                            color: APP_COLORS.textPrimary
-                                        }}
-                                        secureTextEntry
-                                    />
+                                    <View style={{ position: "relative", justifyContent: "center" }}>
+
+                                        <Input
+                                            value={value}
+                                            className={`${getMyanmarLeadingClass(locale)}`}
+                                            onChangeText={onChange}
+                                            placeholder="Enter password"
+                                            placeholderTextColor={APP_COLORS.textMuted}
+                                            secureTextEntry = {!showPassword}
+                                            style={{
+                                                backgroundColor:APP_COLORS.inputBackground,
+                                                borderColor: errors.password ? APP_COLORS.error : APP_COLORS.border,
+                                                borderWidth: 1,
+                                                color: APP_COLORS.textPrimary,
+                                                paddingRight: 45
+                                            }}
+
+                                        />
+                                        <Pressable
+                                            onPress={() => setShowPassword(!showPassword)}
+                                            style={({pressed})=>({
+                                                position:'absolute',
+                                                right: 12 ,
+                                                padding: 4 ,
+                                                opacity: pressed ? 0.7 : 1
+                                            })}
+                                        >
+                                            <Feather name={showPassword ? 'eye-off' : 'eye'} size={18} color={APP_COLORS.textMuted}/>
+                                        </Pressable>
+
+
+                                    </View>
+
                                 )}
                             />
                             {!!errors.password?.message ? (
@@ -162,7 +185,7 @@ export default function LoginScreen() {
                         <Button
                             onPress={handleSubmit(onSubmit)}
                             isDisabled={isPending}
-                            className="w-full leading-0"
+                            className={`w-full ${getMyanmarLeadingClass(locale)}`}
                             style={{
                                 backgroundColor:APP_COLORS.primary,
                                 opacity: isPending ? 0.7 : 1
