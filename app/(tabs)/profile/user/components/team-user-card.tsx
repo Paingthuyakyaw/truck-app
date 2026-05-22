@@ -5,6 +5,7 @@ import { Card } from "heroui-native";
 import React, { useMemo } from "react";
 import { Pressable, Text, View } from "react-native";
 import { useTranslation } from "@/hooks/use-translation";
+import {APP_COLORS} from "@/constants/colors";
 
 type TeamUserCardProps = {
     item: UserTeamItem;
@@ -23,7 +24,11 @@ export function TeamUserCard({ item, locale, onPress }: TeamUserCardProps) {
             disabled={!onPress}
             style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
         >
-            <Card className="mb-3 border border-slate-100 shadow-sm">
+            <Card className="mb-3 border shadow-sm" style={{
+                backgroundColor: APP_COLORS.card,
+                borderColor:APP_COLORS.border,
+                borderWidth:1
+            }}>
                 <Card.Body className="p-4">
 
                     {/* Top Row: Name and Role Badge Only */}
