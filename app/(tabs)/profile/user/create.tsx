@@ -218,13 +218,17 @@ export default function TeamCreateUserScreen() {
     };
 
     return (
-        <SafeAreaView className="flex-1 bg-[#f3f7fb]">
+        <SafeAreaView className="flex-1" style={{backgroundColor:APP_COLORS.background}}>
+
             <View className="flex-row items-center px-4 pb-3 pt-1">
                 <Pressable
                     onPress={() => router.back()}
                     className="h-11 w-11 items-center justify-center rounded-full bg-[#eef2f6]"
+                    style={({pressed})=> ({
+                        backgroundColor: pressed ? APP_COLORS.primaryPressed : APP_COLORS.primary
+                    })}
                 >
-                    <Ionicons name="arrow-back" size={22} color="#475569"/>
+                    <Ionicons name="arrow-back" size={22} color={APP_COLORS.card}/>
                 </Pressable>
                 <Text
                     className={`flex-1 px-3 text-center text-lg ${getMyanmarLeadingClass(locale)}  font-bold text-slate-900  `}
@@ -242,7 +246,15 @@ export default function TeamCreateUserScreen() {
                     flexGrow: 1,
                 }}
             >
-                <View className="rounded-2xl border border-[#c8dbf7] bg-[#ecf4ff] p-3">
+                <View
+                    className="rounded-2xl border border-[#c8dbf7] bg-[#ecf4ff] p-3"
+                    style={{
+                        backgroundColor:APP_COLORS.warningSoft,
+                        borderColor:APP_COLORS.border,
+                        borderWidth:1
+
+                    }}
+                >
                     <View className="flex-row items-start gap-2">
                         <Ionicons
                             name="information-circle-outline"
@@ -266,7 +278,13 @@ export default function TeamCreateUserScreen() {
                     </View>
                 </View>
 
-                <View className="mt-4 rounded-2xl bg-white p-4">
+                <View className="mt-4 rounded-2xl bg-white p-4"
+                      style={{
+                          backgroundColor:APP_COLORS.card,
+                          borderColor:APP_COLORS.border,
+                          borderWidth:1
+                      }}
+                >
                     <View className="gap-3">
                         <View className="gap-1.5">
                             <View className="flex-row items-center gap-1">
@@ -682,12 +700,12 @@ export default function TeamCreateUserScreen() {
                     onPress={handleSubmit(onSubmit)}
                     disabled={isPending}
                     className={`mb-2 mt-5 items-center justify-center rounded-xl py-3 ${getMyanmarLeadingClass(locale)}`}
-                    style={{
-                        backgroundColor: APP_COLORS.primary,
+                    style={({pressed})=>({
+                        backgroundColor: pressed ? APP_COLORS.primaryPressed : APP_COLORS.primary,
                         opacity: isPending ? 0.7 : 1,
-                    }}
+                    })}
                 >
-                    <Text className="text-base font-semibold text-white" style={style}>
+                    <Text className="text-base font-semibold" style={[style,{color:APP_COLORS.card}]}>
                         {isPending ? t.submitting : t.submit}
                     </Text>
                 </Pressable>
