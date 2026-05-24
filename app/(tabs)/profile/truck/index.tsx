@@ -18,7 +18,6 @@ import {
   ActivityIndicator,
   FlatList,
   Pressable,
-  RefreshControl,
   Text,
   View,
 } from "react-native";
@@ -91,8 +90,6 @@ export default function TruckManagementScreen() {
     hasNextPage,
     isFetchingNextPage,
     isPending,
-    refetch,
-    isRefetching,
   } = useTrucksInfinite(columns);
 
   const items = useMemo(
@@ -329,13 +326,6 @@ export default function TruckManagementScreen() {
           ) : null
         }
         contentContainerStyle={{ paddingBottom: 24, flexGrow: 1 }}
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefetching && !isFetchingNextPage}
-            onRefresh={refetch}
-            tintColor={APP_COLORS.primary}
-          />
-        }
       />
     </SafeAreaView>
   );

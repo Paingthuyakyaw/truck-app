@@ -14,7 +14,6 @@ import React, { useCallback, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
-  RefreshControl,
   Text,
   View,
 } from "react-native";
@@ -88,18 +87,12 @@ export default function ProposalScreen() {
     hasNextPage,
     isFetchingNextPage,
     isPending,
-    isRefetching,
-    refetch,
   } = useProposalsInfinite(status, filters, role, true);
 
   const items = useMemo(
     () => data?.pages.flatMap((page) => page.data.data) ?? [],
     [data],
   );
-
-  const onRefresh = useCallback(() => {
-    refetch();
-  }, [refetch]);
 
   const advancedFilters: ProposalAdvancedFilters = useMemo(
     () => ({
@@ -209,13 +202,6 @@ export default function ProposalScreen() {
           ) : null
         }
         contentContainerStyle={{ paddingBottom: 24, flexGrow: 1 }}
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefetching && !isFetchingNextPage}
-            onRefresh={onRefresh}
-            tintColor={APP_COLORS.primary}
-          />
-        }
       />
     </SafeAreaView>
   );

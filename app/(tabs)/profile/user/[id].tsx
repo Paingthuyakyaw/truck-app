@@ -7,6 +7,8 @@ import { useTranslation } from "@/hooks/use-translation";
 import { getApiErrorAlertCopy } from "@/lib/api-error-alert";
 import profileLocale from "@/locale/profile/profile.json";
 import { useLocaleStore } from "@/stores/client/locale-store";
+import { useOwnerLookupOptions } from "@/stores/server/ownership/owner-lookup-query";
+import { useUserDetail } from "@/stores/server/user/query";
 import type { CreateUserRole } from "@/stores/server/user/create-mutation";
 import {
   useUpdateUserActiveStatus,
@@ -19,11 +21,20 @@ import DateTimePicker, {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Constants from "expo-constants";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useQueryClient } from "@tanstack/react-query";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { Input, Select, Switch } from "heroui-native";
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Alert, Platform, Pressable, ScrollView, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { z } from "zod";
 
@@ -96,15 +107,6 @@ function toDmyDate(date: Date): string {
   return `${day}/${month}/${year}`;
 }
 
-function getAppVersionNumber(): number {
-  const version = String(Constants.expoConfig?.version ?? "").trim();
-  if (!version) return 0;
-
-  const numericOnly = version.replace(/[^\d]/g, "");
-  const parsed = Number(numericOnly);
-  return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
-}
-
 function buildSchema(locale: "en" | "mm") {
   return z.object({
     version: z.coerce
@@ -161,6 +163,7 @@ type FormValues = z.infer<ReturnType<typeof buildSchema>>;
 
 export default function TeamEditUserScreen() {
   const router = useRouter();
+  const qc = useQueryClient();
   const insets = useSafeAreaInsets();
   const params = useLocalSearchParams<{
     id?: string;
@@ -181,7 +184,8 @@ export default function TeamEditUserScreen() {
   const { mutate: mutateActiveStatus, isPending: isActiveUpdating } =
     useUpdateUserActiveStatus();
   const { mutate: mutateLockStatus, isPending: isLockUpdating } = useUpdateUserLockStatus();
-  const appVersion = useMemo(() => getAppVersionNumber(), []);
+  const userId = String(params.id ?? "").trim();
+  const { data: userDetailRes, isPending: isUserDetailLoading } = useUserDetail(userId);
   const [activeDateField, setActiveDateField] = useState<"joinDate" | "dateOfBirth" | null>(
     null,
   );
@@ -191,18 +195,20 @@ export default function TeamEditUserScreen() {
   const [isUnlockedEnabled, setIsUnlockedEnabled] = useState(
     String(params.notLocked ?? "true").toLowerCase() === "true",
   );
+  const { data: ownerOptions = [] } = useOwnerLookupOptions("");
 
   const roleFromParams = isRole(String(params.role ?? "")) ? params.role : "OWNER";
   const schema = useMemo(() => buildSchema(locale), [locale]);
   const {
     control,
     handleSubmit,
+    reset,
     watch,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      version: appVersion,
+      version: 0,
       fullName: String(params.fullName ?? ""),
       email: String(params.email ?? ""),
       role: roleFromParams,
@@ -221,6 +227,24 @@ export default function TeamEditUserScreen() {
       ? { includeFontPadding: false as const }
       : {};
 
+  useEffect(() => {
+    const detail = userDetailRes?.data;
+    if (!detail) return;
+    reset({
+      version: Number(detail.version ?? 0),
+      fullName: String(detail.fullName ?? ""),
+      email: String(detail.email ?? ""),
+      role: isRole(String(detail.role ?? "")) ? (detail.role as CreateUserRole) : "OWNER",
+      joinDate: detail.joinDate ? isoToDmy(String(detail.joinDate)) : isoToDmy(todayIsoLocal()),
+      phoneNumber: String(detail.phoneNumber ?? ""),
+      dateOfBirth: detail.dateOfBirth ? isoToDmy(String(detail.dateOfBirth)) : "",
+      fullIdNo: String(detail.fullIdNo ?? ""),
+      parentOwnerId: String(detail.parentOwnerId ?? ""),
+    });
+    setIsActiveEnabled(Boolean(detail.active));
+    setIsUnlockedEnabled(Boolean(detail.notLocked));
+  }, [reset, userDetailRes]);
+
   const onSubmit = (values: FormValues) => {
     const id = String(params.id ?? "").trim();
     if (!id) {
@@ -238,7 +262,7 @@ export default function TeamEditUserScreen() {
     mutate(
       {
         id,
-        version: appVersion,
+        version: Number(values.version ?? 0),
         fullName: values.fullName.trim(),
         email: values.email.trim(),
         role: values.role,
@@ -341,11 +365,24 @@ export default function TeamEditUserScreen() {
           parentOwnerId: "Parent Owner ID",
         };
 
+  const onBack = useCallback(() => {
+    qc.invalidateQueries({ queryKey: ["users"] });
+    router.back();
+  }, [qc, router]);
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        qc.invalidateQueries({ queryKey: ["users"] });
+      };
+    }, [qc]),
+  );
+
   return (
     <SafeAreaView className="flex-1 bg-[#f3f7fb]">
       <View className="flex-row items-center px-4 pb-3 pt-1">
         <Pressable
-          onPress={() => router.back()}
+          onPress={onBack}
           className="h-11 w-11 items-center justify-center rounded-full bg-[#eef2f6]"
         >
           <Ionicons name="arrow-back" size={22} color="#475569" />
@@ -359,10 +396,15 @@ export default function TeamEditUserScreen() {
         <View className="h-11 w-11" />
       </View>
 
-      <ScrollView
-        className="px-4"
-        contentContainerStyle={{ paddingBottom: insets.bottom + 80, flexGrow: 1 }}
-      >
+      {isUserDetailLoading ? (
+        <View className="flex-1 items-center justify-center">
+          <ActivityIndicator color={APP_COLORS.primary} />
+        </View>
+      ) : (
+        <ScrollView
+          className="px-4"
+          contentContainerStyle={{ paddingBottom: insets.bottom + 80, flexGrow: 1 }}
+        >
         <View className="rounded-2xl border border-[#c8dbf7] bg-[#ecf4ff] p-3">
           <View className="flex-row items-start gap-2">
             <Ionicons
@@ -658,16 +700,56 @@ export default function TeamEditUserScreen() {
                         ? "VIEWER အတွက် Parent Owner ID လိုအပ်သည်"
                         : "Parent Owner ID is required for VIEWER"),
                   }}
-                  render={({ field: { onChange, value } }) => (
-                    <Input
-                      value={String(value ?? "")}
-                      onChangeText={onChange}
-                      autoCapitalize="none"
-                      placeholder={labels.parentOwnerPlaceholder}
-                      className={inputClassName}
-                      {...androidMmInputProps}
-                    />
-                  )}
+                  render={({ field: { onChange, value } }) => {
+                    const selectedOwner = ownerOptions.find(
+                      (option) => option.value === String(value ?? ""),
+                    );
+                    return (
+                      <View>
+                        <Select
+                          value={
+                            selectedOwner
+                              ? { value: selectedOwner.value, label: selectedOwner.label }
+                              : undefined
+                          }
+                          onValueChange={(next) => {
+                            if (next && !Array.isArray(next)) {
+                              onChange(next.value);
+                            }
+                          }}
+                        >
+                          <Select.Trigger
+                            className={`rounded-xl h-11 py-0 ${getMyanmarLeadingClass(locale)} border border-slate-200 bg-white px-2.5`}
+                          >
+                            <Select.Value
+                              placeholder={labels.parentOwnerPlaceholder}
+                              className={`py-0 text-sm ${getMyanmarLeadingClass(locale)}`}
+                            />
+                            <Select.TriggerIndicator />
+                          </Select.Trigger>
+                          <Select.Portal>
+                            <Select.Overlay />
+                            <Select.Content
+                              className="rounded-2xl border border-slate-200 bg-white"
+                              presentation="popover"
+                              width="trigger"
+                            >
+                              {ownerOptions.map((owner) => (
+                                <Select.Item
+                                  key={owner.value}
+                                  value={owner.value}
+                                  label={owner.label}
+                                >
+                                  <Select.ItemLabel style={style} />
+                                  <Select.ItemIndicator />
+                                </Select.Item>
+                              ))}
+                            </Select.Content>
+                          </Select.Portal>
+                        </Select>
+                      </View>
+                    );
+                  }}
                 />
                 {!!errors.parentOwnerId?.message && (
                   <Text
@@ -741,7 +823,8 @@ export default function TeamEditUserScreen() {
             />
           </View>
         </View>
-      </ScrollView>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 }

@@ -13,7 +13,6 @@ import {
   ActivityIndicator,
   Alert,
   FlatList,
-  RefreshControl,
   Text,
   View,
 } from "react-native";
@@ -139,8 +138,6 @@ export default function OwnerShip() {
     hasNextPage,
     isFetchingNextPage,
     isPending,
-    isRefetching,
-    refetch,
   } = useOwnershipsInfinite(status, filters, role);
 
   const items = useMemo(
@@ -247,13 +244,6 @@ export default function OwnerShip() {
           ) : null
         }
         contentContainerStyle={{ paddingBottom: 24, flexGrow: 1 }}
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefetching && !isFetchingNextPage}
-            onRefresh={refetch}
-            tintColor={APP_COLORS.primary}
-          />
-        }
       />
     </SafeAreaView>
   );

@@ -10,9 +10,10 @@ import { useLocaleStore } from "@/stores/client/locale-store";
 import { useCreateServiceType } from "@/stores/server/service-type/create-mutation";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { Input } from "heroui-native";
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 import {
@@ -33,6 +34,7 @@ type FormValues = z.infer<ReturnType<typeof buildSchema>>;
 
 export default function CreateServiceTypeScreen() {
   const router = useRouter();
+  const qc = useQueryClient();
   const insets = useSafeAreaInsets();
   const locale = useLocaleStore((state) => state.locale);
   const labels = profileLocale[locale].createServiceTypeScreen;
@@ -82,11 +84,16 @@ export default function CreateServiceTypeScreen() {
     );
   };
 
+  const onBack = useCallback(() => {
+    qc.invalidateQueries({ queryKey: ["service-types"] });
+    router.back();
+  }, [qc, router]);
+
   return (
     <SafeAreaView className="flex-1 bg-[#f3f7fb]">
       <View className="flex-row items-center px-4 pb-3 pt-1">
         <Pressable
-          onPress={() => router.back()}
+          onPress={onBack}
           className="h-11 w-11 items-center justify-center rounded-full bg-[#eef2f6]"
         >
           <Ionicons name="arrow-back" size={22} color="#475569" />

@@ -50,7 +50,6 @@ export function useTrucksInfinite(
       }
       return lastPageParam + 1;
     },
-    staleTime: 60 * 1000,
     refetchOnWindowFocus: false,
   });
 }
@@ -67,6 +66,5 @@ export function useTruckDetail(id: string) {
     queryKey: ["truck", "detail", id],
     queryFn: () => fetchTruckById(id),
     enabled: !!id,
-    staleTime: 60 * 1000,
   });
 }

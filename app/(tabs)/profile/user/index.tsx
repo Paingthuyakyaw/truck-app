@@ -21,7 +21,6 @@ import {
   ActivityIndicator,
   FlatList,
   Pressable,
-  RefreshControl,
   Text,
   View,
 } from "react-native";
@@ -192,8 +191,6 @@ export default function TeamManagementScreen() {
     hasNextPage,
     isFetchingNextPage,
     isPending,
-    refetch,
-    isRefetching,
   } = useUsersInfinite(filters);
 
   const items = useMemo(
@@ -418,13 +415,6 @@ export default function TeamManagementScreen() {
           ) : null
         }
         contentContainerStyle={{ paddingBottom: 24, flexGrow: 1 }}
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefetching && !isFetchingNextPage}
-            onRefresh={refetch}
-            tintColor={APP_COLORS.primary}
-          />
-        }
       />
     </SafeAreaView>
   );

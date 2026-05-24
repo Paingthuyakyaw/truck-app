@@ -4,6 +4,12 @@ export interface UserTeamResponse {
   message: string;
 }
 
+export interface UserDetailResponse {
+  data: UserDetail;
+  httpStatus: number;
+  message: string;
+}
+
 export interface UserTeamData {
   data: UserTeamItem[];
   page: number;
@@ -22,5 +28,21 @@ export interface UserTeamItem {
   role: string;
   active: boolean;
   notLocked: boolean;
+}
+
+export interface UserDetail {
+  id: string;
+  version: number;
+  username: string;
+  fullName: string;
+  email: string;
+  fullIdNo?: string | null;
+  phoneNumber?: string;
+  dateOfBirth?: string;
+  joinDate?: string;
+  role: string;
+  active: boolean;
+  notLocked: boolean;
+  parentOwnerId?: string | null;
 }
 

@@ -11,9 +11,10 @@ import { useTruckDetail } from "@/stores/server/truck/query";
 import { useUpdateTruck } from "@/stores/server/truck/update-mutation";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useQueryClient } from "@tanstack/react-query";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { Input, Select } from "heroui-native";
-import React, { useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
   ActivityIndicator,
@@ -51,6 +52,7 @@ type FormValues = z.infer<ReturnType<typeof buildSchema>>;
 
 export default function EditTruckScreen() {
   const router = useRouter();
+  const qc = useQueryClient();
   const insets = useSafeAreaInsets();
   const locale = useLocaleStore((state) => state.locale);
   const labels = profileLocale[locale].editTruckScreen;
@@ -184,11 +186,24 @@ export default function EditTruckScreen() {
     </View>
   );
 
+  const onBack = useCallback(() => {
+    qc.invalidateQueries({ queryKey: ["trucks"] });
+    router.back();
+  }, [qc, router]);
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        qc.invalidateQueries({ queryKey: ["trucks"] });
+      };
+    }, [qc]),
+  );
+
   return (
     <SafeAreaView className="flex-1 bg-[#f3f7fb]">
       <View className="flex-row items-center px-4 pb-3 pt-1">
         <Pressable
-          onPress={() => router.back()}
+          onPress={onBack}
           className="h-11 w-11 items-center justify-center rounded-full bg-[#eef2f6]"
         >
           <Ionicons name="arrow-back" size={22} color="#475569" />
@@ -303,7 +318,7 @@ export default function EditTruckScreen() {
 
           <View className="mb-2 mt-5 flex-row gap-3">
             <Pressable
-              onPress={() => router.back()}
+              onPress={onBack}
               className="flex-1 items-center justify-center rounded-xl bg-slate-200 py-3.5"
             >
               <Text

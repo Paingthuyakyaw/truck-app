@@ -18,7 +18,6 @@ import {
   ActivityIndicator,
   FlatList,
   Pressable,
-  RefreshControl,
   Text,
   View,
 } from "react-native";
@@ -86,8 +85,6 @@ export default function ServiceTypeManagementScreen() {
     isFetchingNextPage,
     isPending,
     isError,
-    isRefetching,
-    refetch,
   } = useServiceTypesInfinite(columns);
 
   const items = useMemo(
@@ -340,13 +337,6 @@ export default function ServiceTypeManagementScreen() {
           ) : null
         }
         contentContainerStyle={{ paddingBottom: 0, flexGrow: 1 }}
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefetching && !isFetchingNextPage}
-            onRefresh={refetch}
-            tintColor={APP_COLORS.primary}
-          />
-        }
       />
     </SafeAreaView>
   );

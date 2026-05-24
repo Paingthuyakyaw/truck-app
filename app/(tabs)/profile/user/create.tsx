@@ -10,12 +10,13 @@ import {
 } from "@/stores/server/user/create-mutation";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import {zodResolver} from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import DateTimePicker, {
     type DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
-import {useRouter} from "expo-router";
+import {useFocusEffect, useRouter} from "expo-router";
 import {Input, Select} from "heroui-native";
-import React, {useMemo, useState} from "react";
+import React, {useCallback, useMemo, useState} from "react";
 import {Controller, useForm} from "react-hook-form";
 import {
     Alert,
@@ -32,6 +33,7 @@ import {
 import {z} from "zod";
 import {useTranslation} from "@/hooks/use-translation";
 import {getApiErrorAlertCopy} from "@/lib/api-error-alert";
+import { useOwnerLookupOptions } from "@/stores/server/ownership/owner-lookup-query";
 
 
 function toIsoDate(dmy: string): string | null {
@@ -148,6 +150,7 @@ export default function TeamCreateUserScreen() {
     const tLookup = useTranslation("lookup")
     const errorCatalog = useTranslation("error")
     const router = useRouter();
+    const qc = useQueryClient();
     const insets = useSafeAreaInsets();
     const locale = useLocaleStore((state) => state.locale);
     const mmTextStyle = useMemo(() => myanmarUITextStyle(), []);
@@ -155,6 +158,7 @@ export default function TeamCreateUserScreen() {
     const [showPassword, setShowPassword] = useState(false);
     const [showDateOfBirthPicker, setShowDateOfBirthPicker] = useState(false);
     const {mutate, isPending} = useCreateUser();
+    const { data: ownerOptions = [] } = useOwnerLookupOptions("");
 
     const schema = useMemo(() => buildSchema(locale), [locale]);
     const {
@@ -227,11 +231,24 @@ export default function TeamCreateUserScreen() {
         );
     };
 
+    const onBack = useCallback(() => {
+        qc.invalidateQueries({ queryKey: ["users"] });
+        router.back();
+    }, [qc, router]);
+
+    useFocusEffect(
+        useCallback(() => {
+            return () => {
+                qc.invalidateQueries({ queryKey: ["users"] });
+            };
+        }, [qc]),
+    );
+
     return (
         <SafeAreaView className="flex-1 bg-[#f3f7fb]">
             <View className="flex-row items-center px-4 pb-3 pt-1">
                 <Pressable
-                    onPress={() => router.back()}
+                    onPress={onBack}
                     className="h-11 w-11 items-center justify-center rounded-full bg-[#eef2f6]"
                 >
                     <Ionicons name="arrow-back" size={22} color="#475569"/>
@@ -654,18 +671,56 @@ export default function TeamCreateUserScreen() {
                                 <Controller
                                     control={control}
                                     name="parentOwnerId"
-                                    render={({field: {onChange, value}}) => (
-                                        <Input
-                                            value={value ?? ""}
-                                            onChangeText={onChange}
-                                            placeholder={t.placeholders.parentOwner}
-                                            autoCapitalize="none"
-                                            className={`border h-11 py-0 ${getMyanmarLeadingClass(locale)}  border-slate-200 bg-white`}
-                                            {...(Platform.OS === "android" && locale === "mm"
-                                                ? {includeFontPadding: false}
-                                                : {})}
-                                        />
-                                    )}
+                                    render={({field: {onChange, value}}) => {
+                                        const selectedOwner = ownerOptions.find(
+                                            (option) => option.value === String(value ?? ""),
+                                        );
+                                        return (
+                                            <View>
+                                                <Select
+                                                    value={
+                                                        selectedOwner
+                                                            ? { value: selectedOwner.value, label: selectedOwner.label }
+                                                            : undefined
+                                                    }
+                                                    onValueChange={(next) => {
+                                                        if (next && !Array.isArray(next)) {
+                                                            onChange(next.value);
+                                                        }
+                                                    }}
+                                                >
+                                                    <Select.Trigger
+                                                        className={`rounded-xl h-11 py-0 ${getMyanmarLeadingClass(locale)}  border border-slate-200 bg-white px-2.5`}
+                                                    >
+                                                        <Select.Value
+                                                            placeholder={t.placeholders.parentOwner}
+                                                            className={` py-0 text-sm ${getMyanmarLeadingClass(locale)}`}
+                                                        />
+                                                        <Select.TriggerIndicator/>
+                                                    </Select.Trigger>
+                                                    <Select.Portal>
+                                                        <Select.Overlay/>
+                                                        <Select.Content
+                                                            className="rounded-2xl border border-slate-200 bg-white"
+                                                            presentation="popover"
+                                                            width="trigger"
+                                                        >
+                                                            {ownerOptions.map((owner) => (
+                                                                <Select.Item
+                                                                    key={owner.value}
+                                                                    value={owner.value}
+                                                                    label={owner.label}
+                                                                >
+                                                                    <Select.ItemLabel style={style}/>
+                                                                    <Select.ItemIndicator/>
+                                                                </Select.Item>
+                                                            ))}
+                                                        </Select.Content>
+                                                    </Select.Portal>
+                                                </Select>
+                                            </View>
+                                        );
+                                    }}
                                 />
                                 {!!errors.parentOwnerId?.message && (
                                     <Text

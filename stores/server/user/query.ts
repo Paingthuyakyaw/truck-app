@@ -1,5 +1,6 @@
 import {
   useInfiniteQuery,
+  useQuery,
   type InfiniteData,
   type UseInfiniteQueryResult,
 } from "@tanstack/react-query";
@@ -9,7 +10,7 @@ import {
   type TeamListFilters,
   teamListFiltersKey,
 } from "./search-columns";
-import type { UserTeamResponse } from "./typed";
+import type { UserDetailResponse, UserTeamResponse } from "./typed";
 
 export interface SearchPayload {
   page: number;
@@ -32,6 +33,11 @@ export interface Search {
 
 const users = async (payload: SearchPayload): Promise<UserTeamResponse> => {
   const { data } = await axios.post("/user/search", payload);
+  return data;
+};
+
+const fetchUserById = async (id: string): Promise<UserDetailResponse> => {
+  const { data } = await axios.get(`/user/find/${id}`);
   return data;
 };
 
@@ -75,4 +81,12 @@ export function useUsersInfinite(
 }
 
 export { TEAM_PAGE_SIZE };
+
+export function useUserDetail(id: string) {
+  return useQuery({
+    queryKey: ["user", "detail", id],
+    queryFn: () => fetchUserById(id),
+    enabled: !!id,
+  });
+}
 
