@@ -1,4 +1,4 @@
-import { myanmarUITextStyle } from "@/constants/myanmar-font";
+import { myanmarUITextStyle,getMyanmarLeadingClass } from "@/constants/myanmar-font";
 import type { UserTeamItem } from "@/stores/server/user/typed";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Card } from "heroui-native";
@@ -6,6 +6,7 @@ import React, { useMemo } from "react";
 import { Pressable, Text, View } from "react-native";
 import { useTranslation } from "@/hooks/use-translation";
 import {APP_COLORS} from "@/constants/colors";
+
 
 type TeamUserCardProps = {
     item: UserTeamItem;
@@ -24,7 +25,7 @@ export function TeamUserCard({ item, locale, onPress }: TeamUserCardProps) {
             disabled={!onPress}
             style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
         >
-            <Card className="mb-3 border shadow-sm" style={{
+            <Card className="mb-3 shadow-sm" style={{
                 backgroundColor: APP_COLORS.card,
                 borderColor:APP_COLORS.border,
                 borderWidth:1
@@ -35,8 +36,8 @@ export function TeamUserCard({ item, locale, onPress }: TeamUserCardProps) {
                     <View className="flex-row items-start justify-between gap-x-3">
                         <View className="flex-1 min-w-0">
                             <Text
-                                className="text-base font-bold text-slate-900"
-                                style={style}
+                                className="text-base font-bold "
+                                style={[style,{color:APP_COLORS.textPrimary}]}
                                 numberOfLines={1}
                                 ellipsizeMode="tail"
                             >
@@ -53,8 +54,9 @@ export function TeamUserCard({ item, locale, onPress }: TeamUserCardProps) {
                         </View>
 
                         {/* Right Tag Column (Keeps its clean structure) */}
-                        <View className="shrink-0 bg-[#EAF1F8] rounded-md px-2.5 py-1.5">
-                            <Text className="text-[12px] font-bold text-[#3F5F87] font-mono tracking-wide" style={style}>
+                        <View className="shrink-0 rounded-md px-2.5 py-1.5" style={{backgroundColor:APP_COLORS.background}}>
+                            <Text className={`text-xs font-bold  font-mono tracking-wide ${getMyanmarLeadingClass(locale)}`}
+                                  style={[style,{color:APP_COLORS.primary}]}>
                                 {(tLookup.roles as any)[item.role] || "-"}
                             </Text>
                         </View>

@@ -31,14 +31,22 @@ export function TeamSearchToolbar({
   onPressAdd,
 }: TeamSearchToolbarProps) {
   return (
-    <View className="mb-4 flex-row items-center gap-2">
+    <View
+        className="mb-4 flex-row items-center gap-2"
+    >
       <View className="relative flex-1">
         <Input
           value={quickQuery}
           onChangeText={onChangeQuickQuery}
           placeholder={placeholder}
-          className={`flex-1 border h-11 py-0 text-sm border-slate-200 bg-white ${getMyanmarLeadingClass(_locale)}`}
-          style={{ paddingRight: 44 }}
+          placeholderTextColor={APP_COLORS.textMuted}
+          className={`flex-1 h-11 py-0 text-sm ${getMyanmarLeadingClass(_locale)}`}
+          style={{
+            paddingRight: 44,
+            backgroundColor:APP_COLORS.inputBackground,
+            borderColor:APP_COLORS.border,
+            borderWidth:1
+        }}
         />
 
         <Pressable
@@ -68,7 +76,9 @@ export function TeamSearchToolbar({
       <Pressable
         onPress={onPressAdd}
         className="items-center justify-center rounded-full p-2.5"
-        style={{ backgroundColor: APP_COLORS.primary }}
+        style={({pressed}) => ({
+          backgroundColor: pressed ? APP_COLORS.primaryPressed : APP_COLORS.primary
+        })}
       >
         <Ionicons name="add" size={20} color="#fff" />
       </Pressable>
