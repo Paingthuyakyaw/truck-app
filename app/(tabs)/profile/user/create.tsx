@@ -136,8 +136,8 @@ function buildSchema(locale: "en" | "mm") {
                     code: z.ZodIssueCode.custom,
                     message:
                         locale === "mm"
-                            ? "VIEWER အတွက် Parent Owner ID လိုအပ်သည်"
-                            : "Parent Owner ID is required for VIEWER",
+                            ? " ကြည့်ရှုသူ ရာထူးအတွက် ယာဉ်ပိုင်ရှင်ကို ရွေးချယ်ပေးပါ"
+                            : "Owner  is required to choose for VIEWER",
                     path: ["parentOwnerId"],
                 });
             }

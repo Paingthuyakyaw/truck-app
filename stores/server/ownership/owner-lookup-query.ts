@@ -1,17 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { axios } from "../api";
 
-type OwnerLookupColumn = {
-  data: string;
-  search: {
-    value: string;
-    type: string;
-    matchCase: boolean;
-  };
-  searchable: boolean;
-  orderable: boolean;
-};
-
 type OwnerLookupResponse = {
   data?: {
     data?: Array<Record<string, unknown>>;
@@ -23,38 +12,9 @@ export type OwnerLookupOption = {
   label: string;
 };
 
-const OWNER_LOOKUP_PAGE_SIZE = 10;
-
-const buildColumn = (
-  data: string,
-  value: string,
-  type: string,
-  matchCase: boolean,
-  searchable = false,
-): OwnerLookupColumn => ({
-  data,
-  search: { value, type, matchCase },
-  searchable,
-  orderable: false,
-});
-
-const buildOwnerLookupColumns = (query: string): OwnerLookupColumn[] => {
-  const columns: OwnerLookupColumn[] = [
-    buildColumn("truckStatus", "ACTIVE", "eq", true, true),
-  ];
-  const q = query.trim();
-  if (q) {
-    columns.push(buildColumn("plateNo", q, "contains", false));
-  }
-  return columns;
-};
 
 const lookupOwners = async (query: string): Promise<OwnerLookupResponse> => {
-  const { data } = await axios.post("/ownership/search", {
-    page: 1,
-    pageSize: OWNER_LOOKUP_PAGE_SIZE,
-    columns: buildOwnerLookupColumns(query),
-  });
+  const { data } = await axios.get("/user/get-all-owners");
   return data;
 };
 
@@ -63,27 +23,22 @@ const toString = (value: unknown): string => String(value ?? "").trim();
 const normalizeOwnerOptions = (
   response: OwnerLookupResponse,
 ): OwnerLookupOption[] => {
-  const items = response.data?.data ?? [];
-  const unique = new Map<string, OwnerLookupOption>();
 
-  for (const item of items) {
-    const owner = (item.owner ?? null) as Record<string, unknown> | null;
-    const optionValue =
-      toString(owner?.id) ||
-      toString(item.ownerId) ||
-      toString(item.userId) ||
-      toString(item.id);
-    if (!optionValue || unique.has(optionValue)) continue;
+  const items = Array.isArray(response?.data) ? response.data : [];
 
-    const ownerName = toString(owner?.fullName);
-    const plateNo = toString(item.truckPlateNo) || toString(item.plateNo);
-    const equipmentName = toString(item.equipmentName);
-    const label = [ownerName, plateNo, equipmentName].filter(Boolean).join(" - ") || optionValue;
+  if (items.length === 0) return [];
 
-    unique.set(optionValue, { value: optionValue, label });
-  }
+  const uniqueOptionsMap = items.reduce((map, item) => {
+    const value = toString(item?.id);
+    const label = toString(item?.fullName);
 
-  return Array.from(unique.values());
+    if (!value || map.has(value)) return map;
+
+    return map.set(value, { value, label });
+  }, new Map<string, OwnerLookupOption>());
+
+  return Array.from(uniqueOptionsMap.values());
+
 };
 
 export function useOwnerLookupOptions(query: string) {
