@@ -91,14 +91,14 @@ export default function ProfileScreen() {
                             {tCommon.greeting}
                         </Text>
                         <Text
-                            className={`mt-1 text-base font-bold ${mmBodyStyle}`}
+                            className={`mt-1 text-base font-normal ${mmBodyStyle}`}
                             style={[textStyle, {color: APP_COLORS.textPrimary}]}
                         >
                             {name}
                         </Text>
                     </View>
                     <Text
-                        className={`text-lg font-bold ${mmLeadingClass}`}
+                        className={`mt-0 text-lg font-bold ${mmLeadingClass}`}
                         style={[{color: APP_COLORS.textPrimary}, textStyle]}>
                         {tProfile.brand}
                     </Text>
@@ -114,34 +114,36 @@ export default function ProfileScreen() {
                 >
                     <Card.Body className="flex-row items-center gap-3">
                         <Avatar size="lg" alt={`${name} avatar`}>
-                            <Avatar.Fallback
-                                style={{backgroundColor: APP_COLORS.primarySoft}}>{initial}</Avatar.Fallback>
+                            <Avatar.Fallback style={{backgroundColor: APP_COLORS.primarySoft}}>{initial}</Avatar.Fallback>
                         </Avatar>
                         <View className="flex-1">
                             <Text
-                                className={`text-base font-semibold  ${mmLeadingClass}`}
+                                className={`text-base font-normal  ${mmLeadingClass}`}
                                 style={[textStyle, {color: APP_COLORS.textPrimary}]}
                             >
                                 {name}
                             </Text>
-                            <View className="mt-1 flex-row items-center gap-2">
-                                <View
-                                    className="h-2 w-2 rounded-full"
-                                    style={{backgroundColor: APP_COLORS.primary}}
-                                />
-                                <Text
-                                    className={`text-base  font-semibold ${mmLeadingClass}`}
-                                    style={[textStyle, {color: APP_COLORS.primary}]}
-                                >
-                                    {(tLookup.roles as any)[userRole] || "Unknown Role"}
-                                </Text>
-                            </View>
+                            { (userRole === 'ADMIN' || 'OWNER' || 'VIEWER') &&
+                                <View className="mt-1 flex-row items-center gap-2">
+                                    <View
+                                        className="h-2 w-2 rounded-full"
+                                        style={{backgroundColor: APP_COLORS.primary}}
+                                    />
+                                    <Text
+                                        className={`text-base  font-medium ${mmLeadingClass}`}
+                                        style={[textStyle, {color: APP_COLORS.primary}]}
+                                    >
+                                        {(tLookup.roles as any)[userRole] }
+                                    </Text>
+                                </View>
+                            }
+
                         </View>
                     </Card.Body>
                 </Card>
 
                 <Text
-                    className={`mb-3 px-1 text-sm font-bold  ${mmLeadingClass}`}
+                    className={`mb-3 px-1 text-base font-bold  ${mmLeadingClass}`}
                     style={[textStyle, {color: APP_COLORS.textMuted}]}
                 >
                     {tProfile.managementSetting}
@@ -173,14 +175,14 @@ export default function ProfileScreen() {
                                     {/* Mid Content Section */}
                                     <View className="flex-1">
                                         <Text
-                                            className={`text-sm font-medium  ${mmLeadingClass}`}
+                                            className={`text-sm font-normal  ${mmLeadingClass}`}
                                             style={[locale === "mm" ? mmBodyStyle : undefined, {color: APP_COLORS.textPrimary}]}
                                         >
                                             {tProfile.settingsRows[row.key as keyof typeof tProfile.settingsRows]}
                                         </Text>
                                         {row.key === "language" ? (
                                             <Text
-                                                className={`text-xs text-slate-500 ${mmLeadingClass}`}
+                                                className={`text-sm font-normal ${mmLeadingClass}`}
                                                 style={[locale === "mm" ? mmBodyStyle : undefined, {color: APP_COLORS.textMuted}]}
                                             >
                                                 {locale === "mm" ? "မြန်မာ (Myanmar)" : "English"}
@@ -210,7 +212,7 @@ export default function ProfileScreen() {
                             })}
                         >
                             <Text
-                                className={`${mmLeadingClass} text-sm font-bold`}
+                                className={`${mmLeadingClass} text-sm font-normal`}
                                 style={[locale === "mm" ? mmBodyStyle : undefined,{color:APP_COLORS.error}]}
                             >
                                 {tLogout.title}
