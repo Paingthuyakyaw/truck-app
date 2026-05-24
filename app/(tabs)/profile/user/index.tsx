@@ -137,22 +137,20 @@ export default function TeamManagementScreen() {
 
   const activeOptions =  useMemo(()=>{
     return [
-      {value: "",labelEn: tCommon.anyLabel , labelMm:tCommon.anyLabel},
-        ...Object.entries(tLookup.accountStatus || {}).map(([key, localizedValue]) => ({
+      {value: "",label: tCommon.anyLabel},
+        ...Object.entries(tLookup.accountStatus || {}).map(([key, localizedLabel]) => ({
           value:key,
-          labelEn:localizedValue,
-          labelMm: localizedValue,
+          label:localizedLabel
         }))
     ]
   },[tLookup.accountStatus,tCommon.anyLabel])
 
   const lockOptions =  useMemo(()=>{
     return [
-      {value: "",labelEn: tCommon.anyLabel , labelMm:tCommon.anyLabel},
-      ...Object.entries(tLookup.accountControl || {}).map(([key, localizedValue]) => ({
+      {value: "",label: tCommon.anyLabel},
+      ...Object.entries(tLookup.accountControl || {}).map(([key, localizedLabel]) => ({
         value:key,
-        labelEn:localizedValue,
-        labelMm: localizedValue,
+        label:localizedLabel
       }))
     ]
   },[tLookup.accountControl,tCommon.anyLabel])
@@ -162,17 +160,16 @@ export default function TeamManagementScreen() {
 
   const  roleFilterOptions = useMemo(() => {
     return [
-      { value: "", labelEn: tCommon.anyLabel, labelMm: tCommon.anyLabel },
-      ...Object.entries(tLookup.roles || {}).map(([key, val]) => ({
+      { value: "", label: tCommon.anyLabel },
+      ...Object.entries(tLookup.roles || {}).map(([key, localizedLabel]) => ({
         value: key,
-        labelEn: val,
-        labelMm: val
+        label: localizedLabel
       }))
     ];
   },[tLookup.roles,tCommon.anyLabel])
 
 
-  const advancedInputClass = `text-[10px] font-normal ${getMyanmarLeadingClass(locale)} py-0 h-11`;
+  const advancedInputClass = `text-[11px] font-normal ${getMyanmarLeadingClass(locale)} py-0 h-11`;
 
   const filters = useMemo(
     () => ({
@@ -295,7 +292,7 @@ export default function TeamManagementScreen() {
                   <View className="flex-row gap-2">
                     <View className="flex-1 gap-1">
                       <Text
-                        className="text-[10px] font-bold"
+                        className={`text-xs font-semibold ${getMyanmarLeadingClass(locale)}`}
                         style={[style,{color:APP_COLORS.textMuted}]}
                       >
                         {tUser.search.fullName}
@@ -316,7 +313,7 @@ export default function TeamManagementScreen() {
                     </View>
                     <View className="flex-1 gap-1">
                       <Text
-                          className="text-[10px] font-bold"
+                          className={`text-xs font-semibold ${getMyanmarLeadingClass(locale)}`}
                           style={[style,{color:APP_COLORS.textMuted}]}
                       >
                         {tUser.search.phoneNumber}
@@ -351,7 +348,7 @@ export default function TeamManagementScreen() {
                     </View>
                     <View className="flex-1 gap-1">
                       <Text
-                          className="text-[10px] font-bold"
+                          className={`text-xs font-semibold ${getMyanmarLeadingClass(locale)}`}
                           style={[style,{color:APP_COLORS.textMuted}]}
                       >
                         {tUser.search.email}
@@ -360,6 +357,7 @@ export default function TeamManagementScreen() {
                         value={ui.email}
                         onChangeText={(email) => patchUi({ email })}
                         placeholder={tUser.search.placeholders.email}
+                        placeholderTextColor={APP_COLORS.textMuted}
                         autoCapitalize="none"
                         keyboardType="email-address"
                         className={advancedInputClass}

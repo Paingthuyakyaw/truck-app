@@ -1,105 +1,124 @@
 import {
-  getMyanmarLeadingClass,
-  myanmarUITextStyle,
+    getMyanmarLeadingClass,
+    myanmarUITextStyle,
 } from "@/constants/myanmar-font";
-import { Select } from "heroui-native";
-import React, { useMemo } from "react";
-import { Text, View } from "react-native";
+import {Select} from "heroui-native";
+import React, {useMemo} from "react";
+import {Text, View} from "react-native";
+import {APP_COLORS} from "@/constants/colors";
 
 type SelectOption = {
-  value: string;
-  labelEn: string;
-  labelMm: string;
+    value: string;
+    label: string;
 };
 
 type CompactSelectProps = {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  locale: "en" | "mm";
-  placeholder: string;
-  options: readonly SelectOption[];
+    label: string;
+    value: string;
+    onChange: (value: string) => void;
+    locale: "en" | "mm";
+    placeholder: string;
+    options: readonly SelectOption[];
 };
 
 export function CompactSelect({
-  label,
-  value,
-  onChange,
-  locale,
-  placeholder,
-  options,
-}: CompactSelectProps) {
-  const mmTextStyle = useMemo(() => myanmarUITextStyle(), []);
-  const style = locale === "mm" ? mmTextStyle : undefined;
+                                  label,
+                                  value,
+                                  onChange,
+                                  locale,
+                                  placeholder,
+                                  options,
+                              }: CompactSelectProps) {
 
-  const selectedOption = options.find((o) => o.value === value);
-  const selectedLabel = selectedOption
-    ? locale === "mm"
-      ? selectedOption.labelMm
-      : selectedOption.labelEn
-    : "";
+    const mmTextStyle = useMemo(() => myanmarUITextStyle(), []);
+    const style = locale === "mm" ? mmTextStyle : undefined;
 
-  return (
-    <View className="flex-1 gap-1">
-      <Text className="text-[10px] text-slate-500" style={style}>
-        {label}
-      </Text>
+    const selectedOption = useMemo(() => {
+        return options.find((opt) => opt.value === value);
+    }, [options, value]);
 
-      <Select
-        value={
-          selectedOption
-            ? {
-                value: selectedOption.value,
-                label: selectedLabel,
-              }
-            : undefined
-        }
-        onValueChange={(next) => {
-          if (next && !Array.isArray(next)) {
-            onChange(next.value);
-          }
-        }}
-        presentation="popover"
-      >
-        <Select.Trigger
-          className="
-         rounded-xl border h-11  py-0 border-slate-200 bg-white px-2.5"
-        >
-          <Select.Value
-            className={`text-sm py-0  text-slate-900 ${getMyanmarLeadingClass(locale)} `}
-            placeholder={placeholder}
-            // style={style}
-          />
-          <Select.TriggerIndicator />
-        </Select.Trigger>
+    const selectedLabel = useMemo(() => {
+        if (!selectedOption) return "";
+        return  selectedOption.label
+    }, [selectedOption]);
 
-        <Select.Portal>
-          <Select.Overlay />
-          <Select.Content
-            className="rounded-2xl border border-slate-200 bg-white"
-            presentation="popover"
-            width="trigger"
-          >
-            {options.map((option) => {
-              const itemLabel =
-                locale === "mm" ? option.labelMm : option.labelEn;
-              return (
-                <Select.Item
-                  key={option.value}
-                  value={option.value}
-                  label={itemLabel}
+    return (
+        <View className="flex-1 gap-1">
+            <Text
+                    className={`text-xs font-semibold ${getMyanmarLeadingClass(locale)}`}
+                    style={[style, {color: APP_COLORS.textMuted}]}>
+                {label}
+            </Text>
+
+            <Select
+                value={
+                    selectedOption
+                        ? { value: selectedOption.value, label: selectedLabel }
+                        : undefined
+                }
+                onValueChange={(next) => {
+                    if (next && !Array.isArray(next)) {
+                        onChange(next.value);
+                    }
+                }}
+                presentation="popover"
+            >
+                <Select.Trigger
+                    className="rounded-xl border h-11  py-0  px-2.5"
+                    style={{
+                        backgroundColor: APP_COLORS.inputBackground,
+                        borderColor:APP_COLORS.border,
+                        borderWidth:1
+                    }}
                 >
-                  <Select.ItemLabel
-                    className={`text-sm text-slate-900 ${getMyanmarLeadingClass(locale)}`}
-                    style={style}
-                  />
-                  <Select.ItemIndicator />
-                </Select.Item>
-              );
-            })}
-          </Select.Content>
-        </Select.Portal>
-      </Select>
-    </View>
-  );
+                    <Select.Value
+                        className={`text-[10px] font-normal py-0  ${getMyanmarLeadingClass(locale)} `}
+                        placeholder={placeholder}
+                        style={[{ color: APP_COLORS.textPrimary }, style]}
+                    />
+                    <Select.TriggerIndicator/>
+                </Select.Trigger>
+
+                <Select.Portal>
+                    <Select.Overlay/>
+                    <Select.Content
+                        className="rounded-2xl border"
+                        style={{
+                            backgroundColor:APP_COLORS.card,
+                            borderColor:APP_COLORS.border,
+                            borderWidth:1
+                        }}
+                        presentation="popover"
+                        width="trigger"
+                    >
+                        {options.map((option) => {
+                            const itemLabel = option.label;
+                            const isSelected = option.value === value;
+                            return (
+                                <Select.Item
+                                    key={option.value}
+                                    value={option.value}
+                                    label={itemLabel}
+                                    style={{
+                                        backgroundColor: isSelected ? APP_COLORS.primarySoft : 'transparent',
+                                        paddingVertical:12,
+                                        paddingHorizontal:16,
+                                    }}
+                                >
+                                    <Select.ItemLabel
+                                        className={`text-xs ${getMyanmarLeadingClass(locale)}`}
+                                        style={[style,{
+                                            color: isSelected ? APP_COLORS.primary : APP_COLORS.textPrimary,
+                                            fontWeight: isSelected ? "600" : "400"
+                                        }]}
+                                    />
+                                    <Select.ItemIndicator />
+                                </Select.Item>
+                            );
+                        })}
+                    </Select.Content>
+                </Select.Portal>
+            </Select>
+        </View>
+    );
 }
