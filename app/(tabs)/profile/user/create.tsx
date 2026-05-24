@@ -245,17 +245,20 @@ export default function TeamCreateUserScreen() {
     );
 
     return (
-        <SafeAreaView className="flex-1 bg-[#f3f7fb]">
+        <SafeAreaView style={{backgroundColor:APP_COLORS.background , flex:1}}>
             <View className="flex-row items-center px-4 pb-3 pt-1">
                 <Pressable
                     onPress={onBack}
-                    className="h-11 w-11 items-center justify-center rounded-full bg-[#eef2f6]"
+                    className="h-11 w-11 items-center justify-center rounded-full "
+                    style={({pressed})=> ({
+                        backgroundColor: pressed ? APP_COLORS.primary : APP_COLORS.background
+                    })}
                 >
                     <Ionicons name="arrow-back" size={22} color="#475569"/>
                 </Pressable>
                 <Text
-                    className={`flex-1 px-3 text-center text-lg ${getMyanmarLeadingClass(locale)}  font-bold text-slate-900  `}
-                    style={style}
+                    className={`flex-1 px-3 text-center text-lg font-bold ${getMyanmarLeadingClass(locale)}`}
+                    style={[style,{color:APP_COLORS.textPrimary}]}
                 >
                     {t.title}
                 </Text>
@@ -269,7 +272,14 @@ export default function TeamCreateUserScreen() {
                     flexGrow: 1,
                 }}
             >
-                <View className="rounded-2xl border border-[#c8dbf7] bg-[#ecf4ff] p-3">
+                <View className="rounded-2xl border border-[#c8dbf7] bg-[#ecf4ff] p-3"
+                      style={{
+                          backgroundColor:APP_COLORS.warningSoft,
+                          borderColor:APP_COLORS.border,
+                          borderWidth:1
+                      }}
+                >
+
                     <View className="flex-row items-start gap-2">
                         <Ionicons
                             name="information-circle-outline"
@@ -284,16 +294,24 @@ export default function TeamCreateUserScreen() {
                                 {t.infoTitle}
                             </Text>
                             <Text
-                                className={`mt-0.5 text-xs ${getMyanmarLeadingClass(locale)}  text-[#325f99]`}
+                                className={`mt-0.5 text-xs font-normal ${getMyanmarLeadingClass(locale)}  text-[#325f99]`}
                                 style={style}
                             >
                                 {t.infoBody}
                             </Text>
                         </View>
                     </View>
+
                 </View>
 
-                <View className="mt-4 rounded-2xl bg-white p-4">
+                <View
+                    className="mt-4 rounded-2xl  p-4"
+                    style={{
+                        backgroundColor:APP_COLORS.card,
+                        borderColor:APP_COLORS.border,
+                        borderWidth:1
+                    }}
+                >
                     <View className="gap-3">
                         <View className="gap-1.5">
                             <View className="flex-row items-center gap-1">

@@ -225,7 +225,7 @@ export default function TeamManagementScreen() {
       <View className="flex-row items-center px-4 pb-2 pt-1">
         <Pressable
           onPress={() => router.back()}
-          className="h-11 w-11 items-center justify-center rounded-full bg-[#eef2f6]"
+          className="h-11 w-11 items-center justify-center rounded-full "
           style={({pressed})=> ({
               backgroundColor: pressed ? APP_COLORS.primary : APP_COLORS.background
           })}
