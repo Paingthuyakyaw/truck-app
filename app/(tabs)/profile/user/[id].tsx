@@ -108,7 +108,7 @@ function toDmyDate(date: Date): string {
 
 function buildSchema(locale: "en" | "mm") {
     return z.object({
-        version: z.coerce
+        version: z
             .number()
             .int()
             .min(0, locale === "mm" ? "Version မမှန်ကန်ပါ" : "Version must be >= 0"),
@@ -191,7 +191,6 @@ export default function TeamEditUserScreen() {
     const {data: ownerOptions = []} = useOwnerLookupOptions("");
     const roleFromParams = isRole(String(params.role ?? "")) ? params.role : "OWNER";
     const schema = useMemo(() => buildSchema(locale), [locale]);
-    const selectedRole = watch("role");
     const inputClassName = `border h-11 py-0 ${getMyanmarLeadingClass(locale)} border-slate-200 bg-white`;
     const androidMmInputProps = Platform.OS === "android" && locale === "mm" ? {includeFontPadding: false as const} : {};
 
@@ -215,6 +214,8 @@ export default function TeamEditUserScreen() {
             parentOwnerId: "",
         },
     });
+    const selectedRole = watch("role");
+
 
 
 
@@ -420,10 +421,10 @@ export default function TeamEditUserScreen() {
                         <View className="gap-3">
                             {(
                                 [
-                                    {key: "fullName", required: true, keyboardType: "text"},
+                                    {key: "fullName", required: true, keyboardType: undefined},
                                     {key: "email", required: true, keyboardType: "email-address"},
                                     {key: "phoneNumber", required: true, keyboardType: "phone-pad"},
-                                    {key: "fullIdNo", required: false, keyboardType: "text"},
+                                    {key: "fullIdNo", required: false, keyboardType: undefined},
                                 ] as const
                             ).map((field) => (
                                 <View className="gap-1.5" key={field.key}>
