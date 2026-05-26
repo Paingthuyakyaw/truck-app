@@ -217,8 +217,6 @@ export default function TeamEditUserScreen() {
     const selectedRole = watch("role");
 
 
-
-
     useEffect(() => {
         const detail = userDetailRes?.data;
         if (!detail) return;
@@ -310,7 +308,7 @@ export default function TeamEditUserScreen() {
             Alert.alert(t.errorTitle, t.userInvalid);
             return;
         }
-        const message = nextStatus ? t.accountLockMsg : t.accountUnlockMsg;
+        const message = nextStatus ? t.accountUnlockMsg : t.accountLockMsg;
         Alert.alert(t.accountLockTitle, message, [
             {text: t.confirmCancel, style: "cancel"},
             {
@@ -769,6 +767,7 @@ export default function TeamEditUserScreen() {
                         </Text>
                     </Pressable>
 
+                    {/* active/inactive , lock/unlock field */}
                     <View className="mt-4 rounded-2xl bg-white p-4">
                         <Text
                             className={`mb-3 text-sm font-semibold text-slate-900 ${getMyanmarLeadingClass(locale)}`}
@@ -784,10 +783,15 @@ export default function TeamEditUserScreen() {
                                     style={{backgroundColor: isActiveEnabled ? "#22c55e" : "#94a3b8"}}
                                 />
                                 <Text className="text-sm text-slate-700" style={style}>
-                                    {t.statusActive}
+                                    {isActiveEnabled ? t.active : t.inactive}
                                 </Text>
                             </View>
                             <Switch
+                                animation={{
+                                    backgroundColor: {
+                                        value: isActiveEnabled ? ['#EAF1F8', APP_COLORS.primary] : ['#EAF1F8', '#EAF1F8']
+                                    },
+                                }}
                                 isSelected={isActiveEnabled}
                                 onSelectedChange={onToggleActive}
                                 isDisabled={isActiveUpdating}
@@ -804,10 +808,15 @@ export default function TeamEditUserScreen() {
                                     color={isUnlockedEnabled ? "#10b981" : "#ef4444"}
                                 />
                                 <Text className="text-sm text-slate-700" style={style}>
-                                    {t.lock}
+                                    {isUnlockedEnabled ? t.unlock : t.lock}
                                 </Text>
                             </View>
                             <Switch
+                                animation={{
+                                    backgroundColor: {
+                                        value: isUnlockedEnabled ? ['#EAF1F8', APP_COLORS.primary] : ['#EAF1F8', '#EAF1F8']
+                                    },
+                                }}
                                 isSelected={isUnlockedEnabled}
                                 onSelectedChange={onToggleLocked}
                                 isDisabled={isLockUpdating}
