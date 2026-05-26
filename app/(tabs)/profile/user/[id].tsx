@@ -35,26 +35,8 @@ import {
 } from "react-native";
 import {SafeAreaView, useSafeAreaInsets} from "react-native-safe-area-context";
 import {z} from "zod";
+import {toIsoDate,parseDmyToDate} from "@/utils/dateUtil"
 
-
-function toIsoDate(dmy: string): string | null {
-
-    const value = dmy.trim();
-    const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value);
-    if (!match) return null;
-    const [, dd, mm, yyyy] = match;
-    const date = new Date(Number(yyyy), Number(mm) - 1, Number(dd));
-    if (
-        date.getFullYear() !== Number(yyyy) ||
-        date.getMonth() !== Number(mm) - 1 ||
-        date.getDate() !== Number(dd)
-    ) {
-        return null;
-    }
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${date.getFullYear()}-${month}-${day}`;
-}
 
 function isoToDmy(isoDate: string): string {
     const raw = isoDate.trim();
@@ -81,14 +63,6 @@ function isRole(value: string): value is CreateUserRole {
     return ["ADMIN", "OWNER", "WORKER", "VIEWER"].includes(value);
 }
 
-function parseDmyToDate(dmy: string): Date | null {
-    const iso = toIsoDate(dmy);
-    if (!iso) return null;
-    const [year, month, day] = iso.split("-").map(Number);
-    if (!year || !month || !day) return null;
-    return new Date(year, month - 1, day);
-}
-
 function toDmyDate(date: Date): string {
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -104,31 +78,31 @@ function buildSchema(locale: "en" | "mm") {
             .min(0, locale === "mm" ? "Version မမှန်ကန်ပါ" : "Version must be >= 0"),
         fullName: z
             .string()
-            .min(1, locale === "mm" ? "အမည်လိုအပ်သည်" : "Full name is required"),
+            .min(1, locale === "mm" ? "အမည်လိုအပ်သည်" : "Full name is required")
+            .max(100, locale === "mm" ? "အမည်သည် စာလုံး ၁၀၀ ထက်မကျော်ရပါ" : "Full name cannot exceed 100 characters"),
+
         email: z
             .string()
+            .max(100, locale === "mm" ? "အီးမေးလ်သည် စာလုံး ၁၀၀ ထက်မကျော်ရပါ" : "Email cannot exceed 100 characters")
             .email(locale === "mm" ? "အီးမေးလ်မှန်ကန်ရမည်" : "Invalid email"),
         role: z.enum(["ADMIN", "OWNER", "WORKER", "VIEWER"]),
         joinDate: z
             .string()
             .min(1, locale === "mm" ? "စတင်နေ့စွဲလိုအပ်သည်" : "Join date is required")
             .refine((value) => !!toIsoDate(value), {
-                message:
-                    locale === "mm" ? "နေ့/လ/နှစ် ပုံစံ dd/mm/yyyy ထည့်ပါ" : "Use dd/mm/yyyy",
+                message: locale === "mm" ? "နေ့/လ/နှစ် ပုံစံ dd/mm/yyyy ထည့်ပါ" : "Use dd/mm/yyyy"
             })
             .refine((value) => isNotFutureDate(value), {
-                message:
-                    locale === "mm"
-                        ? "စတင်နေ့စွဲသည် အနာဂတ်နေ့ မဖြစ်ရပါ"
-                        : "Join date cannot be in the future",
+                message: locale === "mm" ? "စတင်နေ့စွဲသည် အနာဂတ်နေ့ မဖြစ်ရပါ" : "Join date cannot be in the future",
             }),
         phoneNumber: z
             .string()
+            .min(1, locale === "mm" ? "ဖုန်းနံပါတ်လိုအပ်သည်" : "Phone number is required")
             .regex(
                 /^09\d{9}$/,
                 locale === "mm"
-                    ? "09 ဖြင့်စပြီး ဂဏန်း ၉ လုံး ဆက်ရမည်"
-                    : "Must start with 09 and contain 11 digits",
+                    ? "၀၉ ဖြင့်စပြီး ဂဏန်း ၉ လုံး ဖြစ်ရမည် (ဥပမာ- 09111222333)"
+                    : "Phone number must start with 09 followed by exactly 9 digits (e.g., 09111222333)"
             ),
         dateOfBirth: z
             .string()
@@ -143,14 +117,29 @@ function buildSchema(locale: "en" | "mm") {
                         ? "မွေးနေ့သက္ကရာဇ်သည် အနာဂတ်နေ့ မဖြစ်ရပါ"
                         : "Date of birth cannot be in the future",
             }),
-        fullIdNo: z.string().max(50).optional(),
+        fullIdNo: z.string()
+            .max(50, locale === "mm" ? "မှတ်ပုံတင်နံပါတ်သည် စာလုံး ၅၀ ထက်မကျော်ရပါ" : "Full ID number cannot exceed 50 characters")
+            .optional(),
         parentOwnerId: z.string().optional(),
-    });
+    })
+        .superRefine((data, ctx) => {
+            if (data.role === "VIEWER" && !String(data.parentOwnerId ?? "").trim()) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message:
+                        locale === "mm"
+                            ? " ကြည့်ရှုသူ ရာထူးအတွက် ယာဉ်ပိုင်ရှင်ကို ရွေးချယ်ပေးပါ"
+                            : "Owner  is required to choose for VIEWER",
+                    path: ["parentOwnerId"],
+                });
+            }
+        });
 }
 
 type FormValues = z.infer<ReturnType<typeof buildSchema>>;
 
 export default function TeamEditUserScreen() {
+
     const {updateUser: t} = useTranslation('user');
     const tLookup = useTranslation('lookup')
     const locale = useLocaleStore((state) => state.locale);
@@ -623,8 +612,8 @@ export default function TeamEditUserScreen() {
                                                         width="trigger"
                                                     >
                                                         {roleFilterOptions.map((role) => {
-                                                            const itemLabel = role.label;
-                                                            const isSelected = role.value === value;
+                                                                const itemLabel = role.label;
+                                                                const isSelected = role.value === value;
                                                                 return (
                                                                     <Select.Item
                                                                         key={role.value}
