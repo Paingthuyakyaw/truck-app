@@ -5,6 +5,7 @@ import {
 } from "@/constants/myanmar-font";
 import { useAuth } from "@/hooks/use-auth";
 import { useThrottledCallback } from "@/hooks/use-throttled-callback";
+import { useTimeBasedGreeting } from "@/hooks/use-time-based-greeting";
 import { useTranslation } from "@/hooks/use-translation";
 import { useLocaleStore } from "@/stores/client/locale-store";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -45,8 +46,8 @@ export default function ProfileScreen() {
   const name = useMemo(() => fullName ?? "Unknown User", [fullName]);
   const userRole = useMemo(() => role ?? "No role", [role]);
   const initial = name.charAt(0).toUpperCase();
+  const greeting = useTimeBasedGreeting();
   const tProfile = useTranslation("profile");
-  const tCommon = useTranslation("common");
   const tLookup = useTranslation("lookup");
   const tLogout = useTranslation("logout");
   const mmTextStyle = useMemo(() => myanmarUITextStyle(), []);
@@ -90,25 +91,18 @@ export default function ProfileScreen() {
         contentContainerStyle={{ paddingBottom: 24 }}
         showsVerticalScrollIndicator={false}
       >
-        <View className="mb-4 flex-row justify-between items-center ">
-          <View>
-            <Text
-              className={`text-sm ${mmLeadingClass}`}
-              style={[{ color: APP_COLORS.textMuted }, textStyle]}
-            >
-              {tCommon.greeting}
+        <View className="mb-3 flex-row items-center justify-between">
+          <View className="max-w-[72%]">
+            <Text className={`text-xs text-slate-500 ${mmLeadingClass}`}>
+              {greeting}
             </Text>
             <Text
-              className={`mt-1 text-lg font-normal ${mmBodyStyle}`}
-              style={[textStyle, { color: APP_COLORS.textPrimary }]}
+              className={`mt-1 text-[18px] font-semibold text-slate-900 ${mmLeadingClass}`}
             >
               {name}
             </Text>
           </View>
-          <Text
-            className={`mt-0 text-lg font-bold ${mmLeadingClass}`}
-            style={[{ color: APP_COLORS.textPrimary }, textStyle]}
-          >
+          <Text className={`text-sm font-bold text-[#3b4f6b] ${mmLeadingClass}`}>
             {tProfile.brand}
           </Text>
         </View>

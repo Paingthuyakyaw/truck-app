@@ -1,4 +1,3 @@
-import { APP_COLORS } from "@/constants/colors";
 import {
   getMyanmarLeadingClass,
   myanmarUITextStyle,
@@ -12,7 +11,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { Input, Select } from "heroui-native";
+import { Button, Input, Select } from "heroui-native";
 import React, { useCallback, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Alert, Pressable, ScrollView, Text, View } from "react-native";
@@ -281,19 +280,16 @@ export default function CreateTruckScreen() {
           </View>
         </View>
 
-        <Pressable
+        <Button
           onPress={handleSubmit(onSubmit)}
-          disabled={isPending}
-          className="mb-2 mt-5 items-center justify-center rounded-xl py-3.5"
-          style={{
-            backgroundColor: APP_COLORS.primary,
-            opacity: isPending ? 0.7 : 1,
-          }}
+          isDisabled={isPending}
+          className={`mb-2 mt-5 items-center justify-center rounded-xl ${getMyanmarLeadingClass(locale)} bg-primary `}
+          variant="outline"
         >
           <Text className="text-base font-semibold text-white" style={style}>
             {isPending ? labels.submitting : labels.submit}
           </Text>
-        </Pressable>
+        </Button>
       </ScrollView>
     </SafeAreaView>
   );

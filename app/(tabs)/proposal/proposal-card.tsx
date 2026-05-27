@@ -3,7 +3,7 @@ import { getMyanmarLeadingClass } from "@/constants/myanmar-font";
 import type { AppLocale } from "@/stores/client/locale-store";
 import type { ProposalItem } from "@/stores/server/proposal/typed";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Card } from "heroui-native";
+import { Button, Card } from "heroui-native";
 import React, { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
@@ -103,7 +103,9 @@ export function ProposalCard({
                   <Text className={`text-xs text-slate-500 ${mmLeading}`}>
                     {labels.amount}
                   </Text>
-                  <Text className={`text-xl font-semibold text-primary ${mmLeading}`}>
+                  <Text
+                    className={`text-xl font-semibold text-primary ${mmLeading}`}
+                  >
                     {formatAmount(item.proposalAmount)}
                   </Text>
                 </View>
@@ -121,7 +123,9 @@ export function ProposalCard({
                   <Text className={`text-xs text-slate-500 ${mmLeading}`}>
                     {labels.plateNo}
                   </Text>
-                  <Text className={`text-sm font-semibold text-slate-700 ${mmLeading}`}>
+                  <Text
+                    className={`text-sm font-semibold text-slate-700 ${mmLeading}`}
+                  >
                     {item.plateNo || "-"}
                   </Text>
                 </View>
@@ -129,7 +133,9 @@ export function ProposalCard({
                   <Text className={`text-xs text-slate-500 ${mmLeading}`}>
                     {labels.serviceShop}
                   </Text>
-                  <Text className={`text-sm font-semibold text-slate-700 ${mmLeading}`}>
+                  <Text
+                    className={`text-sm font-semibold text-slate-700 ${mmLeading}`}
+                  >
                     {item.serviceShop || "-"}
                   </Text>
                 </View>
@@ -140,7 +146,9 @@ export function ProposalCard({
                   <Text className={`text-xs text-slate-500 ${mmLeading}`}>
                     {labels.proposalDate}
                   </Text>
-                  <Text className={`text-sm font-semibold text-slate-700 ${mmLeading}`}>
+                  <Text
+                    className={`text-sm font-semibold text-slate-700 ${mmLeading}`}
+                  >
                     {formatDateTime(item.proposalDate)}
                   </Text>
                 </View>
@@ -148,31 +156,40 @@ export function ProposalCard({
                   <Text className={`text-xs text-slate-500 ${mmLeading}`}>
                     {labels.serviceDate}
                   </Text>
-                  <Text className={`text-sm font-semibold text-slate-700 ${mmLeading}`}>
+                  <Text
+                    className={`text-sm font-semibold text-slate-700 ${mmLeading}`}
+                  >
                     {formatDateTime(item.serviceDate)}
                   </Text>
                 </View>
               </View>
               <View className="mt-3 flex-row items-center gap-2">
-                <Pressable
+                <Button
                   onPress={() => onPressDetail(item)}
-                  className="flex-1 items-center justify-center rounded-xl py-2.5"
-                  style={{ backgroundColor: APP_COLORS.primary }}
+                  className=" flex-1 bg-primary rounded-md "
+                  size="sm"
+                  variant="outline"
                 >
                   <Text
                     className={`text-xs font-semibold text-white ${mmLeading}`}
                   >
                     {labels.viewDetail}
                   </Text>
-                </Pressable>
+                </Button>
 
                 {canEdit ? (
-                  <Pressable
+                  <Button
                     onPress={() => onPressEdit(item)}
-                    className="h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white"
+                    size="sm"
+                    variant="outline"
+                    className=" w-10 p-0 items-center justify-center rounded-xl border border-slate-200 bg-white"
                   >
-                    <Ionicons name="create-outline" size={18} color={APP_COLORS.primary} />
-                  </Pressable>
+                    <Ionicons
+                      name="create-outline"
+                      size={18}
+                      color={APP_COLORS.primary}
+                    />
+                  </Button>
                 ) : null}
               </View>
             </View>

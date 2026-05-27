@@ -24,7 +24,7 @@ export function OwnershipTabs({
   locale,
 }: OwnershipTabsProps) {
   return (
-    <View className="mb-3 flex-row rounded-2xl border border-slate-200 bg-white p-1">
+    <View className="mb-3 flex-row rounded-2xl border border-slate-200 bg-white p-2">
       {TABS.map((tab) => {
         const active = tab === value;
         return (

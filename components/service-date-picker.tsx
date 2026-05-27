@@ -34,7 +34,7 @@ export function ServiceDatePicker({
   placeholder,
   doneLabel,
   cancelLabel,
-  maximumDate = new Date(),
+  maximumDate,
   minimumDate,
   mode = "datetime",
   triggerClassName,

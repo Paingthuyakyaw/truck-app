@@ -1,7 +1,7 @@
 {
   "en": {
     "brand": "Profile",
-    "greeting": "Good Evening",
+    "greeting": "Welcome",
     "settingsHeading": "Management Settings",
     "logout": "Logout",
     "languageLabel": "Language",
@@ -176,7 +176,7 @@
   },
   "mm": {
     "brand": "ပရိုဖိုင်",
-    "greeting": "မင်္ဂလာညနေခင်းပါ",
+    "greeting": "မင်္ဂလာပါ",
     "settingsHeading": "စီမံမှု ဆက်တင်များ",
     "logout": "အကောင့်မှထွက်ရန်",
     "languageLabel": "ဘာသာစကား",

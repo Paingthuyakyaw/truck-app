@@ -1,7 +1,6 @@
-import { CompactTextInput } from "@/components/compact-text-input";
 import { ServiceDatePicker } from "@/components/service-date-picker";
+import { APP_COLORS } from "@/constants/colors";
 import {
-  COMPACT_LINE_INPUT_CLASSNAME,
   compactLineInputTextStyle,
   compactMultilineInputTextStyle,
 } from "@/constants/compact-input";
@@ -19,10 +18,11 @@ import type { TruckItem } from "@/stores/server/truck/typed";
 import { parseServiceDateDisplayToApi } from "@/utils/service-date";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { useRouter } from "expo-router";
-import { Select } from "heroui-native";
-import React, { useMemo, useState } from "react";
+import { Input, Select } from "heroui-native";
+import React, { useCallback, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
   Alert,
@@ -64,7 +64,7 @@ function buildSchema(t: (typeof proposalLocale)["en"]["create"]) {
       .refine((value) => parseServiceDateDisplayToApi(value) !== null, {
         message: t.invalidDate,
       }),
-    description: z.string().max(1000).optional().default(""),
+    description: z.string().max(1000),
   });
 }
 
@@ -76,6 +76,7 @@ function getTruckSubtitle(item: TruckItem): string {
 
 export default function CreateProposalScreen() {
   const router = useRouter();
+  const qc = useQueryClient();
   const insets = useSafeAreaInsets();
   const locale = useLocaleStore((state) => state.locale);
   const t = proposalLocale[locale].create;
@@ -138,6 +139,11 @@ export default function CreateProposalScreen() {
     [serviceTypeData],
   );
 
+  const onBack = useCallback(() => {
+    qc.invalidateQueries({ queryKey: ["proposal"] });
+    router.back();
+  }, [qc, router]);
+
   const onSubmit = (values: FormValues) => {
     const serviceDate = parseServiceDateDisplayToApi(values.serviceDate);
     if (!serviceDate) return;
@@ -153,8 +159,9 @@ export default function CreateProposalScreen() {
       },
       {
         onSuccess: () => {
-          Alert.alert(t.successTitle, t.successBody);
-          router.back();
+          Alert.alert(t.successTitle, t.successBody, [
+            { text: t.done, onPress: () => router.back() },
+          ]);
         },
         onError: (err: unknown) => {
           const data = isAxiosError(err) ? err.response?.data : undefined;
@@ -175,13 +182,13 @@ export default function CreateProposalScreen() {
     <SafeAreaView className="flex-1 bg-[#f3f7fb]">
       <View className="flex-row items-center px-4 pb-3 pt-1">
         <Pressable
-          onPress={() => router.back()}
+          onPress={onBack}
           className="h-11 w-11 items-center justify-center rounded-full bg-[#f1f5f9]"
         >
           <Ionicons name="arrow-back" size={22} color="#475569" />
         </Pressable>
         <Text
-          className={`flex-1 px-3 text-center text-[24px] font-bold text-slate-900 ${mmLeading}`}
+          className={`flex-1 px-3 text-center text-lg font-bold text-slate-900 ${mmLeading}`}
         >
           {t.title}
         </Text>
@@ -204,8 +211,7 @@ export default function CreateProposalScreen() {
               render={() => (
                 <View className="gap-2">
                   <RequiredLabel label={t.truck} mmLeading={mmLeading} />
-                  <CompactTextInput
-                    locale={locale}
+                  <Input
                     value={truckQuery}
                     onChangeText={(next) => {
                       setTruckQuery(next);
@@ -214,7 +220,7 @@ export default function CreateProposalScreen() {
                     }}
                     onFocus={() => setTruckPickerOpen(true)}
                     placeholder={t.truckPlaceholder}
-                    className={`border bg-white ${COMPACT_LINE_INPUT_CLASSNAME} ${truckPickerOpen ? "border-blue-500" : "border-slate-200"}`}
+                    className={`border py-0 h-11 ${mmLeading} border-slate-200 bg-white ${truckPickerOpen ? "border-blue-500" : ""}`}
                   />
                   {!!errors.truckId?.message && (
                     <Text className={`text-xs text-red-500 ${mmLeading}`}>
@@ -223,15 +229,14 @@ export default function CreateProposalScreen() {
                   )}
                   {truckPickerOpen ? (
                     <View className="rounded-2xl border border-slate-200 bg-white p-3">
-                      <CompactTextInput
-                        locale={locale}
+                      <Input
                         value={truckQuery}
                         onChangeText={(next) => {
                           setTruckQuery(next);
                           setValue("truckId", "");
                         }}
                         placeholder={t.truckSearch}
-                        className={`mb-2 border border-slate-100 bg-slate-50 ${COMPACT_LINE_INPUT_CLASSNAME}`}
+                        className={`mb-2 border py-0 h-11 ${mmLeading} border-slate-100 bg-slate-50`}
                       />
                       {trucks.slice(0, 5).map((truck) => (
                         <Pressable
@@ -246,10 +251,14 @@ export default function CreateProposalScreen() {
                           }}
                           className="py-2"
                         >
-                          <Text className={`text-sm font-semibold text-slate-900 ${mmLeading}`}>
+                          <Text
+                            className={`text-sm font-semibold text-slate-900 ${mmLeading}`}
+                          >
                             {truck.plateNo}
                           </Text>
-                          <Text className={`mt-0.5 text-xs text-slate-500 ${mmLeading}`}>
+                          <Text
+                            className={`mt-0.5 text-xs text-slate-500 ${mmLeading}`}
+                          >
                             {getTruckSubtitle(truck)}
                           </Text>
                         </Pressable>
@@ -286,7 +295,7 @@ export default function CreateProposalScreen() {
                       }
                     }}
                   >
-                    <Select.Trigger className="h-10 max-h-10 flex-row items-center rounded-xl border border-slate-200 bg-white px-2.5">
+                    <Select.Trigger className=" py-0 h-11 ">
                       <Select.Value
                         placeholder={t.serviceTypePlaceholder}
                         style={compactLineInputTextStyle(locale)}
@@ -296,12 +305,13 @@ export default function CreateProposalScreen() {
                     <Select.Portal>
                       <Select.Overlay />
                       <Select.Content
-                        className="rounded-2xl border border-slate-200 bg-white"
+                        className="rounded-2xl text-xs border border-slate-200 bg-white"
                         presentation="popover"
                         width="trigger"
                       >
                         {serviceTypes.map((serviceType) => (
                           <Select.Item
+                            className=" text-xs!"
                             key={String(serviceType.id)}
                             value={serviceType.serviceType}
                             label={getServiceTypeLabel(serviceType, locale)}
@@ -360,7 +370,9 @@ export default function CreateProposalScreen() {
               name="description"
               render={({ field: { value, onChange } }) => (
                 <View className="gap-2">
-                  <Text className={`text-sm font-medium text-slate-900 ${mmLeading}`}>
+                  <Text
+                    className={`text-sm font-medium text-slate-900 ${mmLeading}`}
+                  >
                     {t.description}
                   </Text>
                   <TextInput
@@ -378,9 +390,9 @@ export default function CreateProposalScreen() {
 
             <View className="flex-row gap-3 pt-2">
               <Pressable
-                onPress={() => router.back()}
+                onPress={onBack}
                 disabled={isPending}
-                className="flex-1 items-center justify-center rounded-xl bg-slate-100 py-4"
+                className="flex-1 items-center justify-center rounded-xl bg-slate-100 h-14 "
               >
                 <Text className={`font-semibold text-slate-700 ${mmLeading}`}>
                   {t.cancel}
@@ -389,9 +401,9 @@ export default function CreateProposalScreen() {
               <Pressable
                 onPress={handleSubmit(onSubmit)}
                 disabled={isPending}
-                className="flex-1 items-center justify-center rounded-xl py-4"
+                className="flex-1 items-center justify-center rounded-xl h-14"
                 style={{
-                  backgroundColor: "#3b82f6",
+                  backgroundColor: APP_COLORS.primary,
                   opacity: isPending ? 0.7 : 1,
                 }}
               >
@@ -459,16 +471,17 @@ function FormInput({
               {label}
             </Text>
           )}
-          <CompactTextInput
+          <Input
             value={String(value ?? "")}
             onChangeText={onChange}
             placeholder={placeholder}
             keyboardType={keyboardType}
-            locale={locale}
-            className={`border border-slate-200 bg-white ${COMPACT_LINE_INPUT_CLASSNAME}`}
+            className={`border py-0 h-11 ${getMyanmarLeadingClass(locale)}  border-slate-200 bg-white`}
           />
           {!!error && (
-            <Text className={`text-xs text-red-500 ${mmLeading}`}>{String(error)}</Text>
+            <Text className={`text-xs text-red-500 ${mmLeading}`}>
+              {String(error)}
+            </Text>
           )}
         </View>
       )}

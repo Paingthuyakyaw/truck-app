@@ -1,6 +1,7 @@
 import { APP_COLORS } from "@/constants/colors";
 import { myanmarUITextStyle } from "@/constants/myanmar-font";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
+import { useTimeBasedGreeting } from "@/hooks/use-time-based-greeting";
 import { useAuthStore } from "@/stores/auth-store";
 import { useLocaleStore } from "@/stores/client/locale-store";
 import { useOwnershipsInfinite } from "@/stores/server/ownership/query";
@@ -64,12 +65,13 @@ const ownershipCopy = {
       apply: "Apply",
     },
     card: {
-      licenseStartDate: "License Start",
-      licenseEndDate: "License End",
-      balance: "Balance",
+      ownership: "Ownership",
+      buyDate: "Buy Date",
+      licenseEndDate: "Expiry Date",
+      totalLicenseValidityDays: "Remaining Days",
       licenseCity: "License City",
-      profit: "Profit",
-      monthSuffix: "mo",
+      estimatedSellAmt: "Estimated Price",
+      daySuffix: "days",
     },
   },
   mm: {
@@ -95,12 +97,13 @@ const ownershipCopy = {
       apply: "ရှာမည်",
     },
     card: {
-      licenseStartDate: "လက်ရှိမှတ်",
+      ownership: "ပိုင်ဆိုင်မှု",
+      buyDate: "ဝယ်ယူရက်",
       licenseEndDate: "ကုန်ဆုံးရက်",
-      balance: "လက်ကျန်",
+      totalLicenseValidityDays: "သက်တမ်းကျန်",
       licenseCity: "လိုင်စင်မြို့",
-      profit: "အမြတ်",
-      monthSuffix: "လ",
+      estimatedSellAmt: "ခန့်မှန်းရောင်းဈေး",
+      daySuffix: "ရက်",
     },
   },
 } as const;
@@ -109,6 +112,7 @@ export default function OwnerShip() {
   const locale = useLocaleStore((state) => state.locale);
   const fullName = useAuthStore((state) => state.fullName);
   const role = useAuthStore((state) => state.role);
+  const greeting = useTimeBasedGreeting();
   const t = ownershipCopy[locale];
   const showOwnerId = (role || "").toUpperCase() === "ADMIN";
 
@@ -163,7 +167,7 @@ export default function OwnerShip() {
         data={items}
         className="px-4"
         style={{ flex: 1 }}
-        keyExtractor={(item, index) => item.id || `${item.plateNo}-${index}`}
+        keyExtractor={(item, index) => item.id || `${item.truckPlateNo}-${index}`}
         renderItem={({ item }) => (
           <OwnershipCard item={item} locale={locale} labels={t.card} />
         )}
@@ -177,7 +181,7 @@ export default function OwnerShip() {
           <View className="pb-3 pt-1">
             <OwnershipHeader
               title={t.title}
-              welcomeLabel={t.welcome}
+              welcomeLabel={greeting}
               fullName={fullName || "-"}
               style={style}
             />

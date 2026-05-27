@@ -23,7 +23,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Input, Select } from "heroui-native";
-import React, { useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
   ActivityIndicator,
@@ -38,6 +38,7 @@ import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
+import { useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 
 type FormValues = {
@@ -79,6 +80,7 @@ function getOwnershipId(
 
 export default function EditProposalScreen() {
   const router = useRouter();
+  const qc = useQueryClient();
   const insets = useSafeAreaInsets();
   const locale = useLocaleStore((state) => state.locale);
   const errorCatalog = useTranslation("error");
@@ -146,6 +148,11 @@ export default function EditProposalScreen() {
     [serviceTypeData],
   );
 
+  const onBack = useCallback(() => {
+    qc.invalidateQueries({ queryKey: ["proposal"] });
+    router.back();
+  }, [qc, router]);
+
   const onSubmit = (values: FormValues) => {
     if (!detail?.id) return;
 
@@ -185,7 +192,7 @@ export default function EditProposalScreen() {
     <SafeAreaView className="flex-1 bg-[#f3f7fb]">
       <View className="flex-row items-center px-4 pb-3 pt-1">
         <Pressable
-          onPress={() => router.back()}
+          onPress={onBack}
           className="h-11 w-11 items-center justify-center rounded-full bg-[#f1f5f9]"
         >
           <Ionicons name="arrow-back" size={22} color="#475569" />
@@ -368,7 +375,7 @@ export default function EditProposalScreen() {
 
               <View className="flex-row gap-3 pt-2">
                 <Pressable
-                  onPress={() => router.back()}
+                  onPress={onBack}
                   disabled={isPending}
                   className="flex-1 items-center justify-center rounded-xl bg-slate-100 h-14 "
                 >

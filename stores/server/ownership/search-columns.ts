@@ -32,6 +32,7 @@ const column = (
   value: OwnershipSearchValue,
   type: string,
   matchCase: boolean,
+  searchable = true,
 ): OwnershipColumn => ({
   data,
   search: {
@@ -39,7 +40,7 @@ const column = (
     type,
     matchCase,
   },
-  searchable: false,
+  searchable,
   orderable: false,
 });
 
@@ -98,7 +99,7 @@ export function buildOwnershipSearchColumns(
   allowOwnerId: boolean,
 ): OwnershipColumn[] {
   const columns: OwnershipColumn[] = [
-    column("truckStatus", status, "eq", true),
+    column("truckStatus", status, "eq", true, true),
   ];
 
   const plateNo = f.plateNo.trim();

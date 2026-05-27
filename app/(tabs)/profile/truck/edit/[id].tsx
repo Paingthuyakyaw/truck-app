@@ -13,7 +13,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
-import { Input, Select } from "heroui-native";
+import { Button, Input, Select } from "heroui-native";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -317,34 +317,32 @@ export default function EditTruckScreen() {
           </View>
 
           <View className="mb-2 mt-5 flex-row gap-3">
-            <Pressable
+            <Button
               onPress={onBack}
-              className="flex-1 items-center justify-center rounded-xl bg-slate-200 py-3.5"
+              variant="outline"
+              className={`flex-1 items-center py-0 justify-center rounded-xl bg-slate-200 ${getMyanmarLeadingClass(locale)}`}
             >
               <Text
-                className="text-base font-semibold text-slate-700"
-                style={style}
+                className={`text-sm font-semibold text-slate-700 ${getMyanmarLeadingClass(locale)} `}
+                // style={style}
               >
                 {labels.cancel}
               </Text>
-            </Pressable>
+            </Button>
 
-            <Pressable
+            <Button
               onPress={handleSubmit(onSubmit)}
-              disabled={isPending}
-              className="flex-1 items-center justify-center rounded-xl py-3.5"
-              style={{
-                backgroundColor: APP_COLORS.primary,
-                opacity: isPending ? 0.7 : 1,
-              }}
+              isDisabled={isPending}
+              className="flex-1 items-center justify-center rounded-xl py-0 bg-primary"
+              variant="outline"
             >
               <Text
-                className="text-base font-semibold text-white"
+                className={`text-sm font-semibold text-white ${getMyanmarLeadingClass(locale)} `}
                 style={style}
               >
                 {isPending ? labels.submitting : labels.submit}
               </Text>
-            </Pressable>
+            </Button>
           </View>
         </ScrollView>
       )}

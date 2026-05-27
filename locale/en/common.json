@@ -14,7 +14,12 @@
       "update": "Update",
       "delete": "Delete"
     },
-    "greeting": "Good Evening",
+    "greetings": {
+      "morning": "Good Morning",
+      "afternoon": "Good Afternoon",
+      "evening": "Good Evening",
+      "night": "Good Night"
+    },
     "anyLabel": "Any"
   }
 }

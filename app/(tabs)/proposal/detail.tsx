@@ -1,8 +1,6 @@
 import { CompactTextInput } from "@/components/compact-text-input";
 import { APP_COLORS } from "@/constants/colors";
-import {
-  getMyanmarLeadingClass,
-} from "@/constants/myanmar-font";
+import { getMyanmarLeadingClass } from "@/constants/myanmar-font";
 import { useTranslation } from "@/hooks/use-translation";
 import { getApiErrorAlertCopy } from "@/lib/api-error-alert";
 import proposalLocale from "@/locale/proposal/proposal.json";
@@ -14,6 +12,7 @@ import type { ProposalDetail } from "@/stores/server/proposal/typed";
 import { normalizeServiceDateForApi } from "@/utils/service-date";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { Button } from "heroui-native";
 import React, { useCallback, useState } from "react";
 import {
   ActivityIndicator,
@@ -24,7 +23,10 @@ import {
   Text,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 function formatDateTime(value: string): string {
   if (!value) return "-";
@@ -53,6 +55,7 @@ function getOwnershipId(
 
 export default function ProposalDetailScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const locale = useLocaleStore((state) => state.locale);
   const mmLeading = getMyanmarLeadingClass(locale);
   const errorCatalog = useTranslation("error");
@@ -228,174 +231,170 @@ export default function ProposalDetailScreen() {
           <ActivityIndicator color={APP_COLORS.primary} />
         </View>
       ) : (
-        <>
-          <ScrollView
-            className="px-4"
-            contentContainerStyle={{ paddingBottom: showActions ? 100 : 24 }}
-          >
-            <View className="rounded-2xl bg-white p-4">
-              <View className="flex-row items-start justify-between gap-2">
-                <View className="flex-1">
-                  <Text className={`text-xl font-bold text-primary ${mmLeading}`}>
-                    {detail?.proposalNo || "-"}
-                  </Text>
-                  <Text className={`mt-1 text-sm text-slate-500 ${mmLeading}`}>
-                    {detail?.plateNo || "-"}
-                  </Text>
-                </View>
-                <View className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-1.5">
-                  <Text className={`text-xs font-semibold uppercase text-rose-700 ${mmLeading}`}>
-                    {detail?.status || "-"}
-                  </Text>
-                </View>
+        <ScrollView
+          className="px-4"
+          contentContainerStyle={{
+            paddingBottom: insets.bottom + 24,
+            flexGrow: 1,
+          }}
+        >
+          <View className="mt-1 rounded-2xl bg-white p-4">
+            <View className="flex-row items-start justify-between gap-2">
+              <View className="flex-1">
+                <Text className={`text-xl font-bold text-primary ${mmLeading}`}>
+                  {detail?.proposalNo || "-"}
+                </Text>
+                <Text className={`mt-1 text-sm text-slate-500 ${mmLeading}`}>
+                  {detail?.plateNo || "-"}
+                </Text>
               </View>
-
-              <View className="mt-4 gap-3">
-                <View className="flex-row items-center justify-between">
-                  <Text
-                    className={`text-xs text-slate-500 ${mmLeading}`}>
-                    {labels.serviceType}
-                  </Text>
-                  <Text
-                    className={`text-sm font-semibold text-slate-700 ${mmLeading}`}>
-                    {detail?.serviceType || "-"}
-                  </Text>
-                </View>
-                <View className="h-px bg-slate-200" />
-                <View className="flex-row items-center justify-between">
-                  <Text
-                    className={`text-xs text-slate-500 ${mmLeading}`}>
-                    {labels.amount}
-                  </Text>
-                  <Text
-                    className={`text-2xl font-bold text-primary ${mmLeading}`}>
-                    {formatAmount(Number(detail?.proposalAmount ?? 0))}
-                  </Text>
-                </View>
-                <View className="h-px bg-slate-200" />
-                <View className="flex-row items-center justify-between">
-                  <Text
-                    className={`text-xs text-slate-500 ${mmLeading}`}>
-                    {labels.serviceShop}
-                  </Text>
-                  <Text
-                    className={`text-sm font-semibold text-slate-700 ${mmLeading}`}>
-                    {detail?.serviceShop || "-"}
-                  </Text>
-                </View>
-                <View className="h-px bg-slate-200" />
-                <View className="flex-row items-center justify-between">
-                  <Text
-                    className={`text-xs text-slate-500 ${mmLeading}`}>
-                    {labels.proposalDate}
-                  </Text>
-                  <Text
-                    className={`text-sm font-semibold text-slate-700 ${mmLeading}`}>
-                    {formatDateTime(detail?.proposalDate || "")}
-                  </Text>
-                </View>
-                <View className="h-px bg-slate-200" />
-                <View className="flex-row items-center justify-between">
-                  <Text
-                    className={`text-xs text-slate-500 ${mmLeading}`}>
-                    {labels.serviceDate}
-                  </Text>
-                  <Text
-                    className={`text-sm font-semibold text-slate-700 ${mmLeading}`}>
-                    {formatDateTime(detail?.serviceDate || "")}
-                  </Text>
-                </View>
-                <View className="h-px bg-slate-200" />
-                <View className="flex-row items-center justify-between">
-                  <Text
-                    className={`text-xs text-slate-500 ${mmLeading}`}>
-                    {labels.createdBy}
-                  </Text>
-                  <View className="items-end">
-                    <Text
-                      className={`text-sm font-semibold text-slate-700 ${mmLeading}`}
-                    >
-                      {detail?.createdUserFullName || detail?.createdBy || "-"}
-                    </Text>
-                    {detail?.createdUserPhone ? (
-                      <Text
-                        className={`mt-0.5 text-xs text-slate-400 ${mmLeading}`}
-                      >
-                        {detail.createdUserPhone}
-                      </Text>
-                    ) : null}
-                  </View>
-                </View>
-                <View className="h-px bg-slate-200" />
-                <View className="flex-row items-center justify-between">
-                  <Text
-                    className={`text-xs text-slate-500 ${mmLeading}`}>
-                    {labels.owner}
-                  </Text>
-                  <View className="items-end">
-                    <Text
-                      className={`text-sm font-semibold text-slate-700 ${mmLeading}`}
-                    >
-                      {detail?.ownerFullName || "-"}
-                    </Text>
-                    {detail?.ownerPhone ? (
-                      <Text
-                        className={`mt-0.5 text-xs text-slate-400 ${mmLeading}`}
-                      >
-                        {detail.ownerPhone}
-                      </Text>
-                    ) : null}
-                  </View>
-                </View>
-                <View className="h-px bg-slate-200" />
-                <View>
-                  <Text
-                    className={`text-xs mb-1 text-slate-500 ${mmLeading}`}>
-                    {labels.description}
-                  </Text>
-                  <Text
-                    className={`rounded-xl border border-slate-200 bg-[#f8fafc] p-3 text-sm text-slate-700 ${mmLeading}`}
-                  >
-                    {detail?.description || "-"}
-                  </Text>
-                </View>
+              <View className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-1.5">
+                <Text
+                  className={`text-xs font-semibold uppercase text-rose-700 ${mmLeading}`}
+                >
+                  {detail?.status || "-"}
+                </Text>
               </View>
             </View>
-          </ScrollView>
+
+            <View className="mt-4 gap-3">
+              <View className="flex-row items-center justify-between">
+                <Text className={`text-xs text-slate-500 ${mmLeading}`}>
+                  {labels.serviceType}
+                </Text>
+                <Text
+                  className={`text-sm font-semibold text-slate-700 ${mmLeading}`}
+                >
+                  {detail?.serviceType || "-"}
+                </Text>
+              </View>
+              <View className="h-px bg-slate-200" />
+              <View className="flex-row items-center justify-between">
+                <Text className={`text-xs text-slate-500 ${mmLeading}`}>
+                  {labels.amount}
+                </Text>
+                <Text
+                  className={`text-2xl font-bold text-primary ${mmLeading}`}
+                >
+                  {formatAmount(Number(detail?.proposalAmount ?? 0))}
+                </Text>
+              </View>
+              <View className="h-px bg-slate-200" />
+              <View className="flex-row items-center justify-between">
+                <Text className={`text-xs text-slate-500 ${mmLeading}`}>
+                  {labels.serviceShop}
+                </Text>
+                <Text
+                  className={`text-sm font-semibold text-slate-700 ${mmLeading}`}
+                >
+                  {detail?.serviceShop || "-"}
+                </Text>
+              </View>
+              <View className="h-px bg-slate-200" />
+              <View className="flex-row items-center justify-between">
+                <Text className={`text-xs text-slate-500 ${mmLeading}`}>
+                  {labels.proposalDate}
+                </Text>
+                <Text
+                  className={`text-sm font-semibold text-slate-700 ${mmLeading}`}
+                >
+                  {formatDateTime(detail?.proposalDate || "")}
+                </Text>
+              </View>
+              <View className="h-px bg-slate-200" />
+              <View className="flex-row items-center justify-between">
+                <Text className={`text-xs text-slate-500 ${mmLeading}`}>
+                  {labels.serviceDate}
+                </Text>
+                <Text
+                  className={`text-sm font-semibold text-slate-700 ${mmLeading}`}
+                >
+                  {formatDateTime(detail?.serviceDate || "")}
+                </Text>
+              </View>
+              <View className="h-px bg-slate-200" />
+              <View className="flex-row items-center justify-between">
+                <Text className={`text-xs text-slate-500 ${mmLeading}`}>
+                  {labels.createdBy}
+                </Text>
+                <View className="items-end">
+                  <Text
+                    className={`text-sm font-semibold text-slate-700 ${mmLeading}`}
+                  >
+                    {detail?.createdUserFullName || detail?.createdBy || "-"}
+                  </Text>
+                  {detail?.createdUserPhone ? (
+                    <Text
+                      className={`mt-0.5 text-xs text-slate-400 ${mmLeading}`}
+                    >
+                      {detail.createdUserPhone}
+                    </Text>
+                  ) : null}
+                </View>
+              </View>
+              <View className="h-px bg-slate-200" />
+              <View className="flex-row items-center justify-between">
+                <Text className={`text-xs text-slate-500 ${mmLeading}`}>
+                  {labels.owner}
+                </Text>
+                <View className="items-end">
+                  <Text
+                    className={`text-sm font-semibold text-slate-700 ${mmLeading}`}
+                  >
+                    {detail?.ownerFullName || "-"}
+                  </Text>
+                  {detail?.ownerPhone ? (
+                    <Text
+                      className={`mt-0.5 text-xs text-slate-400 ${mmLeading}`}
+                    >
+                      {detail.ownerPhone}
+                    </Text>
+                  ) : null}
+                </View>
+              </View>
+              <View className="h-px bg-slate-200" />
+              <View>
+                <Text className={`mb-1 text-xs text-slate-500 ${mmLeading}`}>
+                  {labels.description}
+                </Text>
+                <Text
+                  className={`rounded-xl border border-slate-200 bg-[#f8fafc] p-3 text-sm text-slate-700 ${mmLeading}`}
+                >
+                  {detail?.description || "-"}
+                </Text>
+              </View>
+            </View>
+          </View>
 
           {showActions ? (
-            <View className="absolute bottom-0 left-0 right-0 border-t border-slate-200 bg-white px-4 py-3">
-              <View className="flex-row gap-3">
-                <Pressable
-                  disabled={isSubmitting}
-                  onPress={() => setTerminateModalOpen(true)}
-                  className="flex-1 items-center justify-center rounded-xl border py-3.5"
-                  style={{
-                    borderColor: APP_COLORS.error,
-                    backgroundColor: "#fff",
-                  }}
+            <View className="mb-2 mt-5 flex-row items-center w-full gap-3">
+              <Button
+                isDisabled={isSubmitting}
+                onPress={() => setTerminateModalOpen(true)}
+                variant="outline"
+                className=" w-1/2 rounded-md "
+              >
+                <Text
+                  className={`text-sm font-semibold text-red-600 ${mmLeading}`}
                 >
-                  <Text
-                    className={`text-sm font-semibold text-[#dc4c4c] ${mmLeading}`}>
-                    {t.terminate}
-                  </Text>
-                </Pressable>
+                  {t.terminate}
+                </Text>
+              </Button>
 
-                <Pressable
-                  disabled={isSubmitting}
-                  onPress={() => setApproveModalOpen(true)}
-                  className="flex-1 items-center justify-center rounded-xl py-3.5"
-                  style={{ backgroundColor: APP_COLORS.primary }}
+              <Button
+                isDisabled={isSubmitting}
+                onPress={() => setApproveModalOpen(true)}
+                className="  w-1/2 rounded-md bg-primary"
+              >
+                <Text
+                  className={`text-sm font-semibold  text-white ${mmLeading}`}
                 >
-                  <Text
-                    className={`text-sm font-semibold text-white ${mmLeading}`}>
-                    {t.accept}
-                  </Text>
-                </Pressable>
-              </View>
+                  {t.accept}
+                </Text>
+              </Button>
             </View>
           ) : null}
-        </>
+        </ScrollView>
       )}
 
       <Modal
@@ -431,16 +430,17 @@ export default function ProposalDetailScreen() {
             />
 
             <View className="mt-4 flex-row gap-2">
-              <Pressable
-                disabled={isSubmitting}
+              <Button
+                isDisabled={isSubmitting}
                 onPress={closeApproveModal}
                 className="flex-1 items-center justify-center rounded-xl bg-slate-100 py-3"
               >
                 <Text
-                  className={`text-sm font-semibold text-slate-700 ${mmLeading}`}>
-                    {createLabels.cancel}
+                  className={`text-sm font-semibold text-slate-700 ${mmLeading}`}
+                >
+                  {createLabels.cancel}
                 </Text>
-              </Pressable>
+              </Button>
 
               <Pressable
                 disabled={isSubmitting}
@@ -452,7 +452,8 @@ export default function ProposalDetailScreen() {
                   <ActivityIndicator color="#fff" />
                 ) : (
                   <Text
-                    className={`text-sm font-semibold text-white ${mmLeading}`}>
+                    className={`text-sm font-semibold text-white ${mmLeading}`}
+                  >
                     {t.accept}
                   </Text>
                 )}
@@ -483,9 +484,8 @@ export default function ProposalDetailScreen() {
                 backgroundColor: APP_COLORS.errorSoft,
               }}
             >
-              <Text
-                className={`text-lg font-bold text-[#dc4c4c] ${mmLeading}`}>
-                    {detail?.proposalNo || "-"}
+              <Text className={`text-lg font-bold text-[#dc4c4c] ${mmLeading}`}>
+                {detail?.proposalNo || "-"}
               </Text>
             </View>
 
@@ -512,7 +512,8 @@ export default function ProposalDetailScreen() {
                   className="flex-1 items-center justify-center rounded-xl bg-slate-100 py-3"
                 >
                   <Text
-                    className={`text-sm font-semibold text-slate-700 ${mmLeading}`}>
+                    className={`text-sm font-semibold text-slate-700 ${mmLeading}`}
+                  >
                     {createLabels.cancel}
                   </Text>
                 </Pressable>
@@ -527,8 +528,9 @@ export default function ProposalDetailScreen() {
                     <ActivityIndicator color="#fff" />
                   ) : (
                     <Text
-                      className={`text-sm font-semibold text-white ${mmLeading}`}>
-                    {t.terminate}
+                      className={`text-sm font-semibold text-white ${mmLeading}`}
+                    >
+                      {t.terminate}
                     </Text>
                   )}
                 </Pressable>

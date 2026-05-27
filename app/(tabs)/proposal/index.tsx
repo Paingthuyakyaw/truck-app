@@ -1,6 +1,7 @@
 import { APP_COLORS } from "@/constants/colors";
 import { getMyanmarLeadingClass } from "@/constants/myanmar-font";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
+import { useTimeBasedGreeting } from "@/hooks/use-time-based-greeting";
 import proposalLocale from "@/locale/proposal/proposal.json";
 import { useAuthStore } from "@/stores/auth-store";
 import { useLocaleStore } from "@/stores/client/locale-store";
@@ -69,6 +70,7 @@ export default function ProposalScreen() {
   }, []);
   const debouncedQuickQuery = useDebouncedValue(ui.quickQuery, 500);
 
+  const greeting = useTimeBasedGreeting();
   const mmLeading = getMyanmarLeadingClass(locale);
   const t = proposalLocale[locale].list;
   const upperRole = (role || "").toUpperCase();
@@ -152,7 +154,7 @@ export default function ProposalScreen() {
             <ProposalHeader
               title={t.title}
               locale={locale}
-              welcomeLabel={t.welcome}
+              welcomeLabel={greeting}
               fullName={fullName || "-"}
             />
             <ProposalTabs

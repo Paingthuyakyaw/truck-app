@@ -15,26 +15,20 @@ export interface OwnershipData {
 
 export interface OwnershipItem {
   id: string;
-  truckStatus?: string;
-  plateNo?: string;
-  licenseCity?: string;
-  licenseStartDate?: string;
+  equipmentName?: string;
+  truckPlateNo?: string;
+  estimatedSellAmt?: string;
+  buyDate?: string;
   licenseEndDate?: string;
-  balance?: number;
+  licenseCity?: string;
+  purchasePlace?: string;
+  notes?: string;
+  totalOwnershipDays?: number;
+  totalLicenseValidityDays?: number;
   profit?: number;
-  model?: string;
-  make?: string;
-  modelYear?: string | number;
-  truck?: {
-    id?: string;
-    plateNo?: string;
-    model?: string;
-    make?: string;
-    modelYear?: string | number;
-  };
-  owner?: {
-    id?: string;
-    fullName?: string;
-    username?: string;
-  } | null;
+  totalCost?: number;
+  totalIncome?: number;
+  sellDate?: string | null;
+  soldPlace?: string | null;
+  version?: number;
 }
