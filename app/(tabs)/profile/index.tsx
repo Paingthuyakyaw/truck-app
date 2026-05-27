@@ -91,7 +91,7 @@ export default function ProfileScreen() {
                             {tCommon.greeting}
                         </Text>
                         <Text
-                            className={`mt-1 text-base font-normal ${mmBodyStyle}`}
+                            className={`mt-1 text-lg font-normal ${mmBodyStyle}`}
                             style={[textStyle, {color: APP_COLORS.textPrimary}]}
                         >
                             {name}
@@ -118,7 +118,7 @@ export default function ProfileScreen() {
                         </Avatar>
                         <View className="flex-1">
                             <Text
-                                className={`text-base font-normal  ${mmLeadingClass}`}
+                                className={`text-lg font-normal  ${mmLeadingClass}`}
                                 style={[textStyle, {color: APP_COLORS.textPrimary}]}
                             >
                                 {name}
@@ -130,7 +130,7 @@ export default function ProfileScreen() {
                                         style={{backgroundColor: APP_COLORS.primary}}
                                     />
                                     <Text
-                                        className={`text-base  font-medium ${mmLeadingClass}`}
+                                        className={`text-sm  font-medium ${mmLeadingClass}`}
                                         style={[textStyle, {color: APP_COLORS.primary}]}
                                     >
                                         {(tLookup.roles as any)[userRole] }
@@ -143,7 +143,7 @@ export default function ProfileScreen() {
                 </Card>
 
                 <Text
-                    className={`mb-3 px-1 text-base font-bold  ${mmLeadingClass}`}
+                    className={`mb-3 px-1 text-sm font-bold  ${mmLeadingClass}`}
                     style={[textStyle, {color: APP_COLORS.textMuted}]}
                 >
                     {tProfile.managementSetting}
@@ -170,19 +170,19 @@ export default function ProfileScreen() {
                                     {/* Left Descriptive Icon Block Container */}
                                     <View className="h-11 w-11 items-center justify-center rounded-xl"
                                           style={{backgroundColor: APP_COLORS.background}}>
-                                        <Ionicons name={row.icon} size={21} color={APP_COLORS.primary}/>
+                                        <Ionicons name={row.icon} size={22} color={APP_COLORS.primary}/>
                                     </View>
                                     {/* Mid Content Section */}
                                     <View className="flex-1">
                                         <Text
-                                            className={`text-sm font-normal  ${mmLeadingClass}`}
+                                            className={`text-sm font-medium  ${mmLeadingClass}`}
                                             style={[locale === "mm" ? mmBodyStyle : undefined, {color: APP_COLORS.textPrimary}]}
                                         >
                                             {tProfile.settingsRows[row.key as keyof typeof tProfile.settingsRows]}
                                         </Text>
                                         {row.key === "language" ? (
                                             <Text
-                                                className={`text-sm font-normal ${mmLeadingClass}`}
+                                                className={`text-sm font-medium ${mmLeadingClass}`}
                                                 style={[locale === "mm" ? mmBodyStyle : undefined, {color: APP_COLORS.textMuted}]}
                                             >
                                                 {locale === "mm" ? "မြန်မာ (Myanmar)" : "English"}
@@ -212,7 +212,7 @@ export default function ProfileScreen() {
                             })}
                         >
                             <Text
-                                className={`${mmLeadingClass} text-sm font-normal`}
+                                className={`${mmLeadingClass} text-sm font-medium`}
                                 style={[locale === "mm" ? mmBodyStyle : undefined,{color:APP_COLORS.error}]}
                             >
                                 {tLogout.title}
