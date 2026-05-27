@@ -35,25 +35,7 @@ import {useTranslation} from "@/hooks/use-translation";
 import {getApiErrorAlertCopy} from "@/lib/api-error-alert";
 import {useOwnerLookupOptions} from "@/stores/server/ownership/owner-lookup-query";
 import {Feather} from "@expo/vector-icons";
-
-
-function toIsoDate(dmy: string): string | null {
-    const value = dmy.trim();
-    const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value);
-    if (!match) return null;
-    const [, dd, mm, yyyy] = match;
-    const date = new Date(Number(yyyy), Number(mm) - 1, Number(dd));
-    if (
-        date.getFullYear() !== Number(yyyy) ||
-        date.getMonth() !== Number(mm) - 1 ||
-        date.getDate() !== Number(dd)
-    ) {
-        return null;
-    }
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${date.getFullYear()}-${month}-${day}`;
-}
+import {toIsoDate, parseDmyToDate} from "@/utils/dateUtil"
 
 function todayIsoLocal(): string {
     const d = new Date();
@@ -61,14 +43,6 @@ function todayIsoLocal(): string {
     const m = String(d.getMonth() + 1).padStart(2, "0");
     const day = String(d.getDate()).padStart(2, "0");
     return `${y}-${m}-${day}`;
-}
-
-function parseDmyToDate(dmy: string): Date | null {
-    const iso = toIsoDate(dmy);
-    if (!iso) return null;
-    const [year, month, day] = iso.split("-").map(Number);
-    if (!year || !month || !day) return null;
-    return new Date(year, month - 1, day);
 }
 
 function toDmyDate(date: Date): string {
@@ -288,7 +262,7 @@ export default function TeamCreateUserScreen() {
                         />
                         <View className="flex-1">
                             <Text
-                                className={`text-sm  font-semibold ${getMyanmarLeadingClass(locale)}  text-[#325f99]`}
+                                className={`text-sm  font-medium ${getMyanmarLeadingClass(locale)}  text-[#325f99]`}
                                 style={style}
                             >
                                 {t.infoTitle}
@@ -340,7 +314,7 @@ export default function TeamCreateUserScreen() {
                                             borderWidth: 1,
                                             color: APP_COLORS.textPrimary
                                         }, style]}
-                                        className={`${getMyanmarLeadingClass(locale)}`}
+                                        className={`text-sm font-medium ${getMyanmarLeadingClass(locale)}`}
                                         {...(Platform.OS === "android" && locale === "mm"
                                             ? {includeFontPadding: false}
                                             : {})}
@@ -384,7 +358,7 @@ export default function TeamCreateUserScreen() {
                                                 borderWidth: 1,
                                                 color: APP_COLORS.textPrimary
                                             }, style]}
-                                            className={`${getMyanmarLeadingClass(locale)}`}
+                                            className={`text-sm font-medium ${getMyanmarLeadingClass(locale)}`}
                                             {...(Platform.OS === "android" && locale === "mm"
                                                 ? {includeFontPadding: false}
                                                 : {})}
@@ -441,7 +415,7 @@ export default function TeamCreateUserScreen() {
                                             borderWidth: 1,
                                             color: APP_COLORS.textPrimary
                                         }, style]}
-                                        className={`${getMyanmarLeadingClass(locale)}`}
+                                        className={`text-sm font-medium ${getMyanmarLeadingClass(locale)}`}
                                         {...(Platform.OS === "android" && locale === "mm"
                                             ? {includeFontPadding: false}
                                             : {})}
@@ -481,7 +455,7 @@ export default function TeamCreateUserScreen() {
                                             borderWidth: 1,
                                             color: APP_COLORS.textPrimary
                                         }, style]}
-                                        className={`${getMyanmarLeadingClass(locale)}`}
+                                        className={`text-sm font-medium ${getMyanmarLeadingClass(locale)}`}
                                         {...(Platform.OS === "android" && locale === "mm"
                                             ? {includeFontPadding: false}
                                             : {})}
@@ -523,7 +497,7 @@ export default function TeamCreateUserScreen() {
                                             borderWidth: 1,
                                             color: APP_COLORS.textPrimary
                                         }, style]}
-                                        className={`${getMyanmarLeadingClass(locale)}`}
+                                        className={`text-sm font-medium ${getMyanmarLeadingClass(locale)}`}
                                         {...(Platform.OS === "android" && locale === "mm"
                                             ? {includeFontPadding: false}
                                             : {})}
@@ -562,7 +536,7 @@ export default function TeamCreateUserScreen() {
                                             }}
                                         >
                                             <Text
-                                                className={`${getMyanmarLeadingClass(locale)}`}
+                                                className={`text-sm font-medium ${getMyanmarLeadingClass(locale)}`}
                                                 style={[style, {color: value ? APP_COLORS.textPrimary : APP_COLORS.textMuted}]}
                                             >
                                                 {value || t.placeholders.dateOfBirth}
@@ -583,6 +557,7 @@ export default function TeamCreateUserScreen() {
                                                         Platform.OS === "ios" ? "spinner" : "default"
                                                     }
                                                     maximumDate={new Date()}
+                                                    minimumDate={new Date(1950, 0, 1)}
                                                     onChange={(
                                                         event: DateTimePickerEvent,
                                                         selectedDate?: Date,
@@ -601,10 +576,10 @@ export default function TeamCreateUserScreen() {
                                                         className="mt-2 self-end rounded-lg bg-slate-100 px-3 py-1.5"
                                                     >
                                                         <Text
-                                                            className={`text-xs ${getMyanmarLeadingClass(locale)}  font-semibold text-slate-700`}
+                                                            className={`text-sm ${getMyanmarLeadingClass(locale)}  font-semibold text-slate-700`}
                                                             style={style}
                                                         >
-                                                            {locale === "mm" ? "ပြီးပါပြီ" : "Done"}
+                                                            {locale === "mm" ? "ရွေးချယ်မည်" : "Done"}
                                                         </Text>
                                                     </Pressable>
                                                 ) : null}
@@ -629,7 +604,7 @@ export default function TeamCreateUserScreen() {
                                 >
                                     {t.labels.fullIdNo}
                                 </Text>
-                                <Text className={`text-xs font-normal ${getMyanmarLeadingClass(locale)}`}
+                                <Text className={`text-[11px] font-medium ${getMyanmarLeadingClass(locale)}`}
                                       style={{color: APP_COLORS.warning}}>{locale === 'mm' ? '(မထည့်လည်းရ)' : '(Optional)'}</Text>
                             </View>
                             <Controller
@@ -649,7 +624,7 @@ export default function TeamCreateUserScreen() {
                                             borderWidth: 1,
                                             color: APP_COLORS.textPrimary
                                         }, style]}
-                                        className={`${getMyanmarLeadingClass(locale)}`}
+                                        className={`text-sm font-medium ${getMyanmarLeadingClass(locale)}`}
                                         {...(Platform.OS === "android" && locale === "mm"
                                             ? {includeFontPadding: false}
                                             : {})}
@@ -700,7 +675,7 @@ export default function TeamCreateUserScreen() {
                                             >
                                                 <Select.Value
                                                     placeholder={t.placeholders.role}
-                                                    className={` py-0 text-[11px] ${getMyanmarLeadingClass(locale)}`}
+                                                    className={` py-0 text-[11px] font-medium ${getMyanmarLeadingClass(locale)}`}
                                                     style={[{color: APP_COLORS.textPrimary}]}
                                                 />
                                                 <Select.TriggerIndicator/>
@@ -801,7 +776,7 @@ export default function TeamCreateUserScreen() {
                                                     >
                                                         <Select.Value
                                                             placeholder={t.placeholders.parentOwner}
-                                                            className={` py-0 text-[11px] ${getMyanmarLeadingClass(locale)}`}
+                                                            className={` py-0 text-[11px] font-medium ${getMyanmarLeadingClass(locale)}`}
                                                             style={[{color: APP_COLORS.textPrimary}]}
                                                         />
                                                         <Select.TriggerIndicator/>
@@ -871,7 +846,7 @@ export default function TeamCreateUserScreen() {
                         borderWidth: 1
                     })}
                 >
-                    <Text className={`text-base font-semibold text-white ${getMyanmarLeadingClass(locale)}`}
+                    <Text className={`text-sm font-bold text-white ${getMyanmarLeadingClass(locale)}`}
                           style={style}>
                         {isPending ? t.submitting : t.submit}
                     </Text>
