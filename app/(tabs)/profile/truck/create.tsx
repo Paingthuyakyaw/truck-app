@@ -4,7 +4,6 @@ import {
 } from "@/constants/myanmar-font";
 import { useTranslation } from "@/hooks/use-translation";
 import { getApiErrorAlertCopy } from "@/lib/api-error-alert";
-import profileLocale from "@/locale/profile/profile.json";
 import { useLocaleStore } from "@/stores/client/locale-store";
 import { useCreateTruck } from "@/stores/server/truck/create-mutation";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -22,43 +21,80 @@ import {
 import { z } from "zod";
 import {APP_COLORS} from "@/constants/colors";
 
-const YEAR_RE = /^\d{4}$/;
-const FUEL_TYPES = ["diesel", "petrol", "CNG"] as const;
 
-function buildSchema(requiredField: string, modelYearInvalid: string) {
-  return z.object({
-    plateNo: z.string().min(1, requiredField).max(50),
-    model: z.string().min(1, requiredField).max(50),
-    modelYear: z
-      .string()
-      .min(1, requiredField)
-      .refine((v) => YEAR_RE.test(v.trim()), modelYearInvalid),
-    fuelType: z.enum(FUEL_TYPES, { message: requiredField }),
-    frontTire: z.string().min(1, requiredField).max(100),
-    backTire: z.string().min(1, requiredField).max(100),
-    chassisNo: z.string().max(100).optional(),
-    engineNo: z.string().max(100).optional(),
-  });
+function buildSchema(locale: "en" | "mm"){
+    return z.object({
+        plateNo: z
+            .string()
+            .min(1, locale === "mm" ? "ယာဉ်နံပါတ် လိုအပ်သည်" : "Plate number is required")
+            .max(50, locale === "mm" ? "ယာဉ်နံပါတ်သည် စာလုံး 50 ထက်မကျော်ရပါ" : "Plate number cannot exceed 50 characters")
+            .regex(
+                /^[0-9A-Z]{2}-[0-9]{4}$/,
+                locale === "mm"
+                    ? "ယာဉ်နံပါတ် ဖော်မတ်မမှန်ပါ။ (ဥပမာ - 1A-1234)"
+                    : "Invalid plate number format. (e.g., 1A-1234)"
+            ),
+        model: z
+            .string()
+            .min(1, locale === "mm" ? "တံဆိပ်အမျိုးအစား လိုအပ်သည်" : "Brand is required")
+            .max(100, locale === "mm" ? "တံဆိပ်အမျိုးအစားသည် စာလုံး 100 ထက်မကျော်ရပါ" : "Brand cannot exceed 100 characters"),
+        modelYear: z
+            .string()
+            .min(1, locale === "mm" ? "မော်ဒယ်ခုနှစ် လိုအပ်သည်" : "Model year is required"),
+        feet: z
+            .string()
+            .min(1,locale === "mm" ? "ပေအရှည်သည် လိုအပ်သည်" : "Feet length is required")
+            .max(100, locale === "mm" ? "အများဆုံး ပေ ၁၀၀ ထက်မကျော်ရပါ" : "Feet length cannot exceed 100"),
+
+        fuelType: z
+            .string()
+            .min(1, locale === "mm" ? "စက်သုံးဆီ ရွေးချယ်ပေးပါ" : "Fuel type is required")
+            .max(50, locale === "mm" ? "စက်သုံးဆီအမျိုးအစားသည် စာလုံး 50 ထက်မကျော်ရပါ" : "Fuel type cannot exceed 50 characters")
+            .refine((val) => ["DIESEL","DIESEL_PREMIUM", "OCTANE_92","OCTANE_95","OCTANE_97", "CNG","OTHER" ].includes(val), {
+                message: locale === "mm"
+                    ? "စက်သုံးဆီ ရွေးချယ်ပေးပါ"
+                    : "Fuel type is required"
+            }),
+        frontTire: z
+            .string()
+            .min(1, locale === "mm" ? "ရှေ့ဘီးတာယာဆိုဒ် လိုအပ်သည်" : "Front tire size is required")
+            .max(100, locale === "mm" ? "ရှေ့ဘီးတာယာဆိုဒ်သည် စာလုံး 100 ထက်မကျော်ရပါ" : "Front tire size cannot exceed 100 characters"),
+        backTire: z
+            .string()
+            .min(1, locale === "mm" ? "နောက်ဘီးတာယာဆိုဒ် လိုအပ်သည်" : "Back tire size is required")
+            .max(100, locale === "mm" ? "နောက်ဘီးတာယာဆိုဒ်သည် စာလုံး 100 ထက်မကျော်ရပါ" : "Back tire size cannot exceed 100 characters"),
+        chassisNo: z
+            .string()
+            .max(100, locale === "mm" ? "ကိုယ်ထည်နံပါတ်သည် စာလုံး 100 ထက်မကျော်ရပါ" : "Chassis number cannot exceed 100 characters")
+            .optional()
+            .or(z.literal("").or(z.null())),
+        engineNo: z
+            .string()
+            .max(100, locale === "mm" ? "အင်ဂျင်နံပါတ်သည် စာလုံး 100 ထက်မကျော်ရပါ" : "Engine number cannot exceed 100 characters")
+            .optional()
+            .or(z.literal("").or(z.null()))
+    })
 }
 
 type FormValues = z.infer<ReturnType<typeof buildSchema>>;
 
+
 export default function CreateTruckScreen() {
+
+  const {createTruck:t} = useTranslation('truck');
+  const {fuelTypes} = useTranslation('lookup')
   const router = useRouter();
   const qc = useQueryClient();
   const insets = useSafeAreaInsets();
   const locale = useLocaleStore((state) => state.locale);
-  const labels = profileLocale[locale].createTruckScreen;
   const errorCatalog = useTranslation("error");
   const { mutate, isPending } = useCreateTruck();
 
   const mmTextStyle = useMemo(() => myanmarUITextStyle(), []);
   const style = locale === "mm" ? mmTextStyle : undefined;
 
-  const schema = useMemo(
-    () => buildSchema(labels.requiredField, labels.modelYearInvalid),
-    [labels.modelYearInvalid, labels.requiredField],
-  );
+
+  const schema = useMemo(() => buildSchema(locale), [locale]);
 
   const {
     control,
@@ -70,6 +106,7 @@ export default function CreateTruckScreen() {
       plateNo: "",
       model: "",
       modelYear: "",
+      feet:  "",
       fuelType: "diesel",
       frontTire: "",
       backTire: "",
@@ -78,12 +115,22 @@ export default function CreateTruckScreen() {
     },
   });
 
+    const fuelTypeFilterOptions = useMemo(() => {
+        return [
+            ...Object.entries(fuelTypes || {}).map(([key, localizedValue]) => ({
+                value: key,
+                label: localizedValue
+            }))
+        ];
+    }, [fuelTypes])
+
   const onSubmit = (values: FormValues) => {
     mutate(
       {
         plateNo: values.plateNo.trim(),
         model: values.model.trim(),
-        modelYear: Number(values.modelYear.trim()),
+        modelYear: Number(values.modelYear),
+        feet: Number(values.feet),
         fuelType: values.fuelType.trim(),
         frontTire: values.frontTire.trim(),
         backTire: values.backTire.trim(),
@@ -92,13 +139,13 @@ export default function CreateTruckScreen() {
       },
       {
         onSuccess: () => {
-          Alert.alert(labels.successTitle, labels.successBody);
+          Alert.alert(t.successTitle, t.successBody);
           router.back();
         },
         onError: (err: unknown) => {
           const { title, message } = getApiErrorAlertCopy(err, errorCatalog, {
-            title: labels.errorTitle,
-            message: labels.errorBody,
+            title: t.errorTitle,
+            message: t.errorBody,
           });
           Alert.alert(title, message);
         },
@@ -121,7 +168,7 @@ export default function CreateTruckScreen() {
           className={`text-sm font-medium  ${getMyanmarLeadingClass(locale)} `}
           style={[{color: APP_COLORS.textSecondary}, style]}
         >
-          {labels.fieldLabels[key]}
+          {t.labels[key]}
         </Text>
         {options?.required ? null : (
             <Text
@@ -138,6 +185,7 @@ export default function CreateTruckScreen() {
             value={String(value ?? "")}
             onChangeText={onChange}
             keyboardType={options?.keyboardType}
+            placeholder={t.placeholders[key]}
             placeholderTextColor={APP_COLORS.textMuted}
             autoCapitalize="none"
             style={[{
@@ -175,7 +223,7 @@ export default function CreateTruckScreen() {
           className={`flex-1 px-3 text-center text-lg ${getMyanmarLeadingClass(locale)}  font-bold `}
           style={[style, {color: APP_COLORS.textPrimary}]}
         >
-          {labels.title}
+          {t.title}
         </Text>
         <View className="h-11 w-11" />
       </View>
@@ -204,17 +252,20 @@ export default function CreateTruckScreen() {
                 className={`text-sm font-bold  ${getMyanmarLeadingClass(locale)}`}
                 style={[style,{color:APP_COLORS.textPrimary}]}
               >
-                {labels.basicInfoTitle}
+                {t.basicInfoTitle}
               </Text>
 
               {/* plate number section */}
               {renderTextInput("plateNo", { required: true })}
 
-              {/* model && model year section */}
+              {/* feet length && model year section */}
               <View className="flex-row gap-2">
-                <View className="flex-1">
-                  {renderTextInput("model", { required: true })}
-                </View>
+                  <View className="flex-1">
+                      {renderTextInput("feet", {
+                          required: true,
+                          keyboardType: "number-pad",
+                      })}
+                  </View>
                 <View className="flex-1">
                   {renderTextInput("modelYear", {
                     required: true,
@@ -222,6 +273,8 @@ export default function CreateTruckScreen() {
                   })}
                 </View>
               </View>
+              {/* model/brand section */}
+              {renderTextInput("model", { required: true })}
 
               {/* fuel type */}
               <View className="gap-1.5">
@@ -231,16 +284,21 @@ export default function CreateTruckScreen() {
                       className={`text-sm font-medium ${getMyanmarLeadingClass(locale)}`}
                       style={[{color: APP_COLORS.textSecondary}, style]}
                   >
-                    {labels.fieldLabels.fuelType}
+                    {t.labels.fuelType}
                   </Text>
                 </View>
 
                 <Controller
                   control={control}
                   name="fuelType"
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { value, onChange } }) =>
+                  {
+                  const selectedOption = fuelTypeFilterOptions.find((r) => r.value === value);
+                  const selectedLabel = selectedOption?.label;
+
+                  return (
                     <Select
-                      value={{ value, label: value }}
+                      value={{ value:value, label: selectedLabel ? selectedLabel : "" }}
                       onValueChange={(next) => {
                         if (next && !Array.isArray(next)) {
                           onChange(next.value as FormValues["fuelType"]);
@@ -256,8 +314,8 @@ export default function CreateTruckScreen() {
                           }}
                       >
                         <Select.Value
-                          placeholder={labels.fuelTypePlaceholder}
-                          className={` py-0 text-sm font-medium ${getMyanmarLeadingClass(locale)}`}
+                          placeholder={t.placeholders.fuelType}
+                          className={` py-0 text-[12px] font-medium ${getMyanmarLeadingClass(locale)}`}
                           style={[{color: APP_COLORS.textPrimary}]}
                         />
                         <Select.TriggerIndicator />
@@ -274,15 +332,15 @@ export default function CreateTruckScreen() {
                           presentation="popover"
                           width="trigger"
                         >
-                          {FUEL_TYPES.map((fuelType) => {
+                          {fuelTypeFilterOptions.map((fuelType) => {
 
-                          const itemLabel = fuelType;
-                          const isSelected = fuelType === value;
+                          const itemLabel = fuelType.label;
+                          const isSelected = fuelType.value === value;
 
                           return (
                             <Select.Item
-                              key={fuelType}
-                              value={fuelType}
+                              key={fuelType.value}
+                              value={fuelType.value}
                               label={itemLabel}
                               style={{
                                   backgroundColor: isSelected ? APP_COLORS.primarySoft : 'transparent',
@@ -306,6 +364,7 @@ export default function CreateTruckScreen() {
                       </Select.Portal>
                     </Select>
                   )}
+                }
                 />
                 {!!errors.fuelType?.message && (
                     <Text className={`text-xs font-normal ${getMyanmarLeadingClass(locale)} `}
@@ -331,7 +390,7 @@ export default function CreateTruckScreen() {
                   className={`text-sm font-bold  ${getMyanmarLeadingClass(locale)}`}
                   style={[style,{color:APP_COLORS.textPrimary}]}
               >
-                {labels.tireAndExtraTitle}
+                {t.tireAndExtraTitle}
               </Text>
 
               {/* fTire and bTire section */}
@@ -362,7 +421,7 @@ export default function CreateTruckScreen() {
           variant="outline"
         >
           <Text className={`text-sm font-bold text-white ${getMyanmarLeadingClass(locale)}`} style={style}>
-            {isPending ? labels.submitting : labels.submit}
+            {isPending ? t.submitting : t.submit}
           </Text>
         </Button>
       </ScrollView>

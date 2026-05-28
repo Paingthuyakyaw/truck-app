@@ -5,8 +5,8 @@
       "searchPlaceholder": "ကားနံပါတ်ဖြင့်ရှာဖွေရန်...",
       "empty": "ကုန်တင်ယာဉ်များ မတွေ့ရှိပါ။",
       "card": {
-        "engineNo": "အင်ဂျင်",
-        "chassisNo": "ချက်စီ",
+        "engineNo": "အင်ဂျင်နံပါတ်",
+        "chassisNo": "ချက်စီနံပါတ်",
         "fuelType": "စက်သုံးဆီ",
         "frontTire": "ရှေ့ဘီး",
         "backTire": "နောက်ဘီး"
@@ -27,7 +27,39 @@
       "reset": "ရှင်းလင်းမည်",
       "search": "ရှာပါ"
     },
-    "createTruck": {},
+    "createTruck": {
+      "title": "ယာဉ်အသစ်ထည့်ရန်",
+      "basicInfoTitle": "ယာဉ်အချက်အလက်",
+      "tireAndExtraTitle": "တာယာနှင့် နောက်ထပ်အချက်အလက်",
+      "submit": "ယာဉ်အသစ်ထည့်မည်",
+      "submitting": "ဖန်တီးနေသည်...",
+      "successTitle": "အောင်မြင်သည်",
+      "successBody": "ယာဉ်အသစ်ဖန်တီးပြီးပါပြီ။",
+      "errorTitle": "အမှား",
+      "errorBody": "ယာဉ်အသစ်ဖန်တီး၍ မရပါ။",
+      "labels": {
+        "plateNo": "ယာဉ်နံပါတ်",
+        "model": "တံဆိပ်",
+        "modelYear": "မော်ဒယ်ခုနှစ်",
+        "feet": "ပေအရှည်",
+        "fuelType": "စက်သုံးဆီ",
+        "frontTire": "ရှေ့ဘီး",
+        "backTire": "နောက်ဘီး",
+        "chassisNo": "ချက်စီနံပါတ်",
+        "engineNo": "အင်ဂျင်နံပါတ်"
+      },
+      "placeholders": {
+        "plateNo": "ဥပမာ - 1T-9999",
+        "model": "ဥပမာ - Canter",
+        "modelYear": "ဥပမာ - 2020",
+        "feet": "ဥပမာ - 10",
+        "fuelType": "စက်သုံးဆီ ရွေးပါ",
+        "frontTire": "ဥပမာ - 200 15R",
+        "backTire": "ဥပမာ - 210 75R",
+        "chassisNo": "ချက်စီနံပါတ် ထည့်ပါ",
+        "engineNo": "အင်ဂျင်နံပါတ် ထည့်ပါ"
+      }
+    },
     "updateTruck": {}
   }
 }

@@ -13,6 +13,16 @@
     "accountControl": {
       "true": "Unlocked",
       "false": "Locked"
+    },
+    "fuelTypes": {
+      "DIESEL": "Diesel",
+      "DIESEL_PREMIUM": "Premium Diesel",
+      "OCTANE_92": "Octane 92",
+      "OCTANE_95": "Octane 95",
+      "OCTANE_97": "Octane 97",
+      "CNG": "CNG",
+      "OTHER": "Other"
     }
+
   }
 }

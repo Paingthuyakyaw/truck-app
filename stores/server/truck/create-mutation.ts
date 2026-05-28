@@ -5,6 +5,7 @@ export interface CreateTruckPayload {
   plateNo: string;
   model: string;
   modelYear: number;
+  feet:number;
   fuelType: string;
   frontTire: string;
   backTire: string;

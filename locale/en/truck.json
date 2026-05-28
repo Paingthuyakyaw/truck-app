@@ -27,7 +27,39 @@
       "reset": "Reset",
       "search": "Search"
     },
-    "createTruck": {},
+    "createTruck": {
+      "title": "Create Truck",
+      "basicInfoTitle": "Basic Info",
+      "tireAndExtraTitle": "Tire and Additional Info",
+      "submit": "Create",
+      "submitting": "Creating...",
+      "successTitle": "Success",
+      "successBody": "Truck created successfully.",
+      "errorTitle": "Error",
+      "errorBody": "Unable to create truck.",
+      "labels": {
+        "plateNo": "Plate No.",
+        "model": "Brand",
+        "modelYear": "Model Year",
+        "feet": "Feet",
+        "fuelType": "Fuel Type",
+        "frontTire": "F Tire",
+        "backTire": "B Tire",
+        "chassisNo": "Chassis No",
+        "engineNo": "Engine No"
+      },
+      "placeholders": {
+        "plateNo": "1T-9999",
+        "model": "Canter",
+        "modelYear": "2020",
+        "feet": "Enter feet length",
+        "fuelType": "Enter fuel type",
+        "frontTire": "200 15R",
+        "backTire": "210 75R",
+        "chassisNo": "Enter chassis no.",
+        "engineNo": "Enter engine no."
+      }
+    },
     "updateTruck": {}
   }
 }
