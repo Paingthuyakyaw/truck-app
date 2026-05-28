@@ -81,9 +81,8 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaView
-      style={{ flex: 1 }}
-      className="flex-1"
       edges={["top", "left", "right"]}
+      style={{flex: 1, backgroundColor: APP_COLORS.background}}
     >
       <ScrollView
         className="px-4"
@@ -93,16 +92,23 @@ export default function ProfileScreen() {
       >
         <View className="mb-3 flex-row items-center justify-between">
           <View className="max-w-[72%]">
-            <Text className={`text-xs text-slate-500 ${mmLeadingClass}`}>
+            <Text
+                className={`text-sm ${mmLeadingClass}`}
+                style={[{color: APP_COLORS.textMuted}, textStyle]}
+            >
               {greeting}
             </Text>
             <Text
-              className={`mt-1 text-[18px] font-semibold text-slate-900 ${mmLeadingClass}`}
+              className={`mt-1 text-lg font-normal ${mmBodyStyle} ${mmLeadingClass}`}
+              style={[textStyle, {color: APP_COLORS.textPrimary}]}
             >
               {name}
             </Text>
           </View>
-          <Text className={`text-sm font-bold text-[#3b4f6b] ${mmLeadingClass}`}>
+          <Text
+              className={`mt-0 text-lg font-bold ${mmLeadingClass}`}
+              style={[{color: APP_COLORS.textPrimary}, textStyle]}
+          >
             {tProfile.brand}
           </Text>
         </View>
@@ -116,7 +122,7 @@ export default function ProfileScreen() {
           }}
         >
           <Card.Body className="flex-row items-center gap-3">
-            <Avatar size="lg" alt={`${name} avatar`}>
+            <Avatar size="lg"  alt={`${name} avatar`}>
               <Avatar.Fallback
                 style={{ backgroundColor: APP_COLORS.primarySoft }}
               >
