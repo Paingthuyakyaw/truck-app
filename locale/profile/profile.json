@@ -37,30 +37,6 @@
       "errorTitle": "Could not update password",
       "errorGeneric": "Something went wrong. Please try again."
     },
-    "truckScreen": {
-      "title": "Truck Management",
-      "searchPlaceholder": "Search by plate number...",
-      "advancedTitle": "Advanced Search",
-      "labels": {
-        "plateNo": "Plate Number",
-        "model": "Model",
-        "modelYear": "Model Year",
-        "engineNo": "Engine Number",
-        "chassisNo": "Chassis Number",
-        "fuelType": "Fuel",
-        "frontTire": "Front Tire"
-      },
-      "placeholders": {
-        "plateNo": "Enter plate number",
-        "model": "Enter model",
-        "modelYear": "Enter model year",
-        "engineNo": "Enter engine number",
-        "chassisNo": "Enter chassis number"
-      },
-      "reset": "Reset",
-      "apply": "Apply",
-      "empty": "No trucks found."
-    },
     "serviceTypeScreen": {
       "title": "Service Type Management",
       "searchPlaceholder": "Search by service type...",
@@ -123,55 +99,6 @@
       "errorTitle": "Error",
       "errorBody": "Unable to update service type.",
       "invalidItem": "Invalid service type."
-    },
-    "createTruckScreen": {
-      "title": "Create Truck",
-      "basicInfoTitle": "Basic Information",
-      "tireAndExtraTitle": "Tire and Additional Details",
-      "submit": "Create",
-      "submitting": "Creating...",
-      "successTitle": "Success",
-      "successBody": "Truck created successfully.",
-      "errorTitle": "Error",
-      "errorBody": "Unable to create truck.",
-      "requiredField": "This field is required",
-      "modelYearInvalid": "Enter a valid 4-digit year",
-      "fuelTypePlaceholder": "Select fuel type",
-      "fieldLabels": {
-        "plateNo": "Plate Number",
-        "model": "Model",
-        "modelYear": "Model Year",
-        "fuelType": "Fuel Type",
-        "frontTire": "Front Tire",
-        "backTire": "Back Tire",
-        "chassisNo": "Chassis Number",
-        "engineNo": "Engine Number"
-      }
-    },
-    "truckDetailScreen": {
-      "title": "Truck Detail",
-      "edit": "Update",
-      "cancel": "Cancel",
-      "fieldLabels": {
-        "plateNo": "Plate Number",
-        "model": "Model",
-        "modelYear": "Model Year",
-        "fuelType": "Fuel Type",
-        "frontTire": "Front Tire",
-        "backTire": "Back Tire",
-        "chassisNo": "Chassis Number",
-        "engineNo": "Engine Number"
-      }
-    },
-    "editTruckScreen": {
-      "title": "Edit Truck",
-      "submit": "Update",
-      "submitting": "Updating...",
-      "cancel": "Cancel",
-      "successTitle": "Success",
-      "successBody": "Truck updated successfully.",
-      "errorTitle": "Error",
-      "errorBody": "Unable to update truck."
     }
   },
   "mm": {
@@ -211,30 +138,6 @@
       "ok": "အိုကေ",
       "errorTitle": "စကားဝှက် မပြောင်းနိုင်ပါ",
       "errorGeneric": "တစ်ခုခု မှားယွင်းနေပါသည်။ ထပ်ကြိုးစားပါ။"
-    },
-    "truckScreen": {
-      "title": "ထရက်ကား စီမံခန့်ခွဲမှု",
-      "searchPlaceholder": "ကားနံပါတ်ဖြင့်ရှာဖွေရန်...",
-      "advancedTitle": "အဆင့်မြင့်ရှာဖွေမှု",
-      "labels": {
-        "plateNo": "ကားနံပါတ်",
-        "model": "မော်ဒယ်",
-        "modelYear": "မော်ဒယ်နှစ်",
-        "engineNo": "အင်ဂျင်နံပါတ်",
-        "chassisNo": "ရှာစီနံပါတ်",
-        "fuelType": "ဆီအမျိုးအစား",
-        "frontTire": "ရှေ့တာယာ"
-      },
-      "placeholders": {
-        "plateNo": "ကားနံပါတ် ထည့်ပါ",
-        "model": "မော်ဒယ် ထည့်ပါ",
-        "modelYear": "မော်ဒယ်နှစ် ထည့်ပါ",
-        "engineNo": "အင်ဂျင်နံပါတ် ထည့်ပါ",
-        "chassisNo": "ရှာစီနံပါတ် ထည့်ပါ"
-      },
-      "reset": "ရှင်းလင်းမည်",
-      "apply": "ကျင့်သုံး",
-      "empty": "ထရက်ကား မတွေ့ရှိပါ။"
     },
     "serviceTypeScreen": {
       "title": "ဝန်ဆောင်မှုအမျိုးအစား စီမံခန့်ခွဲမှု",
@@ -298,55 +201,6 @@
       "errorTitle": "အမှား",
       "errorBody": "ဝန်ဆောင်မှုအမျိုးအစား မပြင်ဆင်နိုင်ပါ။",
       "invalidItem": "ဝန်ဆောင်မှုအမျိုးအစား မမှန်ကန်ပါ။"
-    },
-    "createTruckScreen": {
-      "title": "ထရက်ကားအသစ်ထည့်ရန်",
-      "basicInfoTitle": "ယာဉ်အချက်အလက်",
-      "tireAndExtraTitle": "တာယာနှင့် နောက်ထပ်အချက်အလက်",
-      "submit": "မှတ်တမ်းမည်",
-      "submitting": "ဖန်တီးနေသည်...",
-      "successTitle": "အောင်မြင်သည်",
-      "successBody": "ထရက်ကားဖန်တီးပြီးပါပြီ။",
-      "errorTitle": "အမှား",
-      "errorBody": "ထရက်ကားဖန်တီး၍ မရပါ။",
-      "requiredField": "ဤအကွက် လိုအပ်သည်",
-      "modelYearInvalid": "၄ လုံးပါ နှစ်ကိုထည့်ပါ",
-      "fuelTypePlaceholder": "ဆီအမျိုးအစား ရွေးပါ",
-      "fieldLabels": {
-        "plateNo": "ကားနံပါတ်",
-        "model": "မော်ဒယ်",
-        "modelYear": "မော်ဒယ်နှစ်",
-        "fuelType": "ဆီအမျိုးအစား",
-        "frontTire": "ရှေ့တာယာ",
-        "backTire": "နောက်တာယာ",
-        "chassisNo": "ရှာစီနံပါတ်",
-        "engineNo": "အင်ဂျင်နံပါတ်"
-      }
-    },
-    "truckDetailScreen": {
-      "title": "ထရက်ကားအသေးစိတ်",
-      "edit": "ပြင်ဆင်ရန်",
-      "cancel": "မလုပ်တော့ပါ",
-      "fieldLabels": {
-        "plateNo": "ကားနံပါတ်",
-        "model": "မော်ဒယ်",
-        "modelYear": "မော်ဒယ်နှစ်",
-        "fuelType": "ဆီအမျိုးအစား",
-        "frontTire": "ရှေ့တာယာ",
-        "backTire": "နောက်တာယာ",
-        "chassisNo": "ရှာစီနံပါတ်",
-        "engineNo": "အင်ဂျင်နံပါတ်"
-      }
-    },
-    "editTruckScreen": {
-      "title": "ထရက်ကားအချက်အလက် ပြင်ဆင်ရန်",
-      "submit": "သိမ်းမည်",
-      "submitting": "ပြင်ဆင်နေသည်...",
-      "cancel": "မလုပ်တော့ပါ",
-      "successTitle": "အောင်မြင်သည်",
-      "successBody": "ထရက်ကားအချက်အလက် ပြင်ဆင်ပြီးပါပြီ။",
-      "errorTitle": "အမှား",
-      "errorBody": "ထရက်ကားအချက်အလက် မပြင်ဆင်နိုင်ပါ။"
     }
   }
 }
