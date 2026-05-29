@@ -21,6 +21,7 @@ import {
 import { z } from "zod";
 import {APP_COLORS} from "@/constants/colors";
 
+const YEAR_RE = /^\d{4}$/;
 
 function buildSchema(locale: "en" | "mm"){
     return z.object({
@@ -40,11 +41,19 @@ function buildSchema(locale: "en" | "mm"){
             .max(100, locale === "mm" ? "တံဆိပ်အမျိုးအစားသည် စာလုံး 100 ထက်မကျော်ရပါ" : "Brand cannot exceed 100 characters"),
         modelYear: z
             .string()
-            .min(1, locale === "mm" ? "မော်ဒယ်ခုနှစ် လိုအပ်သည်" : "Model year is required"),
+            .min(1, locale === "mm" ? "မော်ဒယ်ခုနှစ် လိုအပ်သည်" : "Model year is required")
+            .refine((v)=> YEAR_RE.test(v.trim()) ,{
+                message: locale === "mm" ? "4 လုံးပါ နှစ်ကိုထည့်ပါ" : "Enter a valid 4-digit year"
+            })
+        ,
         feet: z
             .string()
             .min(1,locale === "mm" ? "ပေအရှည်သည် လိုအပ်သည်" : "Feet length is required")
-            .max(100, locale === "mm" ? "အများဆုံး ပေ ၁၀၀ ထက်မကျော်ရပါ" : "Feet length cannot exceed 100"),
+            .max(100, locale === "mm" ? "အများဆုံး ပေ ၁၀၀ ထက်မကျော်ရပါ" : "Feet length cannot exceed 100")
+            .refine((v)=> Number(v.trim()) > 3 &&  Number(v.trim()) < 101  ,{
+                message : locale === "mm" ? "4 ပေမှ 100 ပေအထိသာ" : "From 4-100 feet"
+            })
+        ,
 
         fuelType: z
             .string()
