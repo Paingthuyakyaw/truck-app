@@ -6,6 +6,7 @@ export interface UpdateTruckPayload {
   version: number;
   model: string;
   modelYear: number;
+  feet: number;
   fuelType: string;
   frontTire: string;
   backTire: string;

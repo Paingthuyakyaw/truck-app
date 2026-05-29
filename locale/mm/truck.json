@@ -60,6 +60,39 @@
         "engineNo": "အင်ဂျင်နံပါတ် ထည့်ပါ"
       }
     },
-    "updateTruck": {}
+    "updateTruck": {
+      "title": "အချက်အလက် ပြင်ဆင်ရန်",
+      "basicInfoTitle": "ယာဉ်အချက်အလက်",
+      "tireAndExtraTitle": "တာယာနှင့် နောက်ထပ်အချက်အလက်",
+      "submit": "ပြင်ဆင်မည်",
+      "submitting":  "ပြင်ဆင်နေသည်...",
+      "successTitle": "အောင်မြင်သည်",
+      "successBody": "ယာဉ်အချက်အလက် ပြင်ဆင်ပြီးပါပြီ။",
+      "errorTitle": "အမှားအယွင်း",
+      "errorBody": "ယာဉ်အချက်အလက် ပြင်ဆင်၍ မရပါ။",
+      "cancel": "မလုပ်တော့ပါ",
+      "labels": {
+        "plateNo": "ယာဉ်နံပါတ်",
+        "model": "တံဆိပ်",
+        "modelYear": "မော်ဒယ်ခုနှစ်",
+        "feet": "ပေအရှည်",
+        "fuelType": "စက်သုံးဆီ",
+        "frontTire": "ရှေ့ဘီး",
+        "backTire": "နောက်ဘီး",
+        "chassisNo": "ချက်စီနံပါတ်",
+        "engineNo": "အင်ဂျင်နံပါတ်"
+      },
+      "placeholders": {
+        "plateNo": "ဥပမာ - 1T-9999",
+        "model": "ဥပမာ - Canter",
+        "modelYear": "ဥပမာ - 2020",
+        "feet": "ဥပမာ - 10",
+        "fuelType": "စက်သုံးဆီ ရွေးပါ",
+        "frontTire": "ဥပမာ - 200 15R",
+        "backTire": "ဥပမာ - 210 75R",
+        "chassisNo": "ချက်စီနံပါတ် ထည့်ပါ",
+        "engineNo": "အင်ဂျင်နံပါတ် ထည့်ပါ"
+      }
+    }
   }
 }

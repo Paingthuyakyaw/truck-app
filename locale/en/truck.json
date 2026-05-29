@@ -60,6 +60,39 @@
         "engineNo": "Enter engine no."
       }
     },
-    "updateTruck": {}
+    "updateTruck": {
+      "title": "Update Truck",
+      "basicInfoTitle": "Basic Info",
+      "tireAndExtraTitle": "Tire and Additional Info",
+      "submit": "Update",
+      "submitting": "Updating...",
+      "successTitle": "Success",
+      "successBody": "Truck updated successfully.",
+      "errorTitle": "Error",
+      "errorBody": "Unable to update truck.",
+      "cancel": "Cancel",
+      "labels": {
+        "plateNo": "Plate No.",
+        "model": "Brand",
+        "modelYear": "Model Year",
+        "feet": "Feet",
+        "fuelType": "Fuel Type",
+        "frontTire": "F Tire",
+        "backTire": "B Tire",
+        "chassisNo": "Chassis No",
+        "engineNo": "Engine No"
+      },
+      "placeholders": {
+        "plateNo": "1T-9999",
+        "model": "Canter",
+        "modelYear": "2020",
+        "feet": "Enter feet length",
+        "fuelType": "Enter fuel type",
+        "frontTire": "200 15R",
+        "backTire": "210 75R",
+        "chassisNo": "Enter chassis no.",
+        "engineNo": "Enter engine no."
+      }
+    }
   }
 }

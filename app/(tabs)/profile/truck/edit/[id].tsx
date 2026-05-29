@@ -5,7 +5,6 @@ import {
 } from "@/constants/myanmar-font";
 import {useTranslation} from "@/hooks/use-translation";
 import {getApiErrorAlertCopy} from "@/lib/api-error-alert";
-import profileLocale from "@/locale/profile/profile.json";
 import {useLocaleStore} from "@/stores/client/locale-store";
 import {useTruckDetail} from "@/stores/server/truck/query";
 import {useUpdateTruck} from "@/stores/server/truck/update-mutation";
@@ -31,40 +30,87 @@ import {
 import {z} from "zod";
 
 const YEAR_RE = /^\d{4}$/;
-const FUEL_TYPES = ["diesel", "petrol", "CNG"] as const;
 
-function buildSchema(requiredField: string, modelYearInvalid: string) {
+function buildSchema(locale: "en" | "mm") {
     return z.object({
-        model: z.string().min(1, requiredField).max(100),
+        plateNo: z
+            .string()
+            .min(1, locale === "mm" ? "ယာဉ်နံပါတ် လိုအပ်သည်" : "Plate number is required")
+            .max(50, locale === "mm" ? "ယာဉ်နံပါတ်သည် စာလုံး 50 ထက်မကျော်ရပါ" : "Plate number cannot exceed 50 characters")
+            .regex(
+                /^[0-9A-Z]{2}-[0-9]{4}$/,
+                locale === "mm"
+                    ? "ယာဉ်နံပါတ် ဖော်မတ်မမှန်ပါ။ (ဥပမာ - 1A-1234)"
+                    : "Invalid plate number format. (e.g., 1A-1234)"
+            ),
+        model: z
+            .string()
+            .min(1, locale === "mm" ? "တံဆိပ်အမျိုးအစား လိုအပ်သည်" : "Brand is required")
+            .max(100, locale === "mm" ? "တံဆိပ်အမျိုးအစားသည် စာလုံး 100 ထက်မကျော်ရပါ" : "Brand cannot exceed 100 characters"),
         modelYear: z
             .string()
-            .min(1, requiredField)
-            .refine((v) => YEAR_RE.test(v.trim()), modelYearInvalid),
-        fuelType: z.enum(FUEL_TYPES, {message: requiredField}),
-        frontTire: z.string().min(1, requiredField).max(100),
-        backTire: z.string().min(1, requiredField).max(100),
-        chassisNo: z.string().max(100).optional(),
-        engineNo: z.string().max(100).optional(),
-    });
+            .min(1, locale === "mm" ? "မော်ဒယ်ခုနှစ် လိုအပ်သည်" : "Model year is required")
+            .refine((v) => YEAR_RE.test(v.trim()), {
+                message: locale === "mm" ? "4 လုံးပါ နှစ်ကိုထည့်ပါ" : "Enter a valid 4-digit year"
+            })
+        ,
+        feet: z
+            .string()
+            .min(1, locale === "mm" ? "ပေအရှည်သည် လိုအပ်သည်" : "Feet length is required")
+            .max(100, locale === "mm" ? "အများဆုံး ပေ ၁၀၀ ထက်မကျော်ရပါ" : "Feet length cannot exceed 100")
+            .refine((v) => Number(v.trim()) > 3 && Number(v.trim()) < 101, {
+                message: locale === "mm" ? "4 ပေမှ 100 ပေအထိသာ" : "From 4-100 feet"
+            })
+        ,
+
+        fuelType: z
+            .string()
+            .min(1, locale === "mm" ? "စက်သုံးဆီ ရွေးချယ်ပေးပါ" : "Fuel type is required")
+            .max(50, locale === "mm" ? "စက်သုံးဆီအမျိုးအစားသည် စာလုံး 50 ထက်မကျော်ရပါ" : "Fuel type cannot exceed 50 characters")
+            .refine((val) => ["DIESEL", "DIESEL_PREMIUM", "OCTANE_92", "OCTANE_95", "OCTANE_97", "CNG", "OTHER"].includes(val), {
+                message: locale === "mm"
+                    ? "စက်သုံးဆီ ရွေးချယ်ပေးပါ"
+                    : "Fuel type is required"
+            }),
+        frontTire: z
+            .string()
+            .min(1, locale === "mm" ? "ရှေ့ဘီးတာယာဆိုဒ် လိုအပ်သည်" : "Front tire size is required")
+            .max(100, locale === "mm" ? "ရှေ့ဘီးတာယာဆိုဒ်သည် စာလုံး 100 ထက်မကျော်ရပါ" : "Front tire size cannot exceed 100 characters"),
+        backTire: z
+            .string()
+            .min(1, locale === "mm" ? "နောက်ဘီးတာယာဆိုဒ် လိုအပ်သည်" : "Back tire size is required")
+            .max(100, locale === "mm" ? "နောက်ဘီးတာယာဆိုဒ်သည် စာလုံး 100 ထက်မကျော်ရပါ" : "Back tire size cannot exceed 100 characters"),
+        chassisNo: z
+            .string()
+            .max(100, locale === "mm" ? "ကိုယ်ထည်နံပါတ်သည် စာလုံး 100 ထက်မကျော်ရပါ" : "Chassis number cannot exceed 100 characters")
+            .optional()
+            .or(z.literal("").or(z.null())),
+        engineNo: z
+            .string()
+            .max(100, locale === "mm" ? "အင်ဂျင်နံပါတ်သည် စာလုံး 100 ထက်မကျော်ရပါ" : "Engine number cannot exceed 100 characters")
+            .optional()
+            .or(z.literal("").or(z.null()))
+    })
 }
 
 type FormValues = z.infer<ReturnType<typeof buildSchema>>;
 
+
 export default function EditTruckScreen() {
+
+    const {updateTruck: t} = useTranslation('truck');
+    const {fuelTypes} = useTranslation('lookup')
+    const errorCatalog = useTranslation("error");
+
     const router = useRouter();
     const qc = useQueryClient();
     const insets = useSafeAreaInsets();
     const locale = useLocaleStore((state) => state.locale);
-    const labels = profileLocale[locale].editTruckScreen;
-    const createLabels = profileLocale[locale].createTruckScreen;
-    const errorCatalog = useTranslation("error");
+
     const mmTextStyle = useMemo(() => myanmarUITextStyle(), []);
     const style = locale === "mm" ? mmTextStyle : undefined;
-    const schema = useMemo(
-        () =>
-            buildSchema(createLabels.requiredField, createLabels.modelYearInvalid),
-        [createLabels.modelYearInvalid, createLabels.requiredField],
-    );
+
+    const schema = useMemo(() => buildSchema(locale), [locale]);
 
     const {id} = useLocalSearchParams<{ id?: string }>();
     const truckId = String(id ?? "").trim();
@@ -79,9 +125,11 @@ export default function EditTruckScreen() {
     } = useForm<FormValues>({
         resolver: zodResolver(schema),
         defaultValues: {
+            plateNo: "",
             model: "",
             modelYear: "",
-            fuelType: "diesel",
+            feet: "",
+            fuelType: "",
             frontTire: "",
             backTire: "",
             chassisNo: "",
@@ -89,21 +137,28 @@ export default function EditTruckScreen() {
         },
     });
 
+    const fuelTypeFilterOptions = useMemo(() => {
+        return [
+            ...Object.entries(fuelTypes || {}).map(([key, localizedValue]) => ({
+                value: key,
+                label: localizedValue
+            }))
+        ];
+    }, [fuelTypes])
+
+
     useEffect(() => {
+
         const detail = data?.data;
         if (!detail) return;
-        const fuelTypeRaw = String(detail.fuelType ?? "diesel").toLowerCase();
-        const fuelType = FUEL_TYPES.includes(
-            fuelTypeRaw as (typeof FUEL_TYPES)[number],
-        )
-            ? (fuelTypeRaw as FormValues["fuelType"])
-            : "diesel";
 
         reset({
-            model: String(detail.model ?? detail.make ?? "").trim(),
+            plateNo: String(detail.plateNo ?? "").trim(),
+            model: String(detail.model ?? "").trim(),
             modelYear: String(detail.modelYear ?? "").trim(),
-            fuelType,
-            frontTire: String(detail.frontTire ?? detail.frontTireSize ?? "").trim(),
+            feet: String(detail.feet ?? "").trim(),
+            fuelType: String(detail.fuelType ?? ""),
+            frontTire: String(detail.frontTire ?? "").trim(),
             backTire: String(detail.backTire ?? "").trim(),
             chassisNo: String(detail.chassisNo ?? "").trim(),
             engineNo: String(detail.engineNo ?? "").trim(),
@@ -119,6 +174,7 @@ export default function EditTruckScreen() {
                 version: Number(detail.version ?? 0),
                 model: values.model.trim(),
                 modelYear: Number(values.modelYear.trim()),
+                feet: Number(values.feet.trim()),
                 fuelType: values.fuelType.trim(),
                 frontTire: values.frontTire.trim(),
                 backTire: values.backTire.trim(),
@@ -127,13 +183,13 @@ export default function EditTruckScreen() {
             },
             {
                 onSuccess: () => {
-                    Alert.alert(labels.successTitle, labels.successBody);
+                    Alert.alert(t.successTitle, t.successBody);
                     router.replace("/(tabs)/profile/truck");
                 },
                 onError: (err: unknown) => {
                     const {title, message} = getApiErrorAlertCopy(err, errorCatalog, {
-                        title: labels.errorTitle,
-                        message: labels.errorBody,
+                        title: t.errorTitle,
+                        message: t.errorBody,
                     });
                     Alert.alert(title, message);
                 },
@@ -150,47 +206,54 @@ export default function EditTruckScreen() {
             editable?: boolean;
             valueOverride?: string;
         },
-    ) => (
-        <View className="gap-1.5">
-            <View className="flex-row items-center gap-1">
-                <Text
-                    className={`text-sm font-medium ${getMyanmarLeadingClass(locale)}`}
-                    style={[{color: APP_COLORS.textSecondary}, style]}
-                >
-                    {createLabels.fieldLabels[key]}
-                </Text>
-            </View>
-            <Controller
-                control={control}
-                name={key}
-                render={({field: {onChange, value}}) => (
-                    <Input
-                        value={options?.valueOverride ?? String(value ?? "")}
-                        onChangeText={onChange}
-                        keyboardType={options?.keyboardType}
-                        placeholderTextColor={APP_COLORS.textMuted}
-                        autoCapitalize="none"
-                        editable={options?.editable ?? true}
-                        textAlignVertical={options?.multiline ? "top" : "center"}
-                        style={[{
-                            backgroundColor: APP_COLORS.inputBackground,
-                            borderColor: APP_COLORS.border,
-                            borderWidth: 1,
-                            color: APP_COLORS.textPrimary
-                        }, style]}
+    ) => {
+
+        const isEditable = options?.editable ?? true;
+        const hasError = !!errors[key]?.message;
+
+        return (
+            <View className="gap-1.5">
+                <View className="flex-row items-center gap-1">
+                    <Text
                         className={`text-sm font-medium ${getMyanmarLeadingClass(locale)}`}
-                    />
+                        style={[{color: APP_COLORS.textSecondary}, style]}
+                    >
+                        {t.labels[key]}
+                    </Text>
+                </View>
+                <Controller
+                    control={control}
+                    name={key}
+                    render={({field: {onChange, value}}) => (
+                        <Input
+                            value={options?.valueOverride ?? String(value ?? "")}
+                            onChangeText={onChange}
+                            keyboardType={options?.keyboardType}
+                            placeholder={t.placeholders[key]}
+                            placeholderTextColor={APP_COLORS.textMuted}
+                            autoCapitalize="none"
+                            editable={isEditable}
+                            textAlignVertical={options?.multiline ? "top" : "center"}
+                            className={`text-sm font-medium ${getMyanmarLeadingClass(locale)}`}
+                            style={[{
+                                backgroundColor: !isEditable ? APP_COLORS.border : APP_COLORS.inputBackground,
+                                borderColor: hasError ? APP_COLORS.error : APP_COLORS.border,
+                                borderWidth: 1,
+                                color: APP_COLORS.textPrimary
+                            }, style]}
+                        />
+                    )}
+                />
+                {(options?.editable ?? true) && !!errors[key]?.message && (
+                    <Text className={`text-xs font-normal ${getMyanmarLeadingClass(locale)}`}
+                          style={[style, {color: APP_COLORS.error}]}
+                    >
+                        {String(errors[key]?.message)}
+                    </Text>
                 )}
-            />
-            {(options?.editable ?? true) && !!errors[key]?.message && (
-                <Text className={`text-xs font-normal ${getMyanmarLeadingClass(locale)}`}
-                      style={[style, {color: APP_COLORS.error}]}
-                >
-                    {String(errors[key]?.message)}
-                </Text>
-            )}
-        </View>
-    );
+            </View>
+        )
+    };
 
     const onBack = useCallback(() => {
         qc.invalidateQueries({queryKey: ["trucks"]});
@@ -220,7 +283,7 @@ export default function EditTruckScreen() {
                     className={`flex-1 px-3 text-center text-lg ${getMyanmarLeadingClass(locale)}  font-bold  `}
                     style={[style, {color: APP_COLORS.textPrimary}]}
                 >
-                    {labels.title}
+                    {t.title}
                 </Text>
                 <View className="h-11 w-11"/>
             </View>
@@ -246,13 +309,21 @@ export default function EditTruckScreen() {
                           }}>
                         <View className="gap-4">
 
-                            {/* model field */}
-                            {renderField("model", {
+                            {/* plate no field */}
+                            {renderField("plateNo", {
                                 required: true,
-                                editable: false,
-                                valueOverride:
-                                    `${data?.data?.modelYear ?? ""} ${data?.data?.model ?? ""}`.trim(),
+                                editable: false
                             })}
+
+                            {/* model year ,feet length field */}
+                            <View className="flex-row gap-3">
+                                <View className="flex-1">
+                                    {renderField("modelYear", {required: true, keyboardType: "number-pad",})}
+                                </View>
+                                <View className="flex-1">
+                                    {renderField("feet", {required: true, keyboardType: "number-pad",})}
+                                </View>
+                            </View>
 
                             {/* F tire , B tire field */}
                             <View className="flex-row gap-3">
@@ -271,80 +342,87 @@ export default function EditTruckScreen() {
                                         className={`text-sm font-medium ${getMyanmarLeadingClass(locale)}`}
                                         style={[{color: APP_COLORS.textSecondary}, style]}
                                     >
-                                        {createLabels.fieldLabels.fuelType}
+                                        {t.labels.fuelType}
                                     </Text>
                                 </View>
                                 <Controller
                                     control={control}
                                     name="fuelType"
-                                    render={({field: {value, onChange}}) => (
-                                        <Select
-                                            value={{value, label: value}}
-                                            onValueChange={(next) => {
-                                                if (next && !Array.isArray(next)) {
-                                                    onChange(next.value as FormValues["fuelType"]);
-                                                }
-                                            }}
-                                        >
-                                            <Select.Trigger
-                                                className={`rounded-xl h-14 py-0 ${getMyanmarLeadingClass(locale)}   px-2.5`}
-                                                style={{
-                                                    backgroundColor: APP_COLORS.inputBackground,
-                                                    borderColor: APP_COLORS.border,
-                                                    borderWidth: 1
+                                    render={({field: {value, onChange}}) => {
+
+                                        const selectedOption = fuelTypeFilterOptions.find((r) => r.value === value);
+                                        const selectedLabel = selectedOption?.label;
+
+                                        return (
+                                            <Select
+                                                value={{value, label: selectedLabel ? selectedLabel : ""}}
+                                                onValueChange={(next) => {
+                                                    if (next && !Array.isArray(next)) {
+                                                        onChange(next.value as FormValues["fuelType"]);
+                                                    }
                                                 }}
                                             >
-                                                <Select.Value
-                                                    className={` py-0 text-[12px] font-medium ${getMyanmarLeadingClass(locale)}`}
-                                                    style={[{color: APP_COLORS.textPrimary}]}
-                                                    placeholder={createLabels.fuelTypePlaceholder}
-                                                />
-                                                <Select.TriggerIndicator/>
-                                            </Select.Trigger>
-                                            <Select.Portal>
-                                                <Select.Overlay/>
-                                                <Select.Content
-                                                    className="rounded-2xl"
+                                                <Select.Trigger
+                                                    className={`rounded-xl h-14 py-0 ${getMyanmarLeadingClass(locale)}   px-2.5`}
                                                     style={{
-                                                        backgroundColor: APP_COLORS.card,
+                                                        backgroundColor: APP_COLORS.inputBackground,
                                                         borderColor: APP_COLORS.border,
                                                         borderWidth: 1
                                                     }}
-                                                    presentation="popover"
-                                                    width="trigger"
                                                 >
-                                                    {FUEL_TYPES.map((fuelType) => {
+                                                    <Select.Value
+                                                        className={` py-0 text-[12px] font-medium ${getMyanmarLeadingClass(locale)}`}
+                                                        style={[{color: APP_COLORS.textPrimary}]}
+                                                        placeholder={t.placeholders.fuelType}
+                                                    />
+                                                    <Select.TriggerIndicator/>
+                                                </Select.Trigger>
+                                                <Select.Portal>
+                                                    <Select.Overlay/>
+                                                    <Select.Content
+                                                        className="rounded-2xl"
+                                                        style={{
+                                                            backgroundColor: APP_COLORS.card,
+                                                            borderColor: APP_COLORS.border,
+                                                            borderWidth: 1
+                                                        }}
+                                                        presentation="popover"
+                                                        width="trigger"
+                                                    >
+                                                        {fuelTypeFilterOptions.map((fuelType) => {
 
-                                                            const itemLabel = fuelType;
-                                                            const isSelected = fuelType === value;
+                                                                const itemLabel = fuelType.label;
+                                                                const isSelected = fuelType.value === value;
 
-                                                            return (
-                                                                <Select.Item
-                                                                    key={fuelType}
-                                                                    value={fuelType}
-                                                                    label={fuelType}
-                                                                    style={{
-                                                                        backgroundColor: isSelected ? APP_COLORS.primarySoft : 'transparent',
-                                                                        paddingVertical: 12,
-                                                                        paddingHorizontal: 16,
-                                                                    }}
-                                                                >
-                                                                    <Select.ItemLabel
-                                                                        className={`text-xs ${getMyanmarLeadingClass(locale)}`}
-                                                                        style={[style, {
-                                                                            color: isSelected ? APP_COLORS.primary : APP_COLORS.textPrimary,
-                                                                            fontWeight: isSelected ? "600" : "400"
-                                                                        }]}
-                                                                    />
-                                                                    <Select.ItemIndicator/>
-                                                                </Select.Item>
-                                                            )
-                                                        }
-                                                    )}
-                                                </Select.Content>
-                                            </Select.Portal>
-                                        </Select>
-                                    )}
+                                                                return (
+                                                                    <Select.Item
+                                                                        key={fuelType.value}
+                                                                        value={fuelType.value}
+                                                                        label={itemLabel}
+                                                                        style={{
+                                                                            backgroundColor: isSelected ? APP_COLORS.primarySoft : 'transparent',
+                                                                            paddingVertical: 12,
+                                                                            paddingHorizontal: 16,
+                                                                        }}
+                                                                    >
+                                                                        <Select.ItemLabel
+                                                                            className={`text-xs ${getMyanmarLeadingClass(locale)}`}
+                                                                            style={[style, {
+                                                                                color: isSelected ? APP_COLORS.primary : APP_COLORS.textPrimary,
+                                                                                fontWeight: isSelected ? "600" : "400"
+                                                                            }]}
+                                                                        />
+                                                                        <Select.ItemIndicator/>
+                                                                    </Select.Item>
+                                                                )
+                                                            }
+                                                        )}
+                                                    </Select.Content>
+                                                </Select.Portal>
+                                            </Select>
+                                        )
+                                    }
+                                    }
                                 />
                                 {!!errors.fuelType?.message && (
                                     <Text className={`text-xs font-normal ${getMyanmarLeadingClass(locale)} `}
@@ -354,10 +432,9 @@ export default function EditTruckScreen() {
                                 )}
                             </View>
 
-                            {/* model year  */}
-                            {renderField("modelYear", {
-                                required: true,
-                                keyboardType: "number-pad",
+                            {/* model   */}
+                            {renderField("model", {
+                                required: true
                             })}
 
                             {/* chassis no.  */}
@@ -380,7 +457,7 @@ export default function EditTruckScreen() {
                                 className={`text-sm font-semibold text-slate-700 ${getMyanmarLeadingClass(locale)} `}
                                 // style={style}
                             >
-                                {labels.cancel}
+                                {t.cancel}
                             </Text>
                         </Button>
 
@@ -394,7 +471,7 @@ export default function EditTruckScreen() {
                                 className={`text-sm font-semibold text-white ${getMyanmarLeadingClass(locale)} `}
                                 style={style}
                             >
-                                {isPending ? labels.submitting : labels.submit}
+                                {isPending ? t.submitting : t.submit}
                             </Text>
                         </Button>
                     </View>

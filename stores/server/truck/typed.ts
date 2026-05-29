@@ -20,10 +20,10 @@ export interface TruckItem {
   model: string;
   make?: string;
   modelYear: string | number;
+  feet: string | number;
   engineNo?: string;
   chassisNo?: string;
   fuelType?: string;
-  frontTireSize?: string;
   frontTire?: string;
   backTire?: string;
 }
