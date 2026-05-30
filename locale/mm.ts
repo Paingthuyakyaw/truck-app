@@ -6,6 +6,7 @@ import error from '@/locale/mm/error.json'
 import common from '@/locale/mm/common.json'
 import user from '@/locale/mm/user.json'
 import truck from '@/locale/mm/truck.json'
+import services from '@/locale/mm/services.json'
 
 export const mm = {
     ...login,
@@ -15,5 +16,6 @@ export const mm = {
     ...error,
     ...common,
     ...user,
-    ...truck
+    ...truck,
+    ...services,
 }

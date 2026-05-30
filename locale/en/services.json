@@ -1,0 +1,66 @@
+{
+  "serviceType": {
+    "master": {
+      "title": "Services",
+      "searchPlaceholder": "Search by service type...",
+      "empty": "No service found."
+    },
+    "search": {
+      "advancedTitle": "Advanced Search",
+      "english": "English",
+      "myanmar": "Myanmar",
+      "status": "Status",
+      "placeholders": {
+        "english": "Enter English name",
+        "myanmar": "Enter Myanmar name"
+      },
+      "reset": "Reset",
+      "search": "Search"
+    },
+    "createServiceType": {
+      "title": "Create Service Type",
+      "infoTitle": "Coming Soon",
+      "infoBody": "Create service type is not added yet.",
+      "labels": {
+        "serviceType": "Service Type Code",
+        "english": "English Name",
+        "myanmar": "Myanmar Name"
+      },
+      "placeholders": {
+        "serviceType": "Enter service type code",
+        "english": "Enter English name",
+        "myanmar": "Enter Myanmar name"
+      },
+      "submit": "Create",
+      "submitting": "Creating...",
+      "successTitle": "Success",
+      "successBody": "Service type created successfully.",
+      "errorTitle": "Error",
+      "errorBody": "Something went wrong."
+    },
+    "updateServiceType": {
+      "title": "Update Service Type",
+      "labels": {
+        "serviceType": "Service Type Code",
+        "english": "English Name",
+        "myanmar": "Myanmar Name"
+      },
+      "placeholders": {
+        "serviceType": "Enter service type code",
+        "english": "Enter English name",
+        "myanmar": "Enter Myanmar name"
+      },
+      "submit": "Update",
+      "submitting": "Updating...",
+      "statusTitle": "Status",
+      "active": "Active",
+      "inactive": "Inactive",
+      "errorTitle": "Error",
+      "successTitle": "Success",
+      "successBody": "Service type update success",
+      "errorBody": "Failed to update service type",
+      "confirmCancel": "Cancel",
+      "confirmOk": "Confirm"
+    }
+  }
+}

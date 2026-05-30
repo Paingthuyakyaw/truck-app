@@ -7,6 +7,7 @@ import error from '@/locale/en/error.json';
 import common from '@/locale/en/common.json';
 import user from '@/locale/en/user.json';
 import truck from '@/locale/en/truck.json';
+import services from '@/locale/en/services.json'
 
 export const en = {
     ...login,
@@ -17,4 +18,5 @@ export const en = {
     ...common,
     ...user,
     ...truck,
+    ...services,
 }

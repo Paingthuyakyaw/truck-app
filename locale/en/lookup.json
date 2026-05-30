@@ -22,7 +22,11 @@
       "OCTANE_97": "Octane 97",
       "CNG": "CNG",
       "OTHER": "Other"
+    },
+    "serviceTypeStatus": {
+      "all": "All",
+      "active": "Active",
+      "inactive": "Inactive"
     }
-
   }
 }

@@ -1,22 +1,17 @@
+import type {AppLocale} from "@/stores/client/locale-store";
+import {Input} from "heroui-native";
+import React, {forwardRef} from "react";
 import {
-  compactAdvancedInputTextStyle,
-  compactLineInputTextStyle,
-} from "@/constants/compact-input";
-import type { AppLocale } from "@/stores/client/locale-store";
-import { Input } from "heroui-native";
-import React, { forwardRef, useMemo } from "react";
-import {
-  Platform,
-  TextInput,
-  type TextInputProps,
-  type TextStyle,
+    Platform,
+    TextInput,
+    type TextInputProps
 } from "react-native";
 import {APP_COLORS} from "@/constants/colors";
 
 export type CompactTextInputProps = TextInputProps & {
-  locale: AppLocale;
-  /** Use `advanced` for 12px advanced-filter fields. */
-  compactVariant?: "line" | "advanced";
+    locale: AppLocale;
+    /** Use `advanced` for 12px advanced-filter fields. */
+    compactVariant?: "line" | "advanced";
 };
 
 /**
@@ -24,32 +19,32 @@ export type CompactTextInputProps = TextInputProps & {
  * which fights `h-10` and makes Myanmar placeholders look tall / bottom-heavy).
  */
 export const CompactTextInput = forwardRef<TextInput, CompactTextInputProps>(
-  function CompactTextInput(
-    { locale, compactVariant = "line", className, style, ...rest },
-    ref,
-  ) {
-    const textStyle = useMemo((): TextStyle => {
-      return compactVariant === "advanced"
-        ? compactAdvancedInputTextStyle(locale)
-        : compactLineInputTextStyle(locale);
-    }, [locale, compactVariant]);
+    function CompactTextInput(
+        {locale, compactVariant = "line", className, style, ...rest},
+        ref,
+    ) {
 
-    const { includeFontPadding: includeFontPaddingProp, ...inputRest } = rest;
+        const {includeFontPadding: includeFontPaddingProp, ...inputRest} = rest;
 
-    const includeFontPadding =
-      Platform.OS === "android" && locale === "mm"
-        ? false
-        : includeFontPaddingProp;
+        const includeFontPadding =
+            Platform.OS === "android" && locale === "mm"
+                ? false
+                : includeFontPaddingProp;
 
-    return (
-      <Input
-        ref={ref}
-        className={className}
-        placeholderTextColor={APP_COLORS.textMuted}
-        style={style}
-        {...inputRest}
-        {...(Platform.OS === "android" ? { includeFontPadding } : {})}
-      />
-    );
-  },
+        return (
+            <Input
+                ref={ref}
+                className={className}
+                placeholderTextColor={APP_COLORS.textMuted}
+                style={[style, {
+                    backgroundColor: APP_COLORS.inputBackground,
+                    borderColor: APP_COLORS.border,
+                    borderWidth: 1,
+                    color: APP_COLORS.textPrimary
+                }]}
+                {...inputRest}
+                {...(Platform.OS === "android" ? {includeFontPadding} : {})}
+            />
+        );
+    },
 );
