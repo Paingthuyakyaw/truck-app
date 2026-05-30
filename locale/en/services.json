@@ -19,8 +19,6 @@
     },
     "createServiceType": {
       "title": "Create Service Type",
-      "infoTitle": "Coming Soon",
-      "infoBody": "Create service type is not added yet.",
       "labels": {
         "serviceType": "Service Type Code",
         "english": "English Name",
@@ -36,7 +34,7 @@
       "successTitle": "Success",
       "successBody": "Service type created successfully.",
       "errorTitle": "Error",
-      "errorBody": "Something went wrong."
+      "errorBody": "Unable to create service type."
     },
     "updateServiceType": {
       "title": "Update Service Type",
