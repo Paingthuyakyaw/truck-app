@@ -2,7 +2,7 @@
   "serviceType": {
     "master": {
       "title": "Services",
-      "searchPlaceholder": "Search by service type...",
+      "searchPlaceholder": "Search by service...",
       "empty": "No service found."
     },
     "search": {
@@ -39,26 +39,23 @@
     "updateServiceType": {
       "title": "Update Service Type",
       "labels": {
-        "serviceType": "Service Type Code",
+        "serviceType": "Service Code",
         "english": "English Name",
-        "myanmar": "Myanmar Name"
+        "myanmar": "Myanmar Name",
+        "status": "Status"
       },
       "placeholders": {
-        "serviceType": "Enter service type code",
+        "serviceType": "Enter service code",
         "english": "Enter English name",
         "myanmar": "Enter Myanmar name"
       },
-      "submit": "Update",
-      "submitting": "Updating...",
-      "statusTitle": "Status",
-      "active": "Active",
-      "inactive": "Inactive",
       "errorTitle": "Error",
+      "errorBody": "Failed to update service type",
       "successTitle": "Success",
       "successBody": "Service type update success",
-      "errorBody": "Failed to update service type",
-      "confirmCancel": "Cancel",
-      "confirmOk": "Confirm"
+      "cancel": "Cancel",
+      "submit": "Update",
+      "submitting": "Updating..."
     }
   }
 }

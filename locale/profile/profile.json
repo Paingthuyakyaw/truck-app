@@ -36,69 +36,6 @@
       "ok": "OK",
       "errorTitle": "Could not update password",
       "errorGeneric": "Something went wrong. Please try again."
-    },
-    "serviceTypeScreen": {
-      "title": "Service Type Management",
-      "searchPlaceholder": "Search by service type...",
-      "advancedTitle": "Advanced Search",
-      "labels": {
-        "english": "English",
-        "myanmar": "Myanmar",
-        "status": "Status"
-      },
-      "placeholders": {
-        "english": "Enter English name",
-        "myanmar": "Enter Myanmar name"
-      },
-      "status": {
-        "all": "All",
-        "active": "Active",
-        "inactive": "Inactive"
-      },
-      "addComingSoonTitle": "Coming Soon",
-      "addComingSoonBody": "Create service type is not added yet.",
-      "reset": "Reset",
-      "apply": "Apply",
-      "empty": "No service types found.",
-      "error": "Something went wrong."
-    },
-    "createServiceTypeScreen": {
-      "title": "Create Service Type",
-      "basicInfoTitle": "Basic Information",
-      "submit": "Create",
-      "submitting": "Creating...",
-      "successTitle": "Success",
-      "successBody": "Service type created successfully.",
-      "errorTitle": "Error",
-      "errorBody": "Unable to create service type.",
-      "requiredField": "This field is required",
-      "maxLength": "Maximum length exceeded",
-      "fieldLabels": {
-        "serviceType": "Service Type",
-        "langEng": "English",
-        "langMy": "Myanmar"
-      },
-      "placeholders": {
-        "serviceType": "Ex: TIRE_SERVICE",
-        "langEng": "Ex: Tire Service",
-        "langMy": "မြန်မာအမည် ထည့်ပါ"
-      }
-    },
-    "editServiceTypeScreen": {
-      "title": "Edit Service Type",
-      "activeLabel": "Active",
-      "status": {
-        "active": "Active",
-        "inactive": "Inactive"
-      },
-      "submit": "Update",
-      "submitting": "Updating...",
-      "cancel": "Cancel",
-      "successTitle": "Success",
-      "successBody": "Service type updated successfully.",
-      "errorTitle": "Error",
-      "errorBody": "Unable to update service type.",
-      "invalidItem": "Invalid service type."
     }
   },
   "mm": {
@@ -138,69 +75,6 @@
       "ok": "အိုကေ",
       "errorTitle": "စကားဝှက် မပြောင်းနိုင်ပါ",
       "errorGeneric": "တစ်ခုခု မှားယွင်းနေပါသည်။ ထပ်ကြိုးစားပါ။"
-    },
-    "serviceTypeScreen": {
-      "title": "ဝန်ဆောင်မှုအမျိုးအစား စီမံခန့်ခွဲမှု",
-      "searchPlaceholder": "ဝန်ဆောင်မှုအမျိုးအစားဖြင့် ရှာဖွေရန်...",
-      "advancedTitle": "အဆင့်မြင့်ရှာဖွေမှု",
-      "labels": {
-        "english": "English",
-        "myanmar": "မြန်မာ",
-        "status": "အခြေအနေ"
-      },
-      "placeholders": {
-        "english": "English အမည် ထည့်ပါ",
-        "myanmar": "မြန်မာအမည် ထည့်ပါ"
-      },
-      "status": {
-        "all": "အားလုံး",
-        "active": "အသုံးပြုနေသည်",
-        "inactive": "မအသုံးပြု"
-      },
-      "addComingSoonTitle": "မကြာမီ",
-      "addComingSoonBody": "ဝန်ဆောင်မှုအမျိုးအစား အသစ်ထည့်ရန် မရသေးပါ။",
-      "reset": "ရှင်းလင်းမည်",
-      "apply": "ကျင့်သုံး",
-      "empty": "ဝန်ဆောင်မှုအမျိုးအစား မတွေ့ရှိပါ။",
-      "error": "အမှားတစ်ခု ဖြစ်ပွားခဲ့သည်။"
-    },
-    "createServiceTypeScreen": {
-      "title": "ဝန်ဆောင်မှုအမျိုးအစား အသစ်ထည့်ရန်",
-      "basicInfoTitle": "အခြေခံအချက်အလက်",
-      "submit": "မှတ်တမ်းမည်",
-      "submitting": "ဖန်တီးနေသည်...",
-      "successTitle": "အောင်မြင်သည်",
-      "successBody": "ဝန်ဆောင်မှုအမျိုးအစား ဖန်တီးပြီးပါပြီ။",
-      "errorTitle": "အမှား",
-      "errorBody": "ဝန်ဆောင်မှုအမျိုးအစား ဖန်တီး၍ မရပါ။",
-      "requiredField": "ဤအကွက် လိုအပ်သည်",
-      "maxLength": "စာလုံးရေ ကန့်သတ်ချက် ကျော်လွန်နေသည်",
-      "fieldLabels": {
-        "serviceType": "ဝန်ဆောင်မှု အမျိုးအစား",
-        "langEng": "English",
-        "langMy": "မြန်မာ"
-      },
-      "placeholders": {
-        "serviceType": "ဥပမာ: TIRE_SERVICE",
-        "langEng": "ဥပမာ: Tire Service",
-        "langMy": "မြန်မာအမည် ထည့်ပါ"
-      }
-    },
-    "editServiceTypeScreen": {
-      "title": "ဝန်ဆောင်မှုအမျိုးအစား ပြင်ဆင်ရန်",
-      "activeLabel": "အသုံးပြုမှု",
-      "status": {
-        "active": "အသုံးပြုနေသည်",
-        "inactive": "မအသုံးပြု"
-      },
-      "submit": "သိမ်းမည်",
-      "submitting": "ပြင်ဆင်နေသည်...",
-      "cancel": "မလုပ်တော့ပါ",
-      "successTitle": "အောင်မြင်သည်",
-      "successBody": "ဝန်ဆောင်မှုအမျိုးအစား ပြင်ဆင်ပြီးပါပြီ။",
-      "errorTitle": "အမှား",
-      "errorBody": "ဝန်ဆောင်မှုအမျိုးအစား မပြင်ဆင်နိုင်ပါ။",
-      "invalidItem": "ဝန်ဆောင်မှုအမျိုးအစား မမှန်ကန်ပါ။"
     }
   }
 }

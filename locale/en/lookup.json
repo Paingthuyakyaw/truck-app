@@ -24,9 +24,8 @@
       "OTHER": "Other"
     },
     "serviceTypeStatus": {
-      "all": "All",
-      "active": "Active",
-      "inactive": "Inactive"
+      "true": "Active",
+      "false": "Inactive"
     }
   }
 }

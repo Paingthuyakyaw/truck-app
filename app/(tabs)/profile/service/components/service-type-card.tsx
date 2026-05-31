@@ -79,7 +79,7 @@ export function ServiceTypeCardItem({item, locale, onPress}: Props) {
 
                         <View style={{width: 65}}>
                             <Text
-                                className={`text-xs font-normal ${getMyanmarLeadingClass(locale)}`}
+                                className={`text-xs font-normal ${getMyanmarLeadingClass('mm')}`}
                                 style={[{color: APP_COLORS.textMuted}, style]}
                             >
                                 မြန်မာ
@@ -90,7 +90,7 @@ export function ServiceTypeCardItem({item, locale, onPress}: Props) {
 
                         <View style={{flex: 1}}>
                             <Text
-                                className={`text-xs font-semibold ${getMyanmarLeadingClass(locale)}`}
+                                className={`text-xs font-semibold ${getMyanmarLeadingClass('mm')}`}
                                 style={[{color: APP_COLORS.textSecondary}, style]}
                                 numberOfLines={1}
                                 ellipsizeMode="tail"

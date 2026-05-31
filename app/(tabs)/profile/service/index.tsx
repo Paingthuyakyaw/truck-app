@@ -40,28 +40,28 @@ const initialServiceListUi: ServiceListUiState = {
     advancedOpen: false,
     langEng: "",
     langMy: "",
-    active: true,
+    active: null,
 };
 
 const defaultServiceAdvancedApplied: ServiceTypeAdvancedFilters = {
     langEng: "",
     langMy: "",
-    active: true,
+    active: null,
 };
 
 export default function ServiceTypeManagementScreen() {
+
     const router = useRouter();
     const locale = useLocaleStore((state) => state.locale);
     const t = useTranslation('serviceType')
-    const {serviceTypeStatus: tStatus} = useTranslation('lookup')
-
+    const tLookup = useTranslation('lookup')
+    const tCommon = useTranslation('common')
     const mmTextStyle = useMemo(() => myanmarUITextStyle(), []);
     const style = locale === "mm" ? mmTextStyle : undefined;
     const [ui, setUi] = useState<ServiceListUiState>(initialServiceListUi);
-    const [appliedAdvanced, setAppliedAdvanced] =
-        useState<ServiceTypeAdvancedFilters>(() => ({
-            ...defaultServiceAdvancedApplied,
-        }));
+    const [appliedAdvanced, setAppliedAdvanced] = useState<ServiceTypeAdvancedFilters>(() => ({
+        ...defaultServiceAdvancedApplied,
+    }));
     const patchUi = useCallback((next: Partial<ServiceListUiState>) => {
         setUi((prev) => ({...prev, ...next}));
     }, []);
@@ -114,6 +114,17 @@ export default function ServiceTypeManagementScreen() {
         router.push("/(tabs)/profile/service/create")
     }, 600)
 
+    const serviceFilterOptions = useMemo(() => {
+        return [
+            {value: "", label: tCommon.anyLabel},
+            ...Object.entries(tLookup.serviceTypeStatus || {}).map(([key, localizedLabel]) => ({
+                value: key,
+                label: localizedLabel
+            }))
+        ];
+    }, [tLookup.serviceTypeStatus, tCommon.anyLabel])
+
+
     return (
         <SafeAreaView className="flex-1 " style={{backgroundColor: APP_COLORS.background}}>
 
@@ -138,24 +149,28 @@ export default function ServiceTypeManagementScreen() {
                 <View className="h-11 w-11"/>
             </View>
 
-
+            {/* search , advanced search , card item list */}
             <FlatList
                 data={items}
                 className="px-4"
                 keyExtractor={(item) => String(item.id)}
+                // card item
                 renderItem={({item}) => (
                     <ServiceTypeCardItem
                         item={item}
                         locale={locale}
                         onPress={() => handleCardPress(item)}
                     />
-                )}
+                )
+                }
                 onEndReachedThreshold={0.2}
+                // fetch next page
                 onEndReached={() => {
                     if (hasNextPage && !isFetchingNextPage) {
                         fetchNextPage();
                     }
                 }}
+                // search && advance search
                 ListHeaderComponent={
                     <View className="pb-3">
                         <ServiceSearchToolbar
@@ -181,6 +196,7 @@ export default function ServiceTypeManagementScreen() {
                                 }}
                             >
                                 <Card.Body className="gap-3">
+                                    {/* advanced search title*/}
                                     <Text
                                         className={`text-sm font-medium  ${getMyanmarLeadingClass(locale)}`}
                                         style={[style, {color: APP_COLORS.textPrimary}]}
@@ -188,6 +204,7 @@ export default function ServiceTypeManagementScreen() {
                                         {t.search.advancedTitle}
                                     </Text>
 
+                                    {/* English && Myanmar input fields */}
                                     <View className="flex-row gap-2">
                                         <View className="flex-1 gap-1">
                                             <Text
@@ -223,6 +240,7 @@ export default function ServiceTypeManagementScreen() {
                                         </View>
                                     </View>
 
+                                    {/* service types combo box  */}
                                     <View className="gap-1">
                                         <Text
                                             className={`text-xs font-semibold ${getMyanmarLeadingClass(locale)}`}
@@ -231,19 +249,19 @@ export default function ServiceTypeManagementScreen() {
                                             {t.search.status}
                                         </Text>
                                         <Select
-                                            value={
-                                                ui.active === null
-                                                    ? {value: "all", label: tStatus.all}
-                                                    : ui.active
-                                                        ? {value: "active", label: tStatus.active}
-                                                        : {value: "inactive", label: tStatus.inactive}
-                                            }
+                                            value={ui.active === null ? {
+                                                value: "",
+                                                label: tCommon.anyLabel
+                                            } : ui.active ? {
+                                                value: "true",
+                                                label: tLookup.serviceTypeStatus.true
+                                            } : {value: "false", label: tLookup.serviceTypeStatus.false}}
+
                                             onValueChange={(next) => {
                                                 if (!next || Array.isArray(next)) return;
-                                                if (next.value === "all") patchUi({active: null});
-                                                if (next.value === "active") patchUi({active: true});
-                                                if (next.value === "inactive")
-                                                    patchUi({active: false});
+                                                if (next.value === "") patchUi({active: null});
+                                                if (next.value === "true") patchUi({active: true});
+                                                if (next.value === "false") patchUi({active: false});
                                             }}
                                             presentation="popover"
                                         >
@@ -256,8 +274,8 @@ export default function ServiceTypeManagementScreen() {
                                                 }}
                                             >
                                                 <Select.Value
-                                                    className={`text-sm font-normal py-0  ${getMyanmarLeadingClass(locale)} `}
                                                     placeholder=""
+                                                    className={`text-sm font-normal py-0  ${getMyanmarLeadingClass(locale)} `}
                                                     style={[{color: APP_COLORS.textPrimary}, style]}
                                                 />
                                                 <Select.TriggerIndicator/>
@@ -274,51 +292,46 @@ export default function ServiceTypeManagementScreen() {
                                                     presentation="popover"
                                                     width="trigger"
                                                 >
-                                                    <Select.Item value="all"
-                                                                 label={tStatus.all}
-                                                                 style={{
-                                                                     paddingVertical: 12,
-                                                                     paddingHorizontal: 16,
-                                                                 }}
-                                                    >
-                                                        <Select.ItemLabel
-                                                            className={`text-xs text-slate-900 ${getMyanmarLeadingClass(locale)}`}
-                                                            style={style}
-                                                        />
-                                                        <Select.ItemIndicator/>
-                                                    </Select.Item>
-                                                    <Select.Item value="active"
-                                                                 label={tStatus.active}
-                                                                 style={{
-                                                                     paddingVertical: 12,
-                                                                     paddingHorizontal: 16,
-                                                                 }}
-                                                    >
-                                                        <Select.ItemLabel
-                                                            className={`text-xs text-slate-900 ${getMyanmarLeadingClass(locale)}`}
-                                                            style={style}
-                                                        />
-                                                        <Select.ItemIndicator/>
-                                                    </Select.Item>
-                                                    <Select.Item
-                                                        value="inactive"
-                                                        label={tStatus.inactive}
-                                                        style={{
-                                                            paddingVertical: 12,
-                                                            paddingHorizontal: 16,
-                                                        }}
-                                                    >
-                                                        <Select.ItemLabel
-                                                            className={`text-xs text-slate-900 ${getMyanmarLeadingClass(locale)}`}
-                                                            style={style}
-                                                        />
-                                                        <Select.ItemIndicator/>
-                                                    </Select.Item>
+
+                                                    {serviceFilterOptions.map((option) => {
+
+                                                        const isCurrentActive = ui.active === true && option.value === "true";
+                                                        const isCurrentInactive = ui.active === false && option.value === "false";
+                                                        const isCurrentAll = ui.active === null && option.value === "";
+                                                        const isSelected = isCurrentActive || isCurrentInactive || isCurrentAll;
+
+                                                        return (
+
+                                                            <Select.Item
+                                                                key={option.value}
+                                                                value={option.value}
+                                                                label={option.label}
+                                                                style={{
+                                                                    backgroundColor: isSelected ? APP_COLORS.primarySoft : "transparent",
+                                                                    paddingVertical: 12,
+                                                                    paddingHorizontal: 16
+                                                                }}
+                                                            >
+                                                                <Select.ItemLabel
+                                                                    className={`text-xs ${getMyanmarLeadingClass(locale)}`}
+                                                                    style={[style, {
+                                                                        color: isSelected ? APP_COLORS.primary : APP_COLORS.textPrimary,
+                                                                        fontWeight: isSelected ? "600" : "400"
+                                                                    }]}
+                                                                />
+                                                                <Select.ItemIndicator/>
+                                                            </Select.Item>
+
+                                                        )
+                                                    })}
+
                                                 </Select.Content>
                                             </Select.Portal>
                                         </Select>
+
                                     </View>
 
+                                    {/* Reset && Search buttons */}
                                     <View className="flex-row gap-2 pt-0.5">
                                         <Pressable
                                             onPress={() => {
@@ -327,7 +340,7 @@ export default function ServiceTypeManagementScreen() {
                                                     quickQuery: "",
                                                     langEng: "",
                                                     langMy: "",
-                                                    active: true,
+                                                    active: null,
                                                 });
                                             }}
                                             className="flex-1 py-3 items-center justify-center rounded-xl "
@@ -371,6 +384,8 @@ export default function ServiceTypeManagementScreen() {
                         ) : null}
                     </View>
                 }
+
+                // empty state
                 ListEmptyComponent={
                     isPending ? (
                         <View className="items-center py-10">
