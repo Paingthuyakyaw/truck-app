@@ -8,7 +8,6 @@ import {useLocaleStore} from "@/stores/client/locale-store";
 import {useChangePassword} from "@/stores/server/user/password-mutation";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {isAxiosError} from "axios";
 import {useRouter} from "expo-router";
 import {Input} from "heroui-native";
 import React, {useMemo, useState} from "react";
@@ -29,13 +28,14 @@ import {
     useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import {z} from "zod";
+import {getApiErrorAlertCopy} from "@/lib/api-error-alert";
+import {useTranslation} from "@/hooks/use-translation";
 
 const FALLBACK_CHANGE_PASSWORD_LABELS = {
     en: {
         title: "Change Password",
         infoTitle: "Password Security",
-        infoBody:
-            "Password must be at least 8 characters. Include upper and lower case letters, numbers, and symbols (@ # $ % ^ & + = !) for stronger security.",
+        infoBody: "Password must be at least 8 characters. Include upper and lower case letters, numbers, and symbols (@ # $ % ^ & + = !) for stronger security.",
         currentLabel: "Current password",
         currentPlaceholder: "Enter current password",
         newLabel: "New password",
@@ -47,8 +47,7 @@ const FALLBACK_CHANGE_PASSWORD_LABELS = {
         newRequired: "New password is required",
         confirmRequired: "Please confirm your new password",
         mismatch: "New passwords do not match",
-        newInvalid:
-            "Use at least 8 characters with upper & lower case letters, a number, and a symbol (@ # $ % ^ & + = !).",
+        newInvalid: "Use at least 8 characters with upper & lower case letters, a number, and a symbol (@ # $ % ^ & + = !).",
         successTitle: "Password updated",
         successBody: "Your password has been changed successfully.",
         ok: "OK",
@@ -58,8 +57,7 @@ const FALLBACK_CHANGE_PASSWORD_LABELS = {
     mm: {
         title: "စကားဝှက်ပြောင်းရန်",
         infoTitle: "စကားဝှက်လုံခြုံရေး",
-        infoBody:
-            "စကားဝှက်သည် အနည်းဆုံး ၈ လုံး ရှိရမည်။ နံပါတ်၊ အကြီးအသေးလုံး နှင့် သင်္ကေတများ ပါဝင်ပါက ပိုမိုလုံခြုံပါသည်။",
+        infoBody: "စကားဝှက်သည် အနည်းဆုံး ၈ လုံး ရှိရမည်။ နံပါတ်၊ အကြီးအသေးလုံး နှင့် သင်္ကေတများ ပါဝင်ပါက ပိုမိုလုံခြုံပါသည်။",
         currentLabel: "လက်ရှိစကားဝှက်",
         currentPlaceholder: "လက်ရှိစကားဝှက်ထည့်ပါ",
         newLabel: "စကားဝှက်အသစ်",
@@ -71,8 +69,7 @@ const FALLBACK_CHANGE_PASSWORD_LABELS = {
         newRequired: "စကားဝှက်အသစ် ထည့်ရန်လိုအပ်ပါသည်",
         confirmRequired: "စကားဝှက်အသစ် ထပ်အတည်ပြုပါ",
         mismatch: "စကားဝှက်အသစ် မတူညီပါ",
-        newInvalid:
-            "အင်္ဂလိပ်အကြီးအသေး၊ နံပါတ်၊ သင်္ကေတ (@ # $ % ^ & + = !) ပါဝင်သော စကားဝှက် အနည်းဆုံး ၈ လုံး သုံးပါ။",
+        newInvalid: "အင်္ဂလိပ်အကြီးအသေး၊ နံပါတ်၊ သင်္ကေတ (@ # $ % ^ & + = !) ပါဝင်သော စကားဝှက် အနည်းဆုံး ၈ လုံး သုံးပါ။",
         successTitle: "ပြင်ဆင်ပြီးပါပြီ",
         successBody: "စကားဝှက်ကို အောင်မြင်စွာ ပြောင်းလဲပြီးပါပြီ။",
         ok: "အိုကေ",
@@ -119,12 +116,13 @@ function buildSchema(labels: {
 type FormValues = z.infer<ReturnType<typeof buildSchema>>;
 
 export default function ChangePasswordScreen() {
+
+    const errorCatalog = useTranslation("error");
     const router = useRouter();
     const insets = useSafeAreaInsets();
     const locale = useLocaleStore((state) => state.locale);
     const profileCopy = profileLocale[locale] ?? profileLocale.en;
-    const labels =
-        profileCopy.changePasswordScreen ?? FALLBACK_CHANGE_PASSWORD_LABELS[locale];
+    const labels = profileCopy.changePasswordScreen ?? FALLBACK_CHANGE_PASSWORD_LABELS[locale];
     const mmTextStyle = useMemo(() => myanmarUITextStyle(), []);
     const textStyle = locale === "mm" ? mmTextStyle : undefined;
     const {mutate, isPending} = useChangePassword();
@@ -157,16 +155,13 @@ export default function ChangePasswordScreen() {
                     ]);
                 },
                 onError: (error: unknown) => {
-                    const data = isAxiosError(error) ? error.response?.data : undefined;
-                    const message =
-                        data &&
-                        typeof data === "object" &&
-                        "message" in data &&
-                        typeof (data as { message?: unknown }).message === "string"
-                            ? (data as { message: string }).message
-                            : labels.errorGeneric;
 
-                    Alert.alert(labels.errorTitle, message);
+                    const {title, message} = getApiErrorAlertCopy(error, errorCatalog, {
+                        title: labels.errorTitle,
+                        message: labels.errorGeneric,
+                    });
+                    Alert.alert(title, message);
+
                 },
             },
         );
