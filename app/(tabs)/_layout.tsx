@@ -35,10 +35,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="ownership/index"
         options={{
-          title: "Record",
-          tabBarLabel: "Record",
+          title: "Truck",
+          tabBarLabel: "Truck",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="document-text" size={size} color={color} />
+            <Ionicons name="car-sport" size={size} color={color} />
           ),
         }}
       />
@@ -48,7 +48,7 @@ export default function TabLayout() {
           title: "Proposal",
           tabBarLabel: "Proposal",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person" size={size} color={color} />
+            <Ionicons name="create" size={size} color={color} />
           ),
         }}
       />
