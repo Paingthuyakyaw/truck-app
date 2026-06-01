@@ -9,6 +9,7 @@ import user from '@/locale/en/user.json';
 import truck from '@/locale/en/truck.json';
 import services from '@/locale/en/services.json'
 import changePassword from '@/locale/en/change-password.json'
+import language from '@/locale/en/language.json'
 
 export const en = {
     ...login,
@@ -20,5 +21,6 @@ export const en = {
     ...user,
     ...truck,
     ...services,
-    ...changePassword
+    ...changePassword,
+    ...language,
 }

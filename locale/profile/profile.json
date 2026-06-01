@@ -4,10 +4,6 @@
     "greeting": "Welcome",
     "settingsHeading": "Management Settings",
     "logout": "Logout",
-    "languageLabel": "Language",
-    "languageMyanmar": "Myanmar",
-    "languageEnglish": "English",
-    "languagePageTitle": "Language",
     "settingsRows": {
       "team": "Team Management",
       "truck": "Truck Management",
@@ -21,10 +17,6 @@
     "greeting": "မင်္ဂလာပါ",
     "settingsHeading": "စီမံမှု ဆက်တင်များ",
     "logout": "အကောင့်မှထွက်ရန်",
-    "languageLabel": "ဘာသာစကား",
-    "languageMyanmar": "မြန်မာ",
-    "languageEnglish": "အင်္ဂလိပ်",
-    "languagePageTitle": "ဘာသာစကား",
     "settingsRows": {
       "team": "အသင်းပြုစု စီမံခန့်ခွဲမှု",
       "truck": "ထရက်ကား စီမံခန့်ခွဲမှု",
