@@ -3,7 +3,6 @@ import { APP_COLORS } from "@/constants/colors";
 import { COMPACT_ADVANCED_INPUT_CLASSNAME } from "@/constants/compact-input";
 import {getMyanmarLeadingClass, myanmarUITextStyle} from "@/constants/myanmar-font";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
-import profileLocale from "@/locale/profile/profile.json";
 import { useLocaleStore } from "@/stores/client/locale-store";
 import { useTrucksInfinite } from "@/stores/server/truck/query";
 import {
