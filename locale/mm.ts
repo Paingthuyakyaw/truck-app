@@ -7,7 +7,7 @@ import common from '@/locale/mm/common.json'
 import user from '@/locale/mm/user.json'
 import truck from '@/locale/mm/truck.json'
 import services from '@/locale/mm/services.json'
-import password from '@/locale/mm/password.json'
+import changePassword from '@/locale/mm/change-password.json'
 
 export const mm = {
     ...login,
@@ -19,5 +19,5 @@ export const mm = {
     ...user,
     ...truck,
     ...services,
-    password
+    ...changePassword
 }

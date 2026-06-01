@@ -3,7 +3,6 @@ import {
     getMyanmarLeadingClass,
     myanmarUITextStyle,
 } from "@/constants/myanmar-font";
-import profileLocale from "@/locale/profile/profile.json";
 import {useLocaleStore} from "@/stores/client/locale-store";
 import {useChangePassword} from "@/stores/server/user/password-mutation";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -30,53 +29,6 @@ import {
 import {z} from "zod";
 import {getApiErrorAlertCopy} from "@/lib/api-error-alert";
 import {useTranslation} from "@/hooks/use-translation";
-
-const FALLBACK_CHANGE_PASSWORD_LABELS = {
-    en: {
-        title: "Change Password",
-        infoTitle: "Password Security",
-        infoBody: "Password must be at least 8 characters. Include upper and lower case letters, numbers, and symbols (@ # $ % ^ & + = !) for stronger security.",
-        currentLabel: "Current password",
-        currentPlaceholder: "Enter current password",
-        newLabel: "New password",
-        newPlaceholder: "Enter new password",
-        confirmLabel: "Confirm new password",
-        confirmPlaceholder: "Re-enter new password",
-        submit: "Confirm",
-        oldRequired: "Current password is required",
-        newRequired: "New password is required",
-        confirmRequired: "Please confirm your new password",
-        mismatch: "New passwords do not match",
-        newInvalid: "Use at least 8 characters with upper & lower case letters, a number, and a symbol (@ # $ % ^ & + = !).",
-        successTitle: "Password updated",
-        successBody: "Your password has been changed successfully.",
-        ok: "OK",
-        errorTitle: "Could not update password",
-        errorGeneric: "Something went wrong. Please try again.",
-    },
-    mm: {
-        title: "စကားဝှက်ပြောင်းရန်",
-        infoTitle: "စကားဝှက်လုံခြုံရေး",
-        infoBody: "စကားဝှက်သည် အနည်းဆုံး ၈ လုံး ရှိရမည်။ နံပါတ်၊ အကြီးအသေးလုံး နှင့် သင်္ကေတများ ပါဝင်ပါက ပိုမိုလုံခြုံပါသည်။",
-        currentLabel: "လက်ရှိစကားဝှက်",
-        currentPlaceholder: "လက်ရှိစကားဝှက်ထည့်ပါ",
-        newLabel: "စကားဝှက်အသစ်",
-        newPlaceholder: "စကားဝှက်အသစ်ထည့်ပါ",
-        confirmLabel: "စကားဝှက်အသစ် အတည်ပြုရန်",
-        confirmPlaceholder: "စကားဝှက်အသစ် ထပ်ထည့်ပါ",
-        submit: "အတည်ပြုမည်",
-        oldRequired: "လက်ရှိစကားဝှက် ထည့်ရန်လိုအပ်ပါသည်",
-        newRequired: "စကားဝှက်အသစ် ထည့်ရန်လိုအပ်ပါသည်",
-        confirmRequired: "စကားဝှက်အသစ် ထပ်အတည်ပြုပါ",
-        mismatch: "စကားဝှက်အသစ် မတူညီပါ",
-        newInvalid: "အင်္ဂလိပ်အကြီးအသေး၊ နံပါတ်၊ သင်္ကေတ (@ # $ % ^ & + = !) ပါဝင်သော စကားဝှက် အနည်းဆုံး ၈ လုံး သုံးပါ။",
-        successTitle: "ပြင်ဆင်ပြီးပါပြီ",
-        successBody: "စကားဝှက်ကို အောင်မြင်စွာ ပြောင်းလဲပြီးပါပြီ။",
-        ok: "အိုကေ",
-        errorTitle: "စကားဝှက် မပြောင်းနိုင်ပါ",
-        errorGeneric: "တစ်ခုခု မှားယွင်းနေပါသည်။ ထပ်ကြိုးစားပါ။",
-    },
-} as const;
 
 const NEW_PASSWORD_REGEX =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!])[A-Za-z\d@#$%^&+=!]{8,}$/;
@@ -117,12 +69,12 @@ type FormValues = z.infer<ReturnType<typeof buildSchema>>;
 
 export default function ChangePasswordScreen() {
 
+    const t = useTranslation('changePassword')
     const errorCatalog = useTranslation("error");
     const router = useRouter();
     const insets = useSafeAreaInsets();
     const locale = useLocaleStore((state) => state.locale);
-    const profileCopy = profileLocale[locale] ?? profileLocale.en;
-    const labels = profileCopy.changePasswordScreen ?? FALLBACK_CHANGE_PASSWORD_LABELS[locale];
+
     const mmTextStyle = useMemo(() => myanmarUITextStyle(), []);
     const textStyle = locale === "mm" ? mmTextStyle : undefined;
     const {mutate, isPending} = useChangePassword();
@@ -131,7 +83,7 @@ export default function ChangePasswordScreen() {
     const [showNew, setShowNew] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
 
-    const schema = useMemo(() => buildSchema(labels), [labels]);
+    const schema = useMemo(() => buildSchema(t), [t]);
     const {
         control,
         handleSubmit,
@@ -150,15 +102,15 @@ export default function ChangePasswordScreen() {
             {oldPassword: values.oldPassword, newPassword: values.newPassword},
             {
                 onSuccess: () => {
-                    Alert.alert(labels.successTitle, labels.successBody, [
-                        {text: labels.ok, onPress: () => router.back()},
+                    Alert.alert(t.successTitle, t.successBody, [
+                        {text: t.ok, onPress: () => router.back()},
                     ]);
                 },
                 onError: (error: unknown) => {
 
                     const {title, message} = getApiErrorAlertCopy(error, errorCatalog, {
-                        title: labels.errorTitle,
-                        message: labels.errorGeneric,
+                        title: t.errorTitle,
+                        message: t.errorGeneric,
                     });
                     Alert.alert(title, message);
 
@@ -245,7 +197,7 @@ export default function ChangePasswordScreen() {
                         className={`flex-1 px-3 text-center text-lg font-bold ${getMyanmarLeadingClass(locale)}`}
                         style={[textStyle, {color: APP_COLORS.textPrimary}]}
                     >
-                        {labels.title}
+                        {t.title}
                     </Text>
                     <View className="h-11 w-11"/>
                 </View>
@@ -276,13 +228,13 @@ export default function ChangePasswordScreen() {
                                     className={`text-sm  font-medium ${getMyanmarLeadingClass(locale)}  text-[#325f99]`}
                                     style={textStyle}
                                 >
-                                    {labels.infoTitle}
+                                    {t.infoTitle}
                                 </Text>
                                 <Text
                                     className={`mt-0.5 text-xs font-normal ${getMyanmarLeadingClass(locale)}  text-[#325f99]`}
                                     style={textStyle}
                                 >
-                                    {labels.infoBody}
+                                    {t.infoBody}
                                 </Text>
                             </View>
                         </View>
@@ -298,22 +250,22 @@ export default function ChangePasswordScreen() {
                     >
                         {renderPasswordField(
                             "oldPassword",
-                            labels.currentLabel,
-                            labels.currentPlaceholder,
+                            t.currentLabel,
+                            t.currentPlaceholder,
                             showOld,
                             () => setShowOld((value) => !value),
                         )}
                         {renderPasswordField(
                             "newPassword",
-                            labels.newLabel,
-                            labels.newPlaceholder,
+                            t.newLabel,
+                            t.newPlaceholder,
                             showNew,
                             () => setShowNew((value) => !value),
                         )}
                         {renderPasswordField(
                             "confirmPassword",
-                            labels.confirmLabel,
-                            labels.confirmPlaceholder,
+                            t.confirmLabel,
+                            t.confirmPlaceholder,
                             showConfirm,
                             () => setShowConfirm((value) => !value),
                         )}
@@ -336,7 +288,7 @@ export default function ChangePasswordScreen() {
                         ) : (
                             <Text className={`text-sm font-bold text-white ${getMyanmarLeadingClass(locale)}`}
                                   style={textStyle}>
-                                {labels.submit}
+                                {t.submit}
                             </Text>
                         )}
                     </Pressable>
